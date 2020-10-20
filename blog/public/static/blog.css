@@ -1,0 +1,7 @@
+/*重写随机背景色 */
+.bd-rainbow {
+    -webkit-animation: rainbow 8s ease infinite;
+    animation: rainbow 8s ease infinite;
+    background-image: linear-gradient(124deg, #dec02b, #d8da69, #f5e095, #82ff59);
+    background-size: 800% 800%;
+}

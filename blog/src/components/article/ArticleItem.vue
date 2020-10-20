@@ -1,0 +1,65 @@
+<template>
+    <v-card  elevation="0" :shaped="article.isTop==1" class="article-item mb-6">
+        <v-lazy>
+            <v-img
+                    :aspect-ratio="18/9"
+                    v-if="article.coverURL"
+                    :src="article.coverURL"
+                    :lazy-src="article.coverURL"
+            />
+        </v-lazy>
+        <v-card-title>
+            <router-link to="/" class="title_a">
+                <span v-if="article.artInfoIsTop == 1" class="body-2">[置顶]</span>
+                {{article.artInfoTitle}}
+            </router-link>
+        </v-card-title>
+        <v-card-subtitle>{{article.artInfoCreatedTime}}</v-card-subtitle>
+        <v-card-text class="text--primary">{{article.artInfoSummary}}</v-card-text>
+        <v-card-actions class="justify-space-between">
+            <v-btn text color="error">开始阅读</v-btn>
+            <div>
+                <v-btn text>
+                    <v-icon left>fa-eye</v-icon>
+                    1
+                </v-btn>
+                <v-btn text>
+                    <v-icon left>fa-heart</v-icon>
+                    1
+                </v-btn>
+                <v-btn text>
+                    <v-icon left>fa-comment</v-icon>
+                    1
+                </v-btn>
+            </div>
+        </v-card-actions>
+    </v-card>
+</template>
+
+<script>
+    export default {
+        name: "ArticleItem",
+        props: {
+            article: {
+                require: true,
+                type: Object,
+                default() {
+                    return {
+                        artInfoId: null,
+                        artInfoTitle: null,
+                        artInfoSummary: null,
+                        artInfoCreatedTime: null,
+                        artInfoIsTop: null,
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .article-item .title_a {
+        color: inherit;
+        text-decoration: none;
+    }
+</style>
