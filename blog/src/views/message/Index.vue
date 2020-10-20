@@ -1,14 +1,16 @@
 <template>
-    <div>
+    <div class="index">
         <v-container>
-            留言
+            <CommentBox></CommentBox>
         </v-container>
     </div>
 </template>
 
 <script>
+    import CommentBox from "../../components/CommentBox";
     export default {
-        name: "Index"
+        name: "Index",
+        components: {CommentBox}
     }
 </script>
 

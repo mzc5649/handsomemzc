@@ -11,22 +11,23 @@
                 </div>
                 <div class="toolbar-action">
                     <v-btn text small @click="handleChangeTheme()">
-                        <v-tooltip  bottom v-if="$vuetify.theme.dark">
+                        <v-tooltip bottom v-if="$vuetify.theme.dark">
                             <template v-slot:activator="{on}">
-                                <v-icon v-on="on" >fa-sun-o</v-icon>
+                                <v-icon v-on="on">fa-sun-o</v-icon>
                             </template>
                             <span>白天模式</span>
                         </v-tooltip>
-                        <v-tooltip  bottom v-else>
+                        <v-tooltip bottom v-else>
                             <template v-slot:activator="{on}">
-                                <v-icon v-on="on" >fa-moon-o</v-icon>
+                                <v-icon v-on="on">fa-moon-o</v-icon>
                             </template>
                             <span>夜间模式</span>
                         </v-tooltip>
                     </v-btn>
-
+                    <v-btn elevation="0" color="primary" @click="SET_LOGIN_OR_REGISTER_DIALOG">
+                        登录
+                    </v-btn>
                 </div>
-
             </div>
         </v-app-bar>
         <v-main>
@@ -46,6 +47,9 @@
             底部13
         </v-footer>
         <div id="aplayer" ref="aplayer" class="aplayer"></div>
+
+
+        <LoginOrRegister></LoginOrRegister>
     </v-app>
 
 </template>
@@ -54,9 +58,11 @@
     import axios from "axios";
     import 'APlayer/dist/APlayer.min.css';
     import APlayer from 'APlayer';
-
+    import { mapMutations, mapState } from 'vuex';
+    import LoginOrRegister from "../components/LoginOrRegister";
     export default {
         name: "Blog",
+        components: {LoginOrRegister},
         data() {
             return {}
         },
@@ -66,6 +72,8 @@
         mounted() {
         },
         methods: {
+            ...mapMutations(['SET_LOGIN_OR_REGISTER_DIALOG']),
+            //改变主题
             handleChangeTheme() {
                 let that = this;
                 that.$vuetify.theme.dark = !that.$vuetify.theme.dark;
@@ -169,7 +177,27 @@
         })
     });
 </script>
+<style lang="scss">
+    .theme--dark {
+        .index {
+            .v-note-wrapper.markdown-body {
+                background-color: inherit;
+                color: white;
+            }
 
+            .v-note-op {
+                border-bottom: 1px solid black;
+            }
+
+            .auto-textarea-wrapper {
+                .auto-textarea-input {
+                    color: white;
+                }
+            }
+
+        }
+    }
+</style>
 <style lang="scss" scoped>
     .theme--light.v-application {
         background-color: #f4f4f4;

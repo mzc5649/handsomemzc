@@ -7,7 +7,10 @@ import 'element-ui/lib/theme-chalk/index.css';
 import Vuetify from 'vuetify'
 // @ts-ignore
 import vuetify from './plugins/vuetify.js'
-
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+// use
+Vue.use(mavonEditor)
 Vue.use(Vuetify)
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
