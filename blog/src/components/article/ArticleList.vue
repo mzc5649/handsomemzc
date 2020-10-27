@@ -1,5 +1,5 @@
 <template>
-    <div class="ArticleList">
+    <div class="ArticleList" >
         <ArticleItem v-for="item in articleStore.list" :article="item" :key="item.artInfoId"></ArticleItem>
         <v-btn v-if="hasMore" elevation="0" color="error" rounded :loading="articleLoading" @click="loadData">加载更多</v-btn>
         <v-btn v-else disabled elevation="0" rounded>没有更多了</v-btn>

@@ -1,31 +1,349 @@
 <template>
-    <v-dialog persistent width="400" v-model="LoginOrRegisterDialog">
-        <v-card>
+    <div>
 
-        </v-card>
-    </v-dialog>
+        <v-dialog :z-index="9999" persistent width="400" v-model="LoginOrRegisterDialog">
+            <v-card>
+                <div class="back-btn-box">
+                    <v-btn elevation="0" text @click="SET_LOGIN_OR_REGISTER_DIALOG">
+                        <v-icon>fa-arrow-left</v-icon>
+                    </v-btn>
+                </div>
+                <div class="login-box">
+                    <header>
+                        <h2 class="login-box-header">欢迎你，
+                            <v-btn color="#E91E63" text class="login-box-header-btn" @click="setType(type==1?2:1)">
+                                去{{type|typeNameReserve}}
+                            </v-btn>
+                        </h2>
+                        <h3>请填写以下信息进行{{type|typeName}}</h3>
+                    </header>
+                    <!--登录-->
+                    <v-form v-show="isLogin" ref="loginForm" v-model="loginValid" lazy-validation>
+                        <div class="form-filed">
+                            <label>用户名/邮箱</label>
+                            <v-text-field v-model="loginForm.login" :rules="validators.LOGINUSERNAME"></v-text-field>
+                        </div>
+                        <div class="form-filed">
+                            <label>密码</label>
+                            <v-text-field v-show="loginForm.pwdType" v-model="loginForm.pass" type="password"
+                                          :rules="validators.PASSWORD">
+                                <div slot="append">
+                                    <v-btn elevation="0" text @click="setLoginPwdType">
+                                        <v-icon>fa-eye-slash</v-icon>
+                                    </v-btn>
+                                </div>
+                            </v-text-field>
+                            <v-text-field v-show="!loginForm.pwdType" v-model="loginForm.pass"
+                                          :rules="validators.PASSWORD">
+                                <div slot="append">
+                                    <v-btn elevation="0" text @click="setLoginPwdType">
+                                        <v-icon>fa-eye</v-icon>
+                                    </v-btn>
+                                </div>
+                            </v-text-field>
+                        </div>
+                    </v-form>
+                    <!--注册-->
+                    <v-form v-show="isRegister" ref="registerForm" v-model="registerValid" lazy-validation>
+                        <div class="form-filed">
+                            <label>用户名</label>
+                            <v-text-field v-model="registerForm.login" :rules="validators.USERNAME"></v-text-field>
+                        </div>
+                        <div class="form-filed">
+                            <label>邮箱</label>
+                            <v-text-field v-model="registerForm.email" :rules="validators.EMAIL"></v-text-field>
+                        </div>
+                        <div class="form-filed">
+                            <label>验证码</label>
+                            <v-text-field v-model="registerForm.code" :rules="validators.REQUIRED">
+                                <div class="email_box" slot="append-outer">
+                                    <v-btn
+                                            text
+                                            :loading="email.loading"
+                                            :disabled="email.isSend"
+                                            @click="handleGetCode"
+                                    >
+                                        <v-icon v-if="!email.isSend">fa-envelope</v-icon>
+                                        <span v-else>{{email.num}}</span>
+                                    </v-btn>
+                                </div>
+                            </v-text-field>
+                        </div>
+
+                        <div class="form-filed">
+                            <label>密码</label>
+                            <v-text-field v-show="registerForm.pwdType" v-model="registerForm.pass"
+                                          :rules="validators.PASSWORD"
+                                          type="password" required>
+                                <div slot="append">
+                                    <v-btn elevation="0" text @click="setRegPwdType">
+                                        <v-icon>fa-eye-slash</v-icon>
+                                    </v-btn>
+
+                                </div>
+                            </v-text-field>
+                            <v-text-field v-show="!registerForm.pwdType" v-model="registerForm.pass"
+                                          :rules="validators.PASSWORD"
+                                          required>
+                                <div slot="append">
+                                    <v-btn elevation="0" text @click="setRegPwdType">
+                                        <v-icon>fa-eye</v-icon>
+                                    </v-btn>
+                                </div>
+                            </v-text-field>
+                        </div>
+                    </v-form>
+                    <div class="d-flex justify-center mt-4">
+                        <v-btn @click="handleSubmit" large elevation="0" class="continue-btn">
+                            继续
+                        </v-btn>
+                    </div>
+
+                </div>
+            </v-card>
+        </v-dialog>
+        <v-snackbar
+                v-model="snackbar.show"
+                top
+                :timeout="2000"
+        >
+            <v-icon>fa-lightbulb-o</v-icon>
+            ：{{snackbar.msg}}
+
+        </v-snackbar>
+    </div>
 </template>
 
 <script>
-    import { mapMutations, mapState } from 'vuex';
+    import {mapMutations, mapState,mapActions} from 'vuex';
+    import axios from "axios";
+
     export default {
         name: "LoginOrRegister",
-        data(){
-            return{
+        data() {
+            return {
 
+                type: 1,
+                loginValid: true,
+                loginForm: {
+                    login: '',
+                    pass: '',
+                    pwdType: true,
+                },
+                registerValid: false,
+                registerForm: {
+                    login: '',
+                    pass: '',
+                    email: '',
+                    code: '',
+                    pwdType: true,
+                },
+                validators: {
+                    REQUIRED: [v => !!v || '不能为空'],
+                    LOGINUSERNAME: [v => !!v || '不能为空', v => /^[_a-zA-Z0-9-@.]+$/.test(v) || '包含特殊字符', v => (v && v.length <= 20) || '超过最大长度'],
+                    USERNAME: [v => !!v || '不能为空', v => /^[_a-zA-Z0-9-]+$/.test(v) || '包含特殊字符', v => (v && v.length <= 20) || '超过最大长度'],
+                    PASSWORD: [v => !!v || '不能为空', v => (v && v.length <= 20) || '超过最大长度'],
+                    EMAIL: [v => !!v || '不能为空', v => /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(v) || '邮箱格式不正确']
+                },
+                email: {
+                    loading: false,
+                    isSend: false,
+                    num: -1
+                },
+                emailValid: {
+                    tamp: '',
+                    hash: ''
+                },
+                snackbar: {
+                    show: false,
+                    msg: ''
+                }
             }
         },
         created() {
         },
-        computed:{
-            ...mapState(["LoginOrRegisterDialog"])
+        computed: {
+            ...mapState(["LoginOrRegisterDialog","token"]),
+            isLogin() {
+                return this.isType(1)
+            },
+            isRegister() {
+                return this.isType(2)
+            }
         },
-        methods:{
+        filters: {
+            typeName: function (type) {
+                return type == 1 ? '登录' : '注册';
+            },
+            typeNameReserve: function (type) {
+                return type == 1 ? '注册' : '登录';
+            }
+        },
+        methods: {
+            ...mapMutations(["SET_LOGIN_OR_REGISTER_DIALOG"]),
+            ...mapActions(["serverInit"]),
+            isType(type) {
+                return this.type == type;
+            },
+            setType(type) {
+                let that = this;
+                that.type = type;
+            },
+            setRegPwdType() {
+                let that = this;
+                that.registerForm.pwdType = !that.registerForm.pwdType;
+            },
+            setLoginPwdType() {
+                let that = this;
+                that.loginForm.pwdType = !that.loginForm.pwdType;
+            },
+            //提交按钮
+            handleSubmit() {
+                let that = this;
+                const formElName = that.type == 1 ? 'loginForm' : 'registerForm';
+                // 验证
+                const isValidate = that.$refs[formElName].validate();
 
+                if (isValidate) {
+                    if (formElName == 'loginForm') {
+                        //登录
+                        axios.post("/blog/user/login", {
+                            login: that.loginForm.login,
+                            pass: that.loginForm.pass
+                        }).then(function (res) {
+                            if (res.data.code == 0) {
+                                that.snackbar.msg = '登录成功';
+                                that.snackbar.show = true;
+                                that.$store.commit('SET_LOGIN_OR_REGISTER_DIALOG');
+                                that.$store.commit('SET_TOKEN', res.data.data.token);
+                                that.$cookies.set("token",res.data.data.token,3600)
+                                that.serverInit(that)
+                            } else if (res.data.code == -1) {
+                                that.snackbar.msg = '用户名不存在或密码错误';
+                                that.snackbar.show = true;
+                            }
+                        })
+                    } else if (formElName == 'registerForm') {
+                        //验证注册
+                        axios.post("/blog/api/validMailCode/" + that.registerForm.code, {
+                            tamp: localStorage.getItem("email_tamp"),
+                            hash: localStorage.getItem("email_hash"),
+                            user: {
+                                uUsername: that.registerForm.login,
+                                uPwd: that.registerForm.pass,
+                                uEmail: that.registerForm.email,
+                            }
+                        }).then(function (res) {
+                            if (res.data.code == 0) {
+                                that.snackbar.msg = res.data.msg;
+                                that.snackbar.show = true;
+                            } else if (res.data.code == 2) {
+                                that.snackbar.msg = res.data.msg;
+                                that.snackbar.show = true;
+                            } else if (res.data.code == -1) {
+                                that.snackbar.msg = res.data.msg;
+                                that.snackbar.show = true;
+                            }
+                        })
+                    }
+                }
+
+            },
+            //发送邮件
+            handleGetCode() {
+                let that = this;
+                const email = that.registerForm.email
+                const errList = that.validators.REQUIRED.filter(item => {
+                    return !(typeof item(email) == 'boolean');
+                })
+                if (errList.length) {
+                    that.snackbar.msg = '邮箱不能为空';
+                    that.snackbar.show = true;
+                    return;
+                }
+                let flag = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(email)
+                if (!flag) {
+                    that.snackbar.msg = '邮箱格式不正确';
+                    that.snackbar.show = true;
+                    return;
+                }
+                const mailDto = {
+                    to: email
+                }
+                that.email.loading = true;
+                //正在发送
+                axios.post("/blog/api/sendMailCode", mailDto)
+                    .then(function (res) {
+                        that.email.loading = false;
+                        if (res.data.code == 0) {
+                            that.snackbar.msg = '验证码发送成功，请注意查收';
+                            that.snackbar.show = true;
+                            localStorage.setItem("email_tamp", res.data.data.tamp);
+                            localStorage.setItem("email_hash", res.data.data.hash);
+                            that.email.isSend = true;
+                            that.email.num = 60;
+                            //计时开始 60秒
+                            let timer = setInterval(() => {
+                                that.email.num--;
+                                if (that.email.num == 0) {
+                                    that.email.isSend = false;
+                                    clearInterval(timer);
+                                }
+                            }, 1000);
+                        } else if (res.data.code == -1) {
+                            that.snackbar.msg = res.data.msg;
+                            that.snackbar.show = true;
+                        }
+                    })
+            }
         }
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    .back-btn-box {
+        padding: 8px 6px;
+    }
 
+    .login-box {
+        padding: 12px 28px 34px;
+
+        .login-box-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .login-box-header-btn {
+                font-size: 16px;
+            }
+
+        }
+
+        h3 {
+            color: #999999;
+            margin-bottom: 12px;
+        }
+
+        .form-filed {
+            label {
+                font-weight: 700;
+                font-size: 14px;
+                margin: 14px 0 6px;
+
+                display: block;
+
+                &::after {
+                    content: '*';
+                    color: #f00;
+                    font-size: 14px;
+                    margin-left: 4px;
+                }
+            }
+
+        }
+
+        .continue-btn {
+            width: 240px;
+        }
+    }
 </style>

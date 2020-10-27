@@ -24,9 +24,15 @@
                             <span>夜间模式</span>
                         </v-tooltip>
                     </v-btn>
-                    <v-btn elevation="0" color="primary" @click="SET_LOGIN_OR_REGISTER_DIALOG">
+                    <v-btn text small v-if="user">
+                        <v-icon>fa-bell</v-icon>
+                    </v-btn>
+                    <v-btn v-if="!user" elevation="0" color="primary" @click="SET_LOGIN_OR_REGISTER_DIALOG">
                         登录
                     </v-btn>
+                    <div class="pl-2" v-else>
+                        <CurrentUser></CurrentUser>
+                    </div>
                 </div>
             </div>
         </v-app-bar>
@@ -44,11 +50,11 @@
             </v-container>
         </v-main>
         <v-footer app absolute>
-            底部13
+            <v-footer absolute class="d-flex justify-center">
+                    {{ new Date().getFullYear() }} — <strong>handsomemzc</strong>
+            </v-footer>
         </v-footer>
         <div id="aplayer" ref="aplayer" class="aplayer"></div>
-
-
         <LoginOrRegister></LoginOrRegister>
     </v-app>
 
@@ -58,21 +64,30 @@
     import axios from "axios";
     import 'APlayer/dist/APlayer.min.css';
     import APlayer from 'APlayer';
-    import { mapMutations, mapState } from 'vuex';
+    import {mapMutations, mapState, mapActions} from 'vuex';
     import LoginOrRegister from "../components/LoginOrRegister";
+    import CurrentUser from "../components/CurrentUser";
+
     export default {
         name: "Blog",
-        components: {LoginOrRegister},
+        components: {CurrentUser, LoginOrRegister},
         data() {
             return {}
         },
         created() {
-
+            let that = this;
+            that.serverInit(that)
         },
         mounted() {
+            const h = new Date().getHours();
+            this.$vuetify.theme.dark = (h >= 19 && h <= 24) || (h >= 0 && h <= 7);
+        },
+        computed: {
+            ...mapState(["user"])
         },
         methods: {
             ...mapMutations(['SET_LOGIN_OR_REGISTER_DIALOG']),
+            ...mapActions(["serverInit"]),
             //改变主题
             handleChangeTheme() {
                 let that = this;
@@ -166,7 +181,7 @@
                     container: document.getElementById('aplayer'),
                     lrcType: 1,
                     fixed: true,
-                    autoplay: true,
+                    autoplay: false,
                     listFolded: false,
                     order: 'list',
                     preload: 'auto',
@@ -232,6 +247,11 @@
 
         .toolbar-title {
             font-weight: 700;
+        }
+
+        .toolbar-action {
+            display: flex;
+            align-items: center;
         }
 
 

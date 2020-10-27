@@ -9,11 +9,14 @@ import Vuetify from 'vuetify'
 import vuetify from './plugins/vuetify.js'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies)
 // use
 Vue.use(mavonEditor)
 Vue.use(Vuetify)
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
+
 new Vue({
     vuetify,
     router,

@@ -2,7 +2,7 @@
     <div class="index">
         <v-container>
             <v-row>
-                <v-col :md="8" :sm="12" :cols="12 ">
+                <v-col :md="8" :sm="12" :cols="12">
                     <v-container fluid class="py-0">
                         <v-row align="center" justify="space-between">
                             <div  class="title">

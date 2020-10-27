@@ -7,6 +7,7 @@ const Index = () => import('@/views/Index.vue');
 const Blog = () => import('@/views/Blog.vue')
 const BlogIndex = () => import('@/views/blog/Index.vue')
 const BlogMessage = () => import('@/views/message/Index.vue')
+const Article = () => import('@/views/article/Index.vue')
 const routes: Array<RouteConfig> = [
     {
         path: "/",
@@ -23,9 +24,10 @@ const routes: Array<RouteConfig> = [
         },
         children:[
             {path:'index',name:'BlogIndex',component:BlogIndex},
-            {path:'msg',name:'BlogMessage',component:BlogMessage}
+            {path:'msg',name:'BlogMessage',component:BlogMessage},
+            {path:'article/:id',name:'Article',component:Article},
         ]
-    }
+    },
 
 ];
 

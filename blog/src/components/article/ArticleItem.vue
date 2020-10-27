@@ -1,5 +1,6 @@
 <template>
     <v-card  elevation="0" :shaped="article.isTop==1" class="article-item mb-6">
+        <v-chip label>{{article.articleSort.sortName}}</v-chip>
         <v-lazy>
             <v-img
                     :aspect-ratio="18/9"
@@ -15,9 +16,9 @@
             </router-link>
         </v-card-title>
         <v-card-subtitle>{{article.artInfoCreatedTime}}</v-card-subtitle>
-        <v-card-text class="text--primary">{{article.artInfoSummary}}</v-card-text>
+        <v-card-text class="text--primary article-summary" v-html="article.artInfoSummary"></v-card-text>
         <v-card-actions class="justify-space-between">
-            <v-btn text color="error">开始阅读</v-btn>
+            <v-btn text color="error" @click="toArticle(article.artInfoId)">开始阅读</v-btn>
             <div>
                 <v-btn text>
                     <v-icon left>fa-eye</v-icon>
@@ -50,8 +51,21 @@
                         artInfoSummary: null,
                         artInfoCreatedTime: null,
                         artInfoIsTop: null,
+                        articleSort: {
+                            sortName:''
+                        }
                     }
                 }
+            }
+        },
+        methods:{
+            toArticle(id){
+            this.$router.push({
+                name:"Article",
+                params:{
+                    id:id
+                }
+            })
             }
         }
     }
@@ -61,5 +75,15 @@
     .article-item .title_a {
         color: inherit;
         text-decoration: none;
+    }
+    .article-summary{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        max-height: 60px;
+        min-height: 0;
+        line-height: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>
