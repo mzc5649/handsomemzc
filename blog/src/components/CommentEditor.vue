@@ -14,6 +14,7 @@
                 :placeholder="editorPlaceholder"
                 :autofocus="false"
                 :codeStyle="$vuetify.theme.dark?'atom-one-dark' : 'atom-one-light'"
+                @change='getContentHtml'
         >
             <template slot="right-toolbar-after" v-if="reply">
                 <v-btn small text elevation="1" @click="handlerUnReply">
@@ -53,7 +54,7 @@
                     help: true // 帮助
                 },
                 content: '',
-
+                contentHtml:''
             }
         },
         computed: {
@@ -70,12 +71,16 @@
                 if (!that.token) {
                     that.SET_LOGIN_OR_REGISTER_DIALOG();
                 } else {
-                    that.$emit("send", that.content)
+                    that.$emit("send", that.contentHtml)
                 }
             },
             handlerUnReply(){
                 let that=this;
                 that.$emit("handlerUnReply")
+            },
+            getContentHtml(value,render){
+                let that=this;
+                that.contentHtml=render;
             }
         }
     }

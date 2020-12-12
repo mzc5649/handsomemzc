@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-
+import snackbar from "@/store/modules/snackbar";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -25,7 +25,7 @@ export default new Vuex.Store({
         serverInit({commit}, app) {
             const token = app.$cookies.get("token")
             if (token) {
-                axios.get("/blog/user/info", {
+                axios.get("/blog-api/user/info", {
                     headers: {
                         token: token
                     }
@@ -46,5 +46,7 @@ export default new Vuex.Store({
         }
 
     },
-    modules: {}
+    modules: {
+        snackbar
+    }
 });

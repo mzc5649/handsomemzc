@@ -2,7 +2,15 @@
     <div>
         <CommentEditor @handlerUnReply="handlerUnReply" @send="handlerSend" :loading="sendBtnLoading"
                        :reply="reply"></CommentEditor>
-        <v-card tile elevation="0">
+        <div v-if="messageLoading">
+            <v-divider color="white"></v-divider>
+            <v-skeleton-loader class="pa-3" type="list-item-avatar-two-line"></v-skeleton-loader>
+            <v-divider color="white"></v-divider>
+            <v-skeleton-loader class="pa-3" type="list-item-avatar-two-line"></v-skeleton-loader>
+            <v-divider color="white"></v-divider>
+            <v-skeleton-loader class="pa-3" type="list-item-avatar-two-line"></v-skeleton-loader>
+        </div>
+        <v-card tile elevation="0" v-else>
             <template v-for="(item,index) in comments">
                 <v-divider color="white"></v-divider>
                 <CommentItem :key="index" :comment="item" @reply="handlerReply"></CommentItem>
@@ -24,6 +32,10 @@
         props: {
             comments: {
                 type: Array
+            },
+            messageLoading: {
+                type: Boolean,
+                default: true
             }
         },
         data() {
@@ -48,7 +60,7 @@
                         uId: that.user.uId,
                         mContent: content
                     }
-                    axios.post('/blog/msg', data, {
+                    axios.post('/blog-api/msg', data, {
                         headers: {
                             token: that.token
                         }
@@ -56,16 +68,23 @@
                         that.sendBtnLoading = false;
                         that.serverInit(that);
                         if (res.data.code == 0) {
-                            alert("success")
-
+                            that.$store.dispatch("snackbar/openSnackbar", {
+                                msg: '发表成功',
+                                color: 'success'
+                            })
                         } else {
-                            alert("发表失败")
+                            that.$store.dispatch("snackbar/openSnackbar", {
+                                msg: '发表失败',
+                                color: 'error'
+                            })
                         }
-
                     }).catch(function (error) {
                         that.sendBtnLoading = false;
                         if (error.response.code == 401) {
-                            alert("用户失效，请重新登录")
+                            that.$store.dispatch("snackbar/openSnackbar", {
+                                msg: '用户失效，请重新登录',
+                                color: 'info'
+                            })
                             that.SET_LOGIN_OR_REGISTER_DIALOG();
                         }
                     })
@@ -83,7 +102,7 @@
                         data.fromUid = that.user.uId;
                         data.toUid = that.reply.fromUid;
                     }
-                    axios.post('/blog/msgr', data, {
+                    axios.post('/blog-api/msgr', data, {
                         headers: {
                             token: that.token
                         }
@@ -91,14 +110,23 @@
                         that.sendBtnLoading = false;
                         that.serverInit(that);
                         if (res.data.code == 0) {
-                            alert("回复成功")
+                            that.$store.dispatch("snackbar/openSnackbar", {
+                                msg: '回复成功',
+                                color: 'success'
+                            })
                         } else {
-                            alert("回复失败")
+                            that.$store.dispatch("snackbar/openSnackbar", {
+                                msg: '回复失败',
+                                color: 'error'
+                            })
                         }
                     }).catch(function (error) {
                         that.sendBtnLoading = false;
                         if (error.response.code == 401) {
-                            alert("用户失效，请重新登录")
+                            that.$store.dispatch("snackbar/openSnackbar", {
+                                msg: '用户失效，请重新登录',
+                                color: 'info'
+                            })
                             that.SET_LOGIN_OR_REGISTER_DIALOG();
                         }
                     })

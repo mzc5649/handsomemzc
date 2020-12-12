@@ -115,8 +115,10 @@
 </template>
 
 <script>
-    import {mapMutations, mapState,mapActions} from 'vuex';
+    import {mapMutations, mapState, mapActions} from 'vuex';
     import axios from "axios";
+    import {login, register, sendMailCode} from '@/api/user'
+    import store from "../store";
 
     export default {
         name: "LoginOrRegister",
@@ -163,7 +165,7 @@
         created() {
         },
         computed: {
-            ...mapState(["LoginOrRegisterDialog","token"]),
+            ...mapState(["LoginOrRegisterDialog", "token"]),
             isLogin() {
                 return this.isType(1)
             },
@@ -207,25 +209,23 @@
                 if (isValidate) {
                     if (formElName == 'loginForm') {
                         //登录
-                        axios.post("/blog/user/login", {
+                        const data = {
                             login: that.loginForm.login,
                             pass: that.loginForm.pass
-                        }).then(function (res) {
-                            if (res.data.code == 0) {
-                                that.snackbar.msg = '登录成功';
-                                that.snackbar.show = true;
-                                that.$store.commit('SET_LOGIN_OR_REGISTER_DIALOG');
-                                that.$store.commit('SET_TOKEN', res.data.data.token);
-                                that.$cookies.set("token",res.data.data.token,3600)
-                                that.serverInit(that)
-                            } else if (res.data.code == -1) {
-                                that.snackbar.msg = '用户名不存在或密码错误';
-                                that.snackbar.show = true;
-                            }
+                        }
+                        login(data).then(function (res) {
+                            that.$store.dispatch("snackbar/openSnackbar", {
+                                msg: '登录成功',
+                                color: 'success'
+                            })
+                            that.$store.commit('SET_LOGIN_OR_REGISTER_DIALOG');
+                            that.$store.commit('SET_TOKEN', res.data.token);
+                            that.$cookies.set("token", res.data.token, 3600)
+                            that.serverInit(that)
                         })
                     } else if (formElName == 'registerForm') {
                         //验证注册
-                        axios.post("/blog/api/validMailCode/" + that.registerForm.code, {
+                        const data = {
                             tamp: localStorage.getItem("email_tamp"),
                             hash: localStorage.getItem("email_hash"),
                             user: {
@@ -233,17 +233,12 @@
                                 uPwd: that.registerForm.pass,
                                 uEmail: that.registerForm.email,
                             }
-                        }).then(function (res) {
-                            if (res.data.code == 0) {
-                                that.snackbar.msg = res.data.msg;
-                                that.snackbar.show = true;
-                            } else if (res.data.code == 2) {
-                                that.snackbar.msg = res.data.msg;
-                                that.snackbar.show = true;
-                            } else if (res.data.code == -1) {
-                                that.snackbar.msg = res.data.msg;
-                                that.snackbar.show = true;
-                            }
+                        }
+                        register(that.registerForm.code, data).then(function (res) {
+                            that.$store.dispatch("snackbar/openSnackbar", {
+                                msg: res.msg,
+                                color: 'success'
+                            })
                         })
                     }
                 }
@@ -257,44 +252,45 @@
                     return !(typeof item(email) == 'boolean');
                 })
                 if (errList.length) {
-                    that.snackbar.msg = '邮箱不能为空';
-                    that.snackbar.show = true;
+                    that.$store.dispatch("snackbar/openSnackbar", {
+                        msg: '邮箱不能为空',
+                        color: 'warning'
+                    })
                     return;
                 }
                 let flag = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(email)
                 if (!flag) {
-                    that.snackbar.msg = '邮箱格式不正确';
-                    that.snackbar.show = true;
+                    that.$store.dispatch("snackbar/openSnackbar", {
+                        msg: '邮箱格式不正确',
+                        color: 'warning'
+                    })
                     return;
                 }
                 const mailDto = {
                     to: email
                 }
                 that.email.loading = true;
-                //正在发送
-                axios.post("/blog/api/sendMailCode", mailDto)
-                    .then(function (res) {
+                //正在发送邮件
+                sendMailCode(mailDto).then(function (res) {
                         that.email.loading = false;
-                        if (res.data.code == 0) {
-                            that.snackbar.msg = '验证码发送成功，请注意查收';
-                            that.snackbar.show = true;
-                            localStorage.setItem("email_tamp", res.data.data.tamp);
-                            localStorage.setItem("email_hash", res.data.data.hash);
-                            that.email.isSend = true;
-                            that.email.num = 60;
-                            //计时开始 60秒
-                            let timer = setInterval(() => {
-                                that.email.num--;
-                                if (that.email.num == 0) {
-                                    that.email.isSend = false;
-                                    clearInterval(timer);
-                                }
-                            }, 1000);
-                        } else if (res.data.code == -1) {
-                            that.snackbar.msg = res.data.msg;
-                            that.snackbar.show = true;
-                        }
-                    })
+                        that.$store.dispatch("snackbar/openSnackbar", {
+                            msg: '验证码发送成功，请注意查收',
+                            color: 'info'
+                        })
+                        localStorage.setItem("email_tamp", res.data.tamp);
+                        localStorage.setItem("email_hash", res.data.hash);
+                        that.email.isSend = true;
+                        that.email.num = 60;
+                        //计时开始 60秒
+                        let timer = setInterval(() => {
+                            that.email.num--;
+                            if (that.email.num == 0) {
+                                that.email.isSend = false;
+                                clearInterval(timer);
+                            }
+                        }, 1000)
+                    }
+                )
             }
         }
     }

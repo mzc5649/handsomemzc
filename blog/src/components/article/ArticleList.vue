@@ -21,7 +21,7 @@
                         list: [],
                         total: 0,
                         currentPage:1,
-                        pageSize:10
+                        pageSize:5
                     }
                 }
             }
@@ -41,7 +41,8 @@
             //加载更多按钮的显示计算
             hasMore(){
                 let that=this;
-                return ((that.articleStore.currentPage-1)*that.articleStore.pageSize<that.articleStore.total);
+                console.log()
+                return that.articleStore.currentPage*that.articleStore.pageSize<that.articleStore.total;
             }
         }
     }

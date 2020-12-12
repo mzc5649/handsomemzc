@@ -4,7 +4,7 @@
             <div class="toolbar-content container">
                 <div class="toolbar-title">handsomemzc</div>
                 <div class="toolbar-nav">
-                    <v-btn elevation="0" tile text to="/">首页</v-btn>
+                    <v-btn elevation="0" tile text to="/">Welcome</v-btn>
                     <v-btn elevation="0" tile text to="/blog/index">博客</v-btn>
                     <v-btn elevation="0" tile text to="/blog/msg">留言</v-btn>
                     <v-btn elevation="0" tile text>其他</v-btn>
@@ -45,17 +45,19 @@
                         leave-active-class="animate__animated animate__fadeOut"
                         mode="out-in"
                 >
-                    <router-view class="animate__animated animate__fadeIn"/>
+                        <router-view class="animate__animated animate__fadeIn"/>
                 </transition>
             </v-container>
         </v-main>
         <v-footer app absolute>
             <v-footer absolute class="d-flex justify-center">
-                    {{ new Date().getFullYear() }} — <strong>handsomemzc</strong>
+                    <a href="http://beian.miit.gov.cn">晋ICP备2020011444号</a>
+                — {{ new Date().getFullYear() }} — <strong>handsomemzc</strong>
             </v-footer>
         </v-footer>
         <div id="aplayer" ref="aplayer" class="aplayer"></div>
         <LoginOrRegister></LoginOrRegister>
+        <Snackbar/>
     </v-app>
 
 </template>
@@ -67,10 +69,10 @@
     import {mapMutations, mapState, mapActions} from 'vuex';
     import LoginOrRegister from "../components/LoginOrRegister";
     import CurrentUser from "../components/CurrentUser";
-
+    import Snackbar from '@/components/Snackbar.vue'
     export default {
         name: "Blog",
-        components: {CurrentUser, LoginOrRegister},
+        components: {CurrentUser, LoginOrRegister , Snackbar},
         data() {
             return {}
         },

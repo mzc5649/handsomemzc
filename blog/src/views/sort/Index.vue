@@ -2,7 +2,7 @@
     <div class="index">
         <v-container>
             <v-row>
-                <v-col :md="8" :sm="12" :cols="12">
+                <v-col :md="8" :sm="12" :cols="12" >
                     <v-container fluid class="py-0">
                         <v-row align="center" justify="space-between">
                             <div class="title">
@@ -11,34 +11,31 @@
 <!--                            <v-switch color="red" :value="false" inset label="热门"></v-switch>-->
                         </v-row>
                     </v-container>
-                    <div ref="articleList">
-                        <div v-if="articleLoading">
-                            <v-skeleton-loader
-                                    type="card"
-                                    class="mb-6"
-                            />
-                            <v-skeleton-loader
-                                    type="card"
-                                    class="mb-6"
-                            />
-                        </div>
-                        <ArticleList v-else :articleStore="articleStore" @loadData="loadData"></ArticleList>
+                    <div v-if="articleLoading">
+                        <v-skeleton-loader
+                                type="card"
+                                class="mb-6"
+                        />
+                        <v-skeleton-loader
+                                type="card"
+                                class="mb-6"
+                        />
                     </div>
+                        <ArticleList v-else :articleStore="articleStore" @loadData="loadData" ></ArticleList>
 
                 </v-col>
                 <v-col :md="4" :sm="12" :cols="12 ">
-                    <ArticleSortList @toArticleSort="toArticleSort"></ArticleSortList>
+                    <ArticleSortList :sortId="id" @toArticleSort="toArticleSort"></ArticleSortList>
                 </v-col>
             </v-row>
         </v-container>
-
     </div>
 </template>
 
 <script>
-    import {getArticleData} from '@/api/article'
     import ArticleList from "@/components/article/ArticleList";
-    import ArticleSortList from "../../components/ArticleSortList";
+    import {getArticleDataBySort} from "@/api/sort"
+    import ArticleSortList from "@/components/ArticleSortList";
     export default {
         name: "Index",
         components: {ArticleSortList, ArticleList},
@@ -50,14 +47,16 @@
                     currentPage: 1,
                     pageSize: 5
                 },
+                id: '',
                 articleLoading:true
             }
         },
-        async created() {
+        created() {
             let that = this;
+            that.id = that.$route.params.id.toString();
         },
-        async mounted() {
-            await this.getArticleData();
+        mounted() {
+            this.getArticleData();
         },
         methods: {
             async loadData(data) {
@@ -70,24 +69,37 @@
                 }
             },
             async getArticleData() {
-                const that = this;
+                let that = this;
                 const params = {
                     currentPage: that.articleStore.currentPage,
                     pageSize: that.articleStore.pageSize
                 }
-                getArticleData(params).then(function (res) {
+                getArticleDataBySort(that.id, params).then(function (res) {
                     that.articleLoading=false
                     that.articleStore.list = that.articleStore.list.concat(res.data.recordList);
                     that.articleStore.total = res.data.recordCount;
                 })
             },
+            initData() {
+                this.articleStore = {
+                    list: [],
+                    total: 0,
+                    currentPage: 1,
+                    pageSize: 5
+                }
+                this.articleLoading=true
+                this.getArticleData()
+            },
             toArticleSort(id) {
+                this.id = id.toString()
                 this.$router.push({
                     name: "ArticleSort",
                     params: {
                         id: id
                     }
                 })
+                this.initData()
+
             }
         }
     }

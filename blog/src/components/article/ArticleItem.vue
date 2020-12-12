@@ -1,6 +1,6 @@
 <template>
     <v-card  elevation="0" :shaped="article.isTop==1" class="article-item mb-6">
-        <v-chip label>{{article.articleSort.sortName}}</v-chip>
+        <v-chip label @click="toArticleSort(article.articleSort.sortId)">{{article.articleSort.sortName}}</v-chip>
         <v-lazy>
             <v-img
                     :aspect-ratio="18/9"
@@ -10,29 +10,29 @@
             />
         </v-lazy>
         <v-card-title>
-            <router-link to="/" class="title_a">
+            <div @click="toArticle(article.artInfoId)" class="title_a" style="cursor: pointer">
                 <span v-if="article.artInfoIsTop == 1" class="body-2">[置顶]</span>
                 {{article.artInfoTitle}}
-            </router-link>
+            </div>
         </v-card-title>
         <v-card-subtitle>{{article.artInfoCreatedTime}}</v-card-subtitle>
         <v-card-text class="text--primary article-summary" v-html="article.artInfoSummary"></v-card-text>
         <v-card-actions class="justify-space-between">
             <v-btn text color="error" @click="toArticle(article.artInfoId)">开始阅读</v-btn>
-            <div>
-                <v-btn text>
-                    <v-icon left>fa-eye</v-icon>
-                    1
-                </v-btn>
-                <v-btn text>
-                    <v-icon left>fa-heart</v-icon>
-                    1
-                </v-btn>
-                <v-btn text>
-                    <v-icon left>fa-comment</v-icon>
-                    1
-                </v-btn>
-            </div>
+<!--            <div>-->
+<!--                <v-btn text>-->
+<!--                    <v-icon left>fa-eye</v-icon>-->
+<!--                    1-->
+<!--                </v-btn>-->
+<!--                <v-btn text>-->
+<!--                    <v-icon left>fa-heart</v-icon>-->
+<!--                    1-->
+<!--                </v-btn>-->
+<!--                <v-btn text>-->
+<!--                    <v-icon left>fa-comment</v-icon>-->
+<!--                    1-->
+<!--                </v-btn>-->
+<!--            </div>-->
         </v-card-actions>
     </v-card>
 </template>
@@ -66,6 +66,14 @@
                     id:id
                 }
             })
+            },
+            toArticleSort(id){
+                this.$router.push({
+                    name:"ArticleSort",
+                    params:{
+                        id:id
+                    }
+                })
             }
         }
     }

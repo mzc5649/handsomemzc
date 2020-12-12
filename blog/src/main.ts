@@ -10,6 +10,7 @@ import vuetify from './plugins/vuetify.js'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import VueCookies from 'vue-cookies'
+import '@/permission'
 Vue.use(VueCookies)
 // use
 Vue.use(mavonEditor)

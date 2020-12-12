@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="comment-reply">
-            <div class="mt-3 pl-3 ">
+            <div class="mt-3 pl-3 " ref="messageReplies">
                 <template v-for="(item,index) in messageReplies">
                     <div :key="index" class="pa-3">
                         <div class="d-flex align-center">
@@ -60,7 +60,6 @@
         </div>
         <div v-if="pagination" class="justify-start">
             <v-pagination
-                    circle
                     :length="page.pageTotal"
                     :value="page.currentPage"
                     @input="pageChange"
@@ -73,7 +72,8 @@
 
 <script>
     import {mapState} from 'vuex'
-    import axios from 'axios'
+    import {Loading} from 'element-ui'
+    import {getMessageOfReply} from '@/api/message'
 
     export default {
         name: "CommentItem",
@@ -96,7 +96,9 @@
         },
         created() {
             let that = this;
-            that.getMessageReplyData();
+        },
+        mounted() {
+            this.getMessageReplyData();
         },
         computed: {
             ...mapState(["user"])
@@ -109,27 +111,32 @@
             },
             getMessageReplyData() {
                 let that = this;
-                axios.get('/blog/msgr/' + that.comment.mId, {
-                    params: {
-                        currentPage: that.page.currentPage,
-                        pageSize: that.page.pageSize
-                    }
-                }).then(function (res) {
-                    that.messageReplies = res.data.data.recordList;
-                    that.page.total = res.data.data.recordCount;
-                    that.page.pageTotal = res.data.data.pageTotal;
+                const loading=Loading.service({
+                    target:that.$refs['messageReplies'],
+                    text:'努力加载评论中...'
+                })
+                const params = {
+                    currentPage: that.page.currentPage,
+                    pageSize: that.page.pageSize
+                }
+                getMessageOfReply(that.comment.mId, params).then(res => {
+                    loading.close()
+                    that.messageReplies = res.data.recordList;
+                    that.page.total = res.data.recordCount;
+                    that.page.pageTotal = res.data.pageTotal;
                 })
             },
-            showMore() {
+            async showMore() {
                 let that = this;
+                that.page.pageSize = 10;
+                await that.getMessageReplyData();
                 that.pagination = true;
-                that.page.pageSize=10;
-                that.getMessageReplyData();
             },
-            pageChange(index){
+            async pageChange(index) {
                 let that = this;
-                that.page.currentPage=index;
+                that.page.currentPage = index;
                 that.getMessageReplyData();
+
             }
         }
     }

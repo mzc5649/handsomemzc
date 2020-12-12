@@ -1,5 +1,14 @@
 <template>
     <div class="Index">
+        <v-app-bar app dense :height="56" flat fixed style="background-color: transparent;">
+            <div class="toolbar-content container">
+                <div class="toolbar-title">handsomemzc</div>
+                <div class="toolbar-nav">
+                    <v-btn elevation="0" tile text to="/">welcome</v-btn>
+                    <v-btn elevation="0" tile text to="/blog/index">博客</v-btn>
+                </div>
+            </div>
+        </v-app-bar>
         <div id='background' class="background">
         </div>
         <button class="btn-nav pre-button" direction='pre'>
@@ -162,9 +171,8 @@
     }
 
 
-
 </script>
-<style scoped>
+<style scoped lang="scss">
     .pre-button {
         position: fixed;
         left: 16px;
@@ -197,6 +205,33 @@
         text-align: left;
 
     }
+    .toolbar-content {
+        height: 100%;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        display: flex;
+        padding: 0;
+        font-size: 22px;
+        color: white;
+        .toolbar-nav {
+            height: 100%;
+
+            .v-btn {
+                font-size: 20px;
+                color: white;
+                min-width: 80px;
+                margin: 0 6px;
+                height: 100%;
+                border: none;
+            }
+        }
+
+        .toolbar-title {
+            font-weight: 700;
+        }
+    }
+
 </style>
 <style>
     .aplayer-lrc {
