@@ -1,12 +1,12 @@
 <template>
     <v-card  elevation="0" :shaped="article.isTop==1" class="article-item mb-6">
-        <v-chip label @click="toArticleSort(article.articleSort.sortId)">{{article.articleSort.sortName}}</v-chip>
+        <v-chip :class="{sort:article.coverUrl}" label @click="toArticleSort(article.articleSort.sortId)">{{article.articleSort.sortName}}</v-chip>
         <v-lazy>
             <v-img
                     :aspect-ratio="18/9"
-                    v-if="article.coverURL"
-                    :src="article.coverURL"
-                    :lazy-src="article.coverURL"
+                    v-if="article.coverUrl"
+                    :src="article.coverUrl"
+                    style="border-top-left-radius: 4px;border-top-right-radius: 4px"
             />
         </v-lazy>
         <v-card-title>
@@ -80,9 +80,20 @@
 </script>
 
 <style lang="scss" scoped>
+    .article-item {
+        position: relative;
+    }
+    .sort {
+        position: absolute;
+        top: 0  ;
+        left: 0;
+        z-index: 10;
+    }
+
     .article-item .title_a {
         color: inherit;
         text-decoration: none;
+        border-radius: 10px;
     }
     .article-summary{
         display: -webkit-box;

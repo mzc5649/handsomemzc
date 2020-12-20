@@ -18,12 +18,12 @@
                     </div>
                     <v-card v-else>
                         <v-chip label>{{articleData.articleSort.sortName}}</v-chip>
-                        <div v-if="articleData.artInfoCoverUrl">
+                        <div v-if="articleData.coverUrl">
                             <v-lazy>
                                 <v-img
-                                        :aspect-ratio="16/9"
-                                        :src="articleData.artInfoCoverUrl"
-                                        :lazy-src="articleData.artInfoCoverUrl">
+                                        :aspect-ratio="18/9"
+                                        :src="articleData.coverUrl+'/thumbnail800'"
+                                        :lazy-src="articleData.coverUrl+'/thumbnail100'">
                                 </v-img>
                             </v-lazy>
                         </div>
