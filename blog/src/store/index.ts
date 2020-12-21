@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import snackbar from "@/store/modules/snackbar";
+import app from '@/store/modules/app'
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -47,6 +48,7 @@ export default new Vuex.Store({
 
     },
     modules: {
-        snackbar
+        snackbar,
+        app
     }
 });

@@ -8,7 +8,6 @@
                             <div class="title">
                                 全部文章
                             </div>
-<!--                            <v-switch color="red" :value="false" inset label="热门"></v-switch>-->
                         </v-row>
                     </v-container>
                     <div ref="articleList">

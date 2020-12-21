@@ -2,15 +2,17 @@
     <v-app id="blog">
         <v-app-bar app dense :height="56" flat fixed>
             <div class="toolbar-content container">
+                <v-btn icon v-if="device === 'mobile'" @click="openSideNav()">
+                    <v-icon>fa-bars</v-icon>
+                </v-btn>
                 <div class="toolbar-title">handsomemzc</div>
-                <div class="toolbar-nav">
+                <div class="toolbar-nav" v-if="device === 'desktop'">
                     <v-btn elevation="0" tile text to="/">Welcome</v-btn>
                     <v-btn elevation="0" tile text to="/blog/index">博客</v-btn>
-                    <v-btn elevation="0" tile text to="/blog/msg">留言</v-btn>
-                    <v-btn elevation="0" tile text>其他</v-btn>
+                    <v-btn elevation="0" tile text to="/blog/msg" >留言</v-btn>
                 </div>
                 <div class="toolbar-action">
-                    <v-btn text small @click="handleChangeTheme()">
+                    <v-btn icon   @click="handleChangeTheme()">
                         <v-tooltip bottom v-if="$vuetify.theme.dark">
                             <template v-slot:activator="{on}">
                                 <v-icon v-on="on">fa-sun-o</v-icon>
@@ -24,11 +26,16 @@
                             <span>夜间模式</span>
                         </v-tooltip>
                     </v-btn>
-                    <v-btn text small v-if="user">
-                        <v-icon>fa-bell</v-icon>
-                    </v-btn>
-                    <v-btn v-if="!user" elevation="0" color="primary" @click="SET_LOGIN_OR_REGISTER_DIALOG">
-                        登录
+<!--                    <v-btn text small v-if="user">-->
+<!--                        <v-icon>fa-bell</v-icon>-->
+<!--                    </v-btn>-->
+                    <v-btn icon v-if="!user" elevation="0"  @click="SET_LOGIN_OR_REGISTER_DIALOG">
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{on}">
+                                <v-icon v-on="on">fa-user-o</v-icon>
+                            </template>
+                            <span>登录</span>
+                        </v-tooltip>
                     </v-btn>
                     <div class="pl-2" v-else>
                         <CurrentUser></CurrentUser>
@@ -49,15 +56,13 @@
                 </transition>
             </v-container>
         </v-main>
-        <v-footer app absolute>
-            <v-footer absolute class="d-flex justify-center">
-                    <a href="http://beian.miit.gov.cn">晋ICP备2020011444号</a>
-                — {{ new Date().getFullYear() }} — <strong>handsomemzc</strong>
-            </v-footer>
+        <v-footer app absolute padless>
+                 <Footer></Footer>
         </v-footer>
         <div id="aplayer" ref="aplayer" class="aplayer"></div>
         <LoginOrRegister></LoginOrRegister>
         <Snackbar/>
+        <Navigation v-if="device === 'mobile'"></Navigation>
     </v-app>
 
 </template>
@@ -70,14 +75,20 @@
     import LoginOrRegister from "../components/LoginOrRegister";
     import CurrentUser from "../components/CurrentUser";
     import Snackbar from '@/components/Snackbar.vue'
+    import ResizeHandler from '../utils/mixins/ResizeHandler';
+    import Navigation from "../components/Navigation";
+    import Footer from "../components/Footer";
     export default {
         name: "Blog",
-        components: {CurrentUser, LoginOrRegister , Snackbar},
+        components: {Footer, Navigation, CurrentUser, LoginOrRegister , Snackbar},
         data() {
-            return {}
+            return {
+                isSideNavShow:false
+            }
         },
+        mixins:[ResizeHandler],
         created() {
-            let that = this;
+            const that = this;
             that.serverInit(that)
         },
         mounted() {
@@ -85,7 +96,11 @@
             this.$vuetify.theme.dark = (h >= 19 && h <= 24) || (h >= 0 && h <= 7);
         },
         computed: {
-            ...mapState(["user"])
+            ...mapState(["user"]),
+            device(){
+                return this.$store.state.app.device
+            }
+
         },
         methods: {
             ...mapMutations(['SET_LOGIN_OR_REGISTER_DIALOG']),
@@ -102,7 +117,9 @@
                     aplayer.style.background = '#fff'
                     aplayer.getElementsByClassName('aplayer-body')[0].style.background = '#fff';
                 }
-
+            },
+            openSideNav(){
+                this.$store.dispatch('app/toggleSideNav', true)
             }
         }
     }
@@ -195,6 +212,9 @@
     });
 </script>
 <style lang="scss">
+    #aplayer{
+
+    }
     .theme--dark {
         .index {
             .v-note-wrapper.markdown-body {

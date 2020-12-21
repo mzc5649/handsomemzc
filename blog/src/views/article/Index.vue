@@ -17,16 +17,16 @@
                         </v-card>
                     </div>
                     <v-card v-else>
-                        <v-chip label>{{articleData.articleSort.sortName}}</v-chip>
                         <div v-if="articleData.coverUrl">
                             <v-lazy>
                                 <v-img
                                         :aspect-ratio="18/9"
-                                        :src="articleData.coverUrl+'/thumbnail800'"
+                                        :src="articleData.coverUrl"
                                         :lazy-src="articleData.coverUrl+'/thumbnail100'">
                                 </v-img>
                             </v-lazy>
                         </div>
+                        <v-chip label>{{articleData.articleSort.sortName}}</v-chip>
                         <div class="article-content">
                             <h1 class="display-1 article_title">{{articleData.artInfoTitle}}</h1>
                             <div class="d-flex align-center article-info">

@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BranchesTreeState">
-    <expand>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-    </expand>
+    <expand />
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13e08225-1ed3-4dd2-931a-0506fc7e5fab" name="Default Changelist" comment="" />
+    <list default="true" id="13e08225-1ed3-4dd2-931a-0506fc7e5fab" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/blog/src/components/Footer.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/src/store/modules/app.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/src/utils/mixins/ResizeHandler.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/components/ArticleSortList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/components/ArticleSortList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/components/Navigation.vue" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/components/Navigation.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/components/article/ArticleItem.vue" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/components/article/ArticleItem.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/store/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/store/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/views/Blog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/views/Blog.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/views/article/Index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/views/article/Index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/views/blog/Index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/views/blog/Index.vue" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -47,7 +45,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/blog/public" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/blog/src/utils/mixins" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -55,7 +53,11 @@
     <property name="ts.external.directory.path" value="E:\vueproject\handsomemzc\blog\node_modules\typescript\lib" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\vueproject\handsomemzc\blog\src\utils\mixins" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\vueproject\handsomemzc\blog\src\utils\mixins" />
       <recent name="E:\vueproject\handsomemzc\blog\public" />
       <recent name="E:\vueproject\handsomemzc\blog\public\static" />
     </key>
@@ -101,7 +103,25 @@
       <workItem from="1607495127107" duration="639000" />
       <workItem from="1607581813362" duration="15790000" />
       <workItem from="1607600582409" duration="3054000" />
+      <workItem from="1607924263612" duration="620000" />
+      <workItem from="1608190965783" duration="41000" />
+      <workItem from="1608264431955" duration="657000" />
+      <workItem from="1608352123400" duration="14000" />
+      <workItem from="1608352191740" duration="2289000" />
+      <workItem from="1608355859619" duration="176000" />
+      <workItem from="1608373956489" duration="1955000" />
+      <workItem from="1608376130728" duration="125000" />
+      <workItem from="1608437599469" duration="7616000" />
+      <workItem from="1608522971714" duration="13184000" />
     </task>
+    <task id="LOCAL-00001" summary="正确显示封面图片">
+      <created>1608437817406</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1608437817406</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -118,6 +138,10 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="正确显示封面图片" />
+    <option name="LAST_COMMIT_MESSAGE" value="正确显示封面图片" />
   </component>
   <component name="WindowStateProjectService">
     <state x="617" y="274" key="#Notifications" timestamp="1603595211392">

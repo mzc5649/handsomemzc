@@ -1,10 +1,11 @@
 <template>
     <div>
+
         <v-container fluid class="py-0">
             <v-row align="center">
-                <div class="title">
-                    分类标签
-                </div>
+                    <div class="title">
+                        分类标签
+                    </div>
             </v-row>
         </v-container>
         <div v-if="loading" style="display: flex;flex-wrap: wrap">
@@ -43,6 +44,7 @@
                 {{item.sortName}}
             </v-chip>
         </template>
+
     </div>
 </template>
 
