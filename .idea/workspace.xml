@@ -6,17 +6,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="13e08225-1ed3-4dd2-931a-0506fc7e5fab" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/blog/src/components/Footer.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blog/src/store/modules/app.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blog/src/utils/mixins/ResizeHandler.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/components/ArticleSortList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/components/ArticleSortList.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/components/Navigation.vue" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/components/Navigation.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/components/article/ArticleItem.vue" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/components/article/ArticleItem.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/store/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/store/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/views/Blog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/views/Blog.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/views/article/Index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/views/article/Index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/views/blog/Index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/views/blog/Index.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,6 +103,7 @@
       <workItem from="1608376130728" duration="125000" />
       <workItem from="1608437599469" duration="7616000" />
       <workItem from="1608522971714" duration="13184000" />
+      <workItem from="1608537287267" duration="615000" />
     </task>
     <task id="LOCAL-00001" summary="正确显示封面图片">
       <created>1608437817406</created>
@@ -121,7 +112,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608437817406</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="更新了footer 适配移动端侧边栏">
+      <created>1608537445766</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1608537445766</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -141,7 +139,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="正确显示封面图片" />
-    <option name="LAST_COMMIT_MESSAGE" value="正确显示封面图片" />
+    <MESSAGE value="更新了footer 适配移动端侧边栏" />
+    <option name="LAST_COMMIT_MESSAGE" value="更新了footer 适配移动端侧边栏" />
   </component>
   <component name="WindowStateProjectService">
     <state x="617" y="274" key="#Notifications" timestamp="1603595211392">
