@@ -200,11 +200,6 @@
         z-index: 1;
         outline: none
     }
-
-    .aplayer {
-        text-align: left;
-
-    }
     .toolbar-content {
         height: 100%;
         width: 100%;

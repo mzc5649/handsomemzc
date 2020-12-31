@@ -9,10 +9,10 @@
                 <div class="toolbar-nav" v-if="device === 'desktop'">
                     <v-btn elevation="0" tile text to="/">Welcome</v-btn>
                     <v-btn elevation="0" tile text to="/blog/index">博客</v-btn>
-                    <v-btn elevation="0" tile text to="/blog/msg" >留言</v-btn>
+                    <v-btn elevation="0" tile text to="/blog/msg">留言</v-btn>
                 </div>
                 <div class="toolbar-action">
-                    <v-btn icon   @click="handleChangeTheme()">
+                    <v-btn icon @click="handleChangeTheme()">
                         <v-tooltip bottom v-if="$vuetify.theme.dark">
                             <template v-slot:activator="{on}">
                                 <v-icon v-on="on">fa-sun-o</v-icon>
@@ -26,10 +26,10 @@
                             <span>夜间模式</span>
                         </v-tooltip>
                     </v-btn>
-<!--                    <v-btn text small v-if="user">-->
-<!--                        <v-icon>fa-bell</v-icon>-->
-<!--                    </v-btn>-->
-                    <v-btn icon v-if="!user" elevation="0"  @click="SET_LOGIN_OR_REGISTER_DIALOG">
+                    <!--                    <v-btn text small v-if="user">-->
+                    <!--                        <v-icon>fa-bell</v-icon>-->
+                    <!--                    </v-btn>-->
+                    <v-btn icon v-if="!user" elevation="0" @click="SET_LOGIN_OR_REGISTER_DIALOG">
                         <v-tooltip bottom>
                             <template v-slot:activator="{on}">
                                 <v-icon v-on="on">fa-user-o</v-icon>
@@ -52,14 +52,21 @@
                         leave-active-class="animate__animated animate__fadeOut"
                         mode="out-in"
                 >
-                        <router-view class="animate__animated animate__fadeIn"/>
+                    <router-view class="animate__animated animate__fadeIn"/>
                 </transition>
             </v-container>
         </v-main>
         <v-footer app absolute padless>
-                 <Footer></Footer>
+            <Footer></Footer>
         </v-footer>
-        <div id="aplayer" ref="aplayer" class="aplayer"></div>
+        <div id="aplayer"  ref="aplayer" class="aplayer">
+        </div>
+        <div v-loading="!audios"
+             v-if="!audios"
+             style="position: fixed;z-index: 100;bottom: 0;left: 0;width: 84px;height: 66px;background-color: white">
+        </div>
+
+
         <LoginOrRegister></LoginOrRegister>
         <Snackbar/>
         <Navigation v-if="device === 'mobile'"></Navigation>
@@ -78,26 +85,49 @@
     import ResizeHandler from '../utils/mixins/ResizeHandler';
     import Navigation from "../components/Navigation";
     import Footer from "../components/Footer";
+    import Music from '../api/music'
+
     export default {
         name: "Blog",
-        components: {Footer, Navigation, CurrentUser, LoginOrRegister , Snackbar},
+        components: {Footer, Navigation, CurrentUser, LoginOrRegister, Snackbar},
         data() {
             return {
-                isSideNavShow:false
+                isSideNavShow: false,
+                audios: ''
             }
         },
-        mixins:[ResizeHandler],
+        mixins: [ResizeHandler],
         created() {
             const that = this;
-            that.serverInit(that)
+            that.serverInit(that);
+
+
         },
         mounted() {
+            const that = this;
             const h = new Date().getHours();
             this.$vuetify.theme.dark = (h >= 19 && h <= 24) || (h >= 0 && h <= 7);
+            const music = new Music();
+            music.getAplayerDataById({id: '5197713080'}).then(res => {
+                this.audios = res;
+                const options = {
+                    container: document.getElementById('aplayer'),
+                    lrcType: 2,
+                    fixed: true,
+                    autoplay: false,
+                    listFolded: false,
+                    order: 'list',
+                    preload: 'auto',
+                    audio: this.audios
+                };
+                const ap = new APlayer(options);
+            })
+
+
         },
         computed: {
             ...mapState(["user"]),
-            device(){
+            device() {
                 return this.$store.state.app.device
             }
 
@@ -118,103 +148,18 @@
                     aplayer.getElementsByClassName('aplayer-body')[0].style.background = '#fff';
                 }
             },
-            openSideNav(){
+            openSideNav() {
                 this.$store.dispatch('app/toggleSideNav', true)
             }
         }
     }
-    //音乐
-    axios.get("/music/playlist/detail", {
-        params: {
-            id: '5197713080'
-        }
-    }).then(function (res) {
-        //获取歌曲id
-        var trackIds = res.data.playlist.trackIds;
-        var ids = '';
-        for (let i = 0; i < trackIds.length; i++) {
-            let id = trackIds[i].id;
-            ids = ids + id + ','
-        }
-        ids = ids.substring(0, ids.length - 1)
-        //获取音乐详情
-        axios.get("/music/song/detail", {
-            params: {
-                ids: ids
-            }
-        }).then(function (res) {
-            var audios = [];
-            //音乐详情
-            var songs = res.data.songs;
-            //获取音乐url
-            axios.get("/music/song/url", {
-                params: {
-                    id: ids
-                }
-            }).then(function (res1) {
-                var urls = res1.data.data;
-                let urlMap = new Map();
-                for (let k of urls) {
-                    urlMap.set(k.id, k.url);
-                }
-                for (let i = 0; i < songs.length; i++) {
-                    var song = {};
-                    //歌曲名
-                    song.name = songs[i].name;
-                    //作者名称
-                    let ars = songs[i].ar;
-                    let artist = ''
-                    for (let j = 0; j < ars.length; j++) {
-                        artist += ars[j].name + '/'
-                    }
-                    song.artist = artist.substring(0, artist.length - 1)
-                    //url
-                    song.url = urlMap.get(songs[i].id);
-                    //封面
-                    song.cover = songs[i].al.picUrl;
-                    //歌词
-                    $.ajax({
-                            url: "/music/lyric",//请求路径
-                            data: {id: songs[i].id},
-                            async: false,
-                            type: "GET",//GET
-                            success: function (res) {
-                                if (res.tlyric != undefined && res.tlyric.lyric) {
-                                    song.lrc = res.tlyric.lyric;
-                                } else if (res.lrc != undefined && res.lrc.lyric) {
-                                    song.lrc = res.lrc.lyric;
-                                } else {
-                                    song.lrc = "暂无歌词"
-                                }
 
-                            },
-                            error: function (a, b, c) {
-                                //a,b,c三个参数,具体请参考JQuery API
-                            }
-                        }
-                    );
-                    //添加数据
-                    audios.push(song);
-                }
-                var options = {
-                    container: document.getElementById('aplayer'),
-                    lrcType: 1,
-                    fixed: true,
-                    autoplay: false,
-                    listFolded: false,
-                    order: 'list',
-                    preload: 'auto',
-                    audio: audios
-                };
-                const ap = new APlayer(options);
-            })
-        })
-    });
 </script>
 <style lang="scss">
-    #aplayer{
+    #aplayer {
 
     }
+
     .theme--dark {
         .index {
             .v-note-wrapper.markdown-body {
@@ -233,6 +178,10 @@
             }
 
         }
+    }
+
+    .aplayer {
+        position: relative;
     }
 </style>
 <style lang="scss" scoped>
