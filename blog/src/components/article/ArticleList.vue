@@ -41,7 +41,6 @@
             //加载更多按钮的显示计算
             hasMore(){
                 let that=this;
-                console.log()
                 return that.articleStore.currentPage*that.articleStore.pageSize<that.articleStore.total;
             }
         }

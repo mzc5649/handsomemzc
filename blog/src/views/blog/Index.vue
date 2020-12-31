@@ -54,20 +54,22 @@
         },
         async created() {
             let that = this;
-        },
-        async mounted() {
             await this.getArticleData();
         },
+        async mounted() {
+        },
         methods: {
+            // 加载更多
             async loadData(data) {
-                let that = this;
-                if ((that.articleStore.currentPage - 1) * that.articleStore.pageSize < that.articleStore.total) {
+                const that = this;
+                if (that.articleStore.currentPage * that.articleStore.pageSize < that.articleStore.total) {
                     data.articleLoading = true;
                     that.articleStore.currentPage += 1;
                     await that.getArticleData();
                     data.articleLoading = false;
                 }
             },
+            // 获取数据
             async getArticleData() {
                 const that = this;
                 const params = {
