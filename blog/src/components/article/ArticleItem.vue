@@ -1,5 +1,5 @@
 <template>
-    <v-card  elevation="0" :shaped="article.artInfoIsTop==0" class="article-item mb-6">
+    <v-card  elevation="0" :shaped="article.artInfoIsTop==1" class="article-item mb-6">
         <v-chip :class="{sort:article.coverUrl}"
                 label
                 @click="toArticleSort(article.articleSort.sortId)">{{article.articleSort.sortName}}
@@ -16,7 +16,7 @@
 
         <v-card-title>
             <div @click="toArticle(article.artInfoId)" class="title_a" style="cursor: pointer">
-                <span v-if="article.artInfoIsTop == 0" class="body-2">[置顶]</span>
+                <span v-if="article.artInfoIsTop == 1" class="body-2">[置顶]</span>
                 {{article.artInfoTitle}}
             </div>
         </v-card-title>

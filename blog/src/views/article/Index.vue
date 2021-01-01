@@ -44,7 +44,10 @@
                                 <div class="markdown-body" ref="content" v-html="articleData.articleContent.artContent">
                                 </div>
                             </div>
+                            <div class="caption">最后修改于：{{articleData.artInfoModifiedTime}}</div>
+                            <div class="overline">最后修改于：{{articleData.artInfoModifiedTime}}</div>
                         </div>
+
                     </v-card>
                 </v-col>
                 <v-col :md="4" :sm="12" :cols="12 ">

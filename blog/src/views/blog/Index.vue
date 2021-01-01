@@ -4,26 +4,23 @@
             <v-row>
                 <v-col :md="8" :sm="12" :cols="12">
                     <v-container fluid class="py-0">
-                        <v-row align="center" justify="space-between">
-                            <div class="title">
-                                全部文章
-                            </div>
-                        </v-row>
-                    </v-container>
-                    <div ref="articleList">
-                        <div v-if="articleLoading">
-                            <v-skeleton-loader
-                                    type="card"
-                                    class="mb-6"
-                            />
-                            <v-skeleton-loader
-                                    type="card"
-                                    class="mb-6"
-                            />
+                        <div class="title">
+                            全部文章
                         </div>
-                        <ArticleList v-else :articleStore="articleStore" @loadData="loadData"></ArticleList>
-                    </div>
-
+                        <div ref="articleList">
+                            <div v-if="articleLoading">
+                                <v-skeleton-loader
+                                        type="card"
+                                        class="mb-6"
+                                />
+                                <v-skeleton-loader
+                                        type="card"
+                                        class="mb-6"
+                                />
+                            </div>
+                            <ArticleList v-else :articleStore="articleStore" @loadData="loadData"></ArticleList>
+                        </div>
+                    </v-container>
                 </v-col>
                 <v-col :md="4" :sm="12" :cols="12 ">
                     <ArticleSortList @toArticleSort="toArticleSort"></ArticleSortList>
@@ -38,6 +35,7 @@
     import {getArticleData} from '@/api/article'
     import ArticleList from "@/components/article/ArticleList";
     import ArticleSortList from "../../components/ArticleSortList";
+
     export default {
         name: "Index",
         components: {ArticleSortList, ArticleList},
@@ -49,7 +47,7 @@
                     currentPage: 1,
                     pageSize: 5
                 },
-                articleLoading:true
+                articleLoading: true
             }
         },
         async created() {
@@ -77,7 +75,7 @@
                     pageSize: that.articleStore.pageSize
                 }
                 getArticleData(params).then(function (res) {
-                    that.articleLoading=false
+                    that.articleLoading = false
                     that.articleStore.list = that.articleStore.list.concat(res.data.recordList);
                     that.articleStore.total = res.data.recordCount;
                 })

@@ -2,7 +2,10 @@
     <div class="pa-3">
         <div class="d-flex align-center">
             <div class="mr-2">
-                <v-avatar size="36">
+                <v-avatar
+                        size="36"
+                        rounded
+                >
                     <v-img :src="comment.user.uIcon"></v-img>
                 </v-avatar>
             </div>
@@ -18,7 +21,7 @@
             </div>
         </div>
         <div>
-            <div class="text--secondary body-2" v-html="comment.mContent">
+            <div class="text--secondary body-2 ml-11 mt-2"  v-html="comment.mContent">
             </div>
         </div>
         <div class="comment-reply">
@@ -111,9 +114,9 @@
             },
             getMessageReplyData() {
                 let that = this;
-                const loading=Loading.service({
-                    target:that.$refs['messageReplies'],
-                    text:'努力加载评论中...'
+                const loading = Loading.service({
+                    target: that.$refs['messageReplies'],
+                    text: '努力加载评论中...'
                 })
                 const params = {
                     currentPage: that.page.currentPage,

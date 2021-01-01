@@ -2,27 +2,24 @@
     <div class="index">
         <v-container>
             <v-row>
-                <v-col :md="8" :sm="12" :cols="12" >
+                <v-col :md="8" :sm="12" :cols="12">
                     <v-container fluid class="py-0">
-                        <v-row align="center" justify="space-between">
-                            <div class="title">
-                                全部文章
-                            </div>
-<!--                            <v-switch color="red" :value="false" inset label="热门"></v-switch>-->
-                        </v-row>
-                    </v-container>
-                    <div v-if="articleLoading">
-                        <v-skeleton-loader
-                                type="card"
-                                class="mb-6"
-                        />
-                        <v-skeleton-loader
-                                type="card"
-                                class="mb-6"
-                        />
-                    </div>
-                        <ArticleList v-else :articleStore="articleStore" @loadData="loadData" ></ArticleList>
+                        <div class="title">
+                            全部文章
+                        </div>
 
+                        <div v-if="articleLoading">
+                            <v-skeleton-loader
+                                    type="card"
+                                    class="mb-6"
+                            />
+                            <v-skeleton-loader
+                                    type="card"
+                                    class="mb-6"
+                            />
+                        </div>
+                        <ArticleList v-else :articleStore="articleStore" @loadData="loadData"></ArticleList>
+                    </v-container>
                 </v-col>
                 <v-col :md="4" :sm="12" :cols="12 ">
                     <ArticleSortList :sortId="id" @toArticleSort="toArticleSort"></ArticleSortList>
@@ -36,6 +33,7 @@
     import ArticleList from "@/components/article/ArticleList";
     import {getArticleDataBySort} from "@/api/sort"
     import ArticleSortList from "@/components/ArticleSortList";
+
     export default {
         name: "Index",
         components: {ArticleSortList, ArticleList},
@@ -48,7 +46,7 @@
                     pageSize: 5
                 },
                 id: '',
-                articleLoading:true
+                articleLoading: true
             }
         },
         created() {
@@ -75,7 +73,7 @@
                     pageSize: that.articleStore.pageSize
                 }
                 getArticleDataBySort(that.id, params).then(function (res) {
-                    that.articleLoading=false
+                    that.articleLoading = false
                     that.articleStore.list = that.articleStore.list.concat(res.data.recordList);
                     that.articleStore.total = res.data.recordCount;
                 })
@@ -87,7 +85,7 @@
                     currentPage: 1,
                     pageSize: 5
                 }
-                this.articleLoading=true
+                this.articleLoading = true
                 this.getArticleData()
             },
             toArticleSort(id) {

@@ -1,8 +1,9 @@
 <template>
     <div class="index">
         <v-container>
+            <MessageList :comments="comments"></MessageList>
             <div ref="commentList">
-            <CommentBox :message-loading="messageLoading" :comments="comments"></CommentBox>
+                <CommentBox :message-loading="messageLoading" :comments="comments"></CommentBox>
             </div>
             <v-pagination
                     :length="page.pageTotal"
@@ -17,9 +18,12 @@
 <script>
     import CommentBox from "../../components/CommentBox";
     import {getMessageData} from '@/api/message'
+    import MessageList from "../../components/MessageList";
+    import OWO from 'owo'
+
     export default {
         name: "Index",
-        components: {CommentBox},
+        components: {MessageList, CommentBox},
         data() {
             return {
                 comments: null,
@@ -29,7 +33,7 @@
                     pageTotal: 0,
                     total: 0
                 },
-                messageLoading:true
+                messageLoading: true
             }
         },
         created() {
@@ -38,6 +42,9 @@
         },
         mounted() {
             this.getMessageData();
+            this.$nextTick(function () {
+
+            })
         },
         methods: {
             pageChange(index) {
@@ -52,7 +59,7 @@
                     pageSize: that.page.pageSize
                 }
                 getMessageData(params).then(function (res) {
-                    that.messageLoading=false;
+                    that.messageLoading = false;
                     that.comments = res.data.recordList
                     that.page.pageTotal = res.data.pageTotal;
                     that.page.total = res.data.recordCount;

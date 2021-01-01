@@ -59,7 +59,7 @@
         <v-footer app absolute padless>
             <Footer></Footer>
         </v-footer>
-        <div id="aplayer"  ref="aplayer" class="aplayer">
+        <div id="aplayer" ref="aplayer" class="aplayer">
         </div>
         <div v-loading="!audios"
              v-if="!audios"
@@ -76,8 +76,8 @@
 
 <script>
     import axios from "axios";
-    import 'APlayer/dist/APlayer.min.css';
-    import APlayer from 'APlayer';
+    import 'aplayer/dist/APlayer.min.css';
+    import APlayer from 'aplayer';
     import {mapMutations, mapState, mapActions} from 'vuex';
     import LoginOrRegister from "../components/LoginOrRegister";
     import CurrentUser from "../components/CurrentUser";
@@ -180,8 +180,26 @@
         }
     }
 
-    .aplayer {
-        position: relative;
+    html {
+        font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: #cbcbcb;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: rgb(187, 187, 187);
+    }
+
+    ::-webkit-scrollbar-track-piece {
+        background: #eee;
     }
 </style>
 <style lang="scss" scoped>
