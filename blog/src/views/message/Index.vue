@@ -19,7 +19,6 @@
     import CommentBox from "../../components/CommentBox";
     import {getMessageData} from '@/api/message'
     import MessageList from "../../components/MessageList";
-    import OWO from 'owo'
 
     export default {
         name: "Index",

@@ -17,7 +17,13 @@ Vue.use(mavonEditor)
 Vue.use(Vuetify)
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
-
+// @ts-ignore
+import Vuesax from 'vuesax'
+import 'vuesax/dist/vuesax.css' //Vuesax styles
+ Vue.use(Vuesax, {
+     // options here
+     theme : 'dark'
+ })
 new Vue({
     vuetify,
     router,
