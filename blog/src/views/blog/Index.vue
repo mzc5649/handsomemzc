@@ -2,10 +2,6 @@
   <div class="index">
     <vs-row>
       <vs-col :lg="8" :md="8" :sm="12" :xs="12">
-        <v-container fluid class="py-0">
-          <div class="text">
-            全部文章
-          </div>
           <div ref="articleList">
             <div v-if="articleLoading">
               <v-skeleton-loader type="card" class="mb-6" />
@@ -17,7 +13,6 @@
               @loadData="loadData"
             ></ArticleList>
           </div>
-        </v-container>
       </vs-col>
       <v-col :lg="4" :md="4" :sm="12" :xs="12">
         <ArticleSortList @toArticleSort="toArticleSort"></ArticleSortList>

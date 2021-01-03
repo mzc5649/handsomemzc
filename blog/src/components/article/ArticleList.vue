@@ -62,4 +62,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+  .ArticleList{
+    padding: 12px;
+  }
+</style>
