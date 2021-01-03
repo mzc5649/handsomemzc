@@ -1,11 +1,11 @@
 <template>
     <div class="left-side">
-        <vs-card type="5">
+        <vs-card type="5" style="position: sticky;
+        top: 50px;">
             <template #title>
                 <h3 style="overflow: hidden;
     text-overflow: ellipsis;">{{master.uname}}</h3>
                 <div>
-
                 </div>
             </template>
             <template #text>
@@ -59,27 +59,6 @@
 <style scoped>
     .left-side {
         padding: 12px;
-    }
 
-    .user-info {
-        display: flex;
-    }
-
-    .user-info-left {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .user-info-right {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .user-info-name {
-        color: var(--theme-text);
     }
 </style>

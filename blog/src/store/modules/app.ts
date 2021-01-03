@@ -30,9 +30,33 @@ const actions = {
         if(data){
             document.documentElement.style.setProperty("--theme-background",'rgb(30, 32, 35)');
             document.documentElement.style.setProperty("--theme-text",'rgb(255, 255, 255)');
+            document.documentElement.style.setProperty("--theme-card-bg",'rgb(30, 32, 35)');
+            document.documentElement.style.setProperty("--theme-md-bg",'#282c34');
+            var ele = document.createElement("link");
+            ele.rel = "stylesheet";
+            ele.classList.add('hl-theme');
+            ele.href = "https://cdn.jsdelivr.net/gh/mzc5649/CDN/css/atom-one-dark.min.css";
+            var headEl = document.getElementsByTagName("head")[0];
+            var linkEl = headEl.getElementsByClassName('hl-theme')[0];
+            if(linkEl != null){
+                headEl.removeChild(linkEl);
+            }
+            headEl.appendChild(ele);
         }else{
             document.documentElement.style.setProperty("--theme-background",'rgb(244, 244, 244)');
             document.documentElement.style.setProperty("--theme-text",'#2C3E50');
+            document.documentElement.style.setProperty("--theme-card-bg",'rgb(255, 255, 255)');
+            document.documentElement.style.setProperty("--theme-md-bg",'#f6f8fa');
+            var ele = document.createElement("link");
+            ele.rel = "stylesheet";
+            ele.classList.add('hl-theme');
+            ele.href = "https://cdn.jsdelivr.net/gh/mzc5649/CDN/css/atom-one-light.min.css";
+            var headEl = document.getElementsByTagName("head")[0];
+            var linkEl = headEl.getElementsByClassName('hl-theme')[0]
+            if(linkEl != null){
+                headEl.removeChild(linkEl);
+            }
+            headEl.appendChild(ele);
         }
     }
 }

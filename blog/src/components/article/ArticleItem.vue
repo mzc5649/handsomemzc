@@ -2,7 +2,7 @@
     <vs-card type="1" style="margin-bottom: 30px;">
         <template #title>
             <div class="title">
-        <span v-if="article.artInfoIsTop == 1" class="body-2">[置顶]</span
+        <span v-if="article.artInfoIsTop == 1" class="span">[置顶]</span
         >{{ article.artInfoTitle }}
             </div>
 
@@ -133,6 +133,9 @@
         margin-right: 10px;
         font-size: 13px;
         color: #A0A0A0;
+    }
+    .span{
+        font-weight: 700;
     }
 </style>
 <style lang="scss" scoped>

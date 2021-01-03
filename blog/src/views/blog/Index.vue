@@ -3,12 +3,7 @@
     <vs-row>
       <vs-col :lg="8" :md="8" :sm="12" :xs="12">
           <div ref="articleList">
-            <div v-if="articleLoading">
-              <v-skeleton-loader type="card" class="mb-6" />
-              <v-skeleton-loader type="card" class="mb-6" />
-            </div>
             <ArticleList
-              v-else
               :articleStore="articleStore"
               @loadData="loadData"
             ></ArticleList>

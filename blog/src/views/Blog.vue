@@ -199,6 +199,8 @@ export default {
 :root {
   --theme-background: #f4f4f4;
   --theme-text: #2c3e50;
+  --theme-card-bg: white;
+  --theme-md-bg:#f6f8fa;
 }
 #aplayer {
 }

@@ -1,76 +1,51 @@
 <template>
-    <div>
-        <v-container>
-            <v-row>
-                <v-col :md="8" :sm="12" :cols="12">
-                    <div v-if="articleLoading">
-                        <v-card>
-                            <v-skeleton-loader type="chip"/>
-                            <div class="ma-5">
-                                <v-skeleton-loader type="card-heading"/>
-                                <v-skeleton-loader type="list-item-avatar-two-line"/>
-                                <v-skeleton-loader type="sentences"/>
-                                <v-skeleton-loader type="sentences"/>
-                                <v-skeleton-loader type="sentences"/>
-                                <v-skeleton-loader type="sentences"/>
-                            </div>
-                        </v-card>
+    <div class="article">
+        <vs-row justify="space-between">
+            <vs-col :lg="9" :md="9" :sm="12" :xs="12">
+                <div class="article-left">
+                    <div v-if="articleData.coverUrl">
+                        <img :src="articleData.coverUrl">
                     </div>
-                    <v-card v-else>
-                        <div v-if="articleData.coverUrl">
-                            <v-lazy>
-                                <v-img
-                                        :aspect-ratio="18/9"
-                                        :src="articleData.coverUrl"
-                                        :lazy-src="articleData.coverUrl+'/thumbnail100'">
-                                </v-img>
-                            </v-lazy>
-                        </div>
-                        <v-chip label>{{articleData.articleSort.sortName}}</v-chip>
-                        <div class="article-content">
-                            <h1 class="display-1 article_title">{{articleData.artInfoTitle}}</h1>
-                            <div class="d-flex align-center article-info">
-                                <div class="mr-2">
-                                    <v-avatar size="48">
-                                        <v-img :src="articleData.user.uIcon"></v-img>
-                                    </v-avatar>
-                                </div>
-                                <div>
-                                    <div class="body-2">{{articleData.user.uUsername}}</div>
-                                    <div class="caption">{{articleData.artInfoCreatedTime}}</div>
-                                </div>
+                    <span class="article-sort">{{articleData.articleSort.sortName}}</span>
+                    <div class="article-content">
+                        <h1 class=" article_title">{{articleData.artInfoTitle}}</h1>
+                        <div class="article-info">
+                            <div>
+                                <vs-avatar circle size="48" style="border: 2px white solid">
+                                    <img
+                                            :src="articleData.user.uIcon"
+                                    />
+                                </vs-avatar>
                             </div>
-                            <div class="article-body mt-4">
-                                <div class="markdown-body" ref="content" v-html="articleData.articleContent.artContent">
-                                </div>
+                            <div style="margin-left: 15px">
+                                <div>{{articleData.user.uUsername}}</div>
+                                <div>{{articleData.artInfoCreatedTime}}</div>
                             </div>
-                            <div class="caption">最后修改于：{{articleData.artInfoModifiedTime}}</div>
-                            <div class="overline">最后修改于：{{articleData.artInfoModifiedTime}}</div>
                         </div>
-
-                    </v-card>
-                </v-col>
-                <v-col :md="4" :sm="12" :cols="12 ">
-                    <v-card class="menus-box">
-                        <v-card-title>导航</v-card-title>
-                        <div v-if="navLoading">
-                            <v-skeleton-loader type="list-item"/>
-                            <v-skeleton-loader type="list-item"/>
-                            <v-skeleton-loader type="list-item"/>
-                            <v-skeleton-loader type="list-item"/>
-                            <v-skeleton-loader type="list-item"/>
+                        <div class="article-body">
+                            <div class="markdown-body" ref="content" v-html="articleData.articleContent.artContent">
+                            </div>
                         </div>
-                        <div v-show="!navLoading" class="d-flex justify-center caption pa-2">
+                        <div>最后修改于：{{articleData.artInfoModifiedTime}}</div>
+                    </div>
+                </div>
+            </vs-col>
+            <vs-col :lg="3" :md="3" :sm="12" :xs="12">
+                <div class="article-right">
+                    <div class="menus-box" :class="auto_fixed">
+                        <div>导航</div>
+                        <div v-show="!navLoading">
                             {{articleData.artInfoTitle}}
                         </div>
                         <ul v-show="!navLoading">
                             <div class="menus" ref="navList">
                             </div>
                         </ul>
-                    </v-card>
-                </v-col>
-            </v-row>
-        </v-container>
+                    </div>
+                </div>
+
+            </vs-col>
+        </vs-row>
     </div>
 </template>
 
@@ -94,7 +69,10 @@
                 navData: [],
                 navFlag: true,
                 articleLoading: true,
-                navLoading: true
+                navLoading: true,
+                auto_fixed: {
+                    menu_fixed: true
+                }
             }
         },
         async created() {
@@ -104,8 +82,11 @@
         },
         mounted() {
             let that = this;
-
             that.initMenuScrollListen();
+            this.$nextTick(function () {
+                that.initMenuScrollListen();
+
+            })
         },
         updated() {
             let that = this;
@@ -141,6 +122,14 @@
                 }
 
             },
+            onScroll() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+                let header_height = 44
+                this.auto_fixed = {
+                    menu_fixed: scrollTop >= header_height
+                }
+
+            },
             getElementToPageTop(el) {
                 const box = el.getBoundingClientRect();
                 const winElem = el.ownerDocument.defaultView;
@@ -158,7 +147,9 @@
             },
             initMenuScrollListen() {
                 window.addEventListener('scroll', this.$scrollListenCallback);
+                window.addEventListener('scroll', this.onScroll)
             },
+
             getAllTitle() {
                 let that = this;
                 if (that.navFlag) {
@@ -198,46 +189,69 @@
 </script>
 
 <style lang="scss" scoped>
+    .article {
+        padding: 12px;
+        position: relative;
+    }
+
+    .article-left {
+        background-color: var(--theme-card-bg);
+        border-radius: 20px;
+        padding: 12px;
+    }
+
+    .article-right {
+        padding: 0 12px;
+    }
+
     .article-content {
         padding: 40px;
+        color: var(--theme-text) !important;
 
         .article_title {
             margin-bottom: 30px;
         }
 
-        .article-body {
+        .article-info {
+            display: flex;
+            align-items: center;
+        }
 
+        .article-body {
         }
     }
 
+    .article-sort {
+        color: var(--theme-text);
+    }
+
     .menus-box {
-        position: sticky;
-        top: 80px;
-
-        ul {
-            position: relative;
-            padding: 0 12px 12px;
-        }
-
-
+        background-color: var(--theme-card-bg);
+        border-radius: 20px;
+        width: 200px;
+        padding: 12px;
+        color: var(--theme-text);
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 5px 20px 0px;
     }
 
 </style>
 <style lang="scss">
-    .v-application code {
-        color: black;
-        font-weight: normal;
+    .markdown-body {
+        background-color: var(--theme-card-bg);
+        color: var(--theme-text)
     }
 
-    .theme--dark.v-application {
-        .markdown-body {
-            color: white;
-        }
+    .markdown-body pre {
+        background-color: var(--theme-md-bg);
+    }
 
-        .artMenuIndex {
-            color: white;
+    .markdown-body .hljs {
+        background-color: var(--theme-md-bg);
+    }
 
-        }
+    .menu_fixed {
+        position: fixed;
+        top: 45px;
     }
 
     .artMenuIndex {
@@ -248,7 +262,7 @@
         cursor: pointer;
         display: flex;
         align-items: center;
-        $color: #444;
+        $color: var(--theme-text);
         color: $color;
 
         &:hover, &.active {
