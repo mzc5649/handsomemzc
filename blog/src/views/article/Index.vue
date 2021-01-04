@@ -33,8 +33,8 @@
             <vs-col :lg="3" :md="3" :sm="12" :xs="12">
                 <div class="article-right">
                     <div class="menus-box" :class="auto_fixed">
-                        <div>导航</div>
-                        <div v-show="!navLoading">
+                        <div style="margin-bottom: 10px">文章导航</div>
+                        <div style="display: flex;justify-content: center;padding: 10px 0">
                             {{articleData.artInfoTitle}}
                         </div>
                         <ul v-show="!navLoading">
@@ -43,9 +43,9 @@
                         </ul>
                     </div>
                 </div>
-
             </vs-col>
         </vs-row>
+
     </div>
 </template>
 
@@ -71,7 +71,7 @@
                 articleLoading: true,
                 navLoading: true,
                 auto_fixed: {
-                    menu_fixed: true
+                    menu_fixed: false
                 }
             }
         },
@@ -85,7 +85,6 @@
             that.initMenuScrollListen();
             this.$nextTick(function () {
                 that.initMenuScrollListen();
-
             })
         },
         updated() {
@@ -122,6 +121,7 @@
                 }
 
             },
+            //监听文章导航
             onScroll() {
                 let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
                 let header_height = 44
@@ -147,7 +147,7 @@
             },
             initMenuScrollListen() {
                 window.addEventListener('scroll', this.$scrollListenCallback);
-                window.addEventListener('scroll', this.onScroll)
+                // window.addEventListener('scroll', this.onScroll)
             },
 
             getAllTitle() {
@@ -201,7 +201,7 @@
     }
 
     .article-right {
-        padding: 0 12px;
+        padding: 0 24px;
     }
 
     .article-content {
@@ -234,6 +234,10 @@
         box-shadow: rgba(0, 0, 0, 0.3) 0px 5px 20px 0px;
     }
 
+    .menu_fixed {
+        position: fixed;
+        top: 56px;
+    }
 </style>
 <style lang="scss">
     .markdown-body {
@@ -249,11 +253,6 @@
         background-color: var(--theme-md-bg);
     }
 
-    .menu_fixed {
-        position: fixed;
-        top: 45px;
-    }
-
     .artMenuIndex {
         position: relative;
         z-index: 1;
@@ -266,8 +265,6 @@
         color: $color;
 
         &:hover, &.active {
-            $color1: rgb(66, 154, 255);
-            color: $color1;
             background-color: rgba($color: #f0f0f0, $alpha: 0.6);
         }
 

@@ -24,6 +24,9 @@ import 'vuesax/dist/vuesax.css' //Vuesax styles
      // options here
      theme : 'dark'
  })
+//fontawesome
+import '@fortawesome/fontawesome-free/css/all.css'
+import '@fortawesome/fontawesome-free/js/all'
 new Vue({
     vuetify,
     router,

@@ -11,7 +11,8 @@
             <template #text>
                 <div>
                     <span class="info">No.{{master.uid}}</span>
-                    <i class="fa fa-male info"></i>
+                    <i class="fas fa-male info" v-if="master.usex == 1"></i>
+                    <i class="fas fa-female info" v-if="master.usex == 2"></i>
                 </div>
                 <p>
                     {{master.usign}}
@@ -60,5 +61,11 @@
     .left-side {
         padding: 12px;
 
+    }
+
+    .info {
+        margin-right: 10px;
+        font-size: 13px;
+        color: #A0A0A0;
     }
 </style>

@@ -7,7 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        LoginOrRegisterDialog: false,
+        LoginOrRegisterDialog: true,
         token: localStorage.getItem("token"),
         user: localStorage.getItem("user"),
     },

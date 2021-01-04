@@ -1,31 +1,13 @@
 <template>
     <div class="index">
-        <v-container>
-            <v-row>
-                <v-col :md="8" :sm="12" :cols="12">
-                    <v-container fluid class="py-0">
-                        <div class="title">
-                            全部文章
-                        </div>
-
-                        <div v-if="articleLoading">
-                            <v-skeleton-loader
-                                    type="card"
-                                    class="mb-6"
-                            />
-                            <v-skeleton-loader
-                                    type="card"
-                                    class="mb-6"
-                            />
-                        </div>
-                        <ArticleList v-else :articleStore="articleStore" @loadData="loadData"></ArticleList>
-                    </v-container>
-                </v-col>
-                <v-col :md="4" :sm="12" :cols="12 ">
+            <vs-row>
+                <vs-col :lg="8" :md="8" :sm="12" :xs="12">
+                        <ArticleList  :articleStore="articleStore" @loadData="loadData"></ArticleList>
+                </vs-col>
+                <vs-col :lg="4" :md="4" :sm="12" :xs="12">
                     <ArticleSortList :sortId="id" @toArticleSort="toArticleSort"></ArticleSortList>
-                </v-col>
-            </v-row>
-        </v-container>
+                </vs-col>
+            </vs-row>
     </div>
 </template>
 
@@ -45,7 +27,7 @@
                     currentPage: 1,
                     pageSize: 5
                 },
-                id: '',
+                id: 0,
                 articleLoading: true
             }
         },

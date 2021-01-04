@@ -32,6 +32,7 @@ const actions = {
             document.documentElement.style.setProperty("--theme-text",'rgb(255, 255, 255)');
             document.documentElement.style.setProperty("--theme-card-bg",'rgb(30, 32, 35)');
             document.documentElement.style.setProperty("--theme-md-bg",'#282c34');
+            //md 黑暗模式切换
             var ele = document.createElement("link");
             ele.rel = "stylesheet";
             ele.classList.add('hl-theme');

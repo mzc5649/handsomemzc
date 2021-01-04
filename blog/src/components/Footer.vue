@@ -1,20 +1,13 @@
 <template>
-        <v-card
-                flat
-                tile
-                width="100%"
-                color=""
-        >
-            <v-card-text  class="d-flex justify-center" >
-                {{new Date().getFullYear() }}—帅气马哥
-                <a href="http://beian.miit.gov.cn">晋ICP备2020011444号</a>
-            </v-card-text>
-            <v-divider></v-divider>
-            <v-card-text  style="height: 66px">
-            </v-card-text>
-        </v-card>
+    <div class="footer">
+        <div style="display: flex;justify-content: center" >
+            {{new Date().getFullYear() }}-帅气马哥-
+            <a href="http://beian.miit.gov.cn">晋ICP备2020011444号</a>
+        </div>
+        <div style="height: 66px">
 
-
+        </div>
+    </div>
 </template>
 
 <script>
@@ -23,8 +16,11 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .footer {
-
+        color: var(--theme-text);
+        a{
+            color: var(--theme-text);
+        }
     }
 </style>

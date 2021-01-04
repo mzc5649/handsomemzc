@@ -1,47 +1,19 @@
 <template>
-    <div>
-        <v-container fluid class="py-0">
-            <div class="title">
-                分类标签
-            </div>
+    <div class="sort-list">
+        <div>
+            分类标签
+        </div>
+        <div style="display:flex;">
+            <template v-for="item in articleSortData" >
+                <vs-button :key="item.sortId"
+                           @click="toArticleSort(item.sortId)"
+                           :disabled="sortId == item.sortId"
 
-            <div v-if="loading" style="display: flex;flex-wrap: wrap">
-                <v-skeleton-loader
-                        class="ma-2"
-                        type="chip">
-                </v-skeleton-loader>
-                <v-skeleton-loader
-                        class="ma-2"
-                        type="chip">
-                </v-skeleton-loader>
-                <v-skeleton-loader
-                        class="ma-2"
-                        type="chip">
-                </v-skeleton-loader>
-                <v-skeleton-loader
-                        class="ma-2"
-                        type="chip">
-                </v-skeleton-loader>
-                <v-skeleton-loader
-                        class="ma-2"
-                        type="chip">
-                </v-skeleton-loader>
-                <v-skeleton-loader
-                        class="ma-2"
-                        type="chip">
-                </v-skeleton-loader>
-            </div>
-            <template v-else v-for="item in articleSortData">
-                <v-chip :key="item.sortId"
-                        class="ma-2"
-                        :color="sortId==item.sortId ? 'primary' : 'default'"
-                        @click="toArticleSort(item.sortId)"
-                        :disabled="sortId==item.sortId"
                 >
                     {{item.sortName}}
-                </v-chip>
+                </vs-button>
             </template>
-        </v-container>
+        </div>
     </div>
 </template>
 
@@ -77,5 +49,8 @@
 </script>
 
 <style scoped>
-
+    .sort-list {
+        color: var(--theme-text);
+        padding: 12px;
+    }
 </style>

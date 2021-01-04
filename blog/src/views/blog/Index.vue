@@ -9,9 +9,9 @@
             ></ArticleList>
           </div>
       </vs-col>
-      <v-col :lg="4" :md="4" :sm="12" :xs="12">
+      <vs-col :lg="4" :md="4" :sm="12" :xs="12">
         <ArticleSortList @toArticleSort="toArticleSort"></ArticleSortList>
-      </v-col>
+      </vs-col>
     </vs-row>
   </div>
 </template>
@@ -30,7 +30,7 @@ export default {
         list: [],
         total: 0,
         currentPage: 1,
-        pageSize: 5
+        pageSize: 2
       },
       articleLoading: true
     };
@@ -52,6 +52,7 @@ export default {
         that.articleStore.currentPage += 1;
         await that.getArticleData();
         data.articleLoading = false;
+
       }
     },
     // 获取数据

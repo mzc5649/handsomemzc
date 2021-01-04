@@ -7,10 +7,11 @@
             </div>
 
         </template>
-        <template #img v-if="article.coverUrl">
+        <template #img>
             <img
                     :src="article.coverUrl + '/thumbnail800'"
                     style="height: 100%;width: 100%"
+                    v-if="article.coverUrl"
             />
         </template>
         <template #text>
@@ -19,35 +20,36 @@
             </p>
         </template>
         <template #interactions>
-            <vs-button shadow size="small" circle animation-type="rotate"
-                       @click="toArticleSort(article.articleSort.sortId)">
-                {{ article.articleSort.sortName }}
-                <template #animate>
-                    {{ article.articleSort.sortName }}
-                </template>
-            </vs-button>
             <vs-button danger icon animation-type="scale">
-                <i class="fa fa-heart-o"></i>
+                <i class="fas fa-heart"></i>
                 <template #animate>
-                    <i class="fa fa-heart"></i>
+                    <i class="fas fa-heart"></i>
                 </template>
             </vs-button>
             <vs-button class="btn-chat" icon shadow animation-type="scale">
-                <i class="fa fa-comment-o"></i>
+                <i class="fas fa-comment"></i>
                 <template #animate>
-                    <i class="fa fa-comment"></i>
+                    <i class="fas fa-comment"></i>
                 </template>
             </vs-button>
         </template>
         <template #buttons>
             <div style="display: flex;justify-content: space-between;padding: 0 15px">
                 <div style="display: flex;align-items: center">
-                    <i class="fa fa-user-o info"></i>
+                    <vs-button shadow size="small" circle animation-type="rotate"
+                              class="info"
+                               @click="toArticleSort(article.articleSort.sortId)">
+                        {{ article.articleSort.sortName }}
+                        <template #animate>
+                            {{ article.articleSort.sortName }}
+                        </template>
+                    </vs-button>
+                    <i class="fas fa-user info"></i>
                     <span class="info">{{article.user.uUsername}}</span>
-                    <i class="fa fa-clock-o info"></i>
+                    <i class="fas fa-clock info"></i>
                     <span class="info">{{article.artInfoCreatedTime }}</span>
                 </div>
-                <vs-button class="btn-chat" shadow border dark animation-type="vertical" @click="toArticle(article.artInfoId)">
+                <vs-button shadow border dark animation-type="vertical" @click="toArticle(article.artInfoId)">
                     开始阅读
                     <template #animate>
                         Go
@@ -129,11 +131,7 @@
     .vs-card {
         max-width: 100%;
     }
-    .info {
-        margin-right: 10px;
-        font-size: 13px;
-        color: #A0A0A0;
-    }
+
     .span{
         font-weight: 700;
     }
@@ -142,7 +140,11 @@
     .article-item {
         /*position: relative;*/
     }
-
+    .info {
+        margin-right: 10px;
+        font-size: 13px;
+        color: #A0A0A0;
+    }
     .title {
         overflow: hidden;
         white-space: nowrap;
