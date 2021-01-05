@@ -2,41 +2,42 @@ const snackbar = {
     namespaced: true,
     state: {
         msg: '',
-        color: '',
+        color: 'danger',
         visible: false,
-        showClose: true,
-        timeout: 5000,
-
+        timeout: 3000,
+        progress: 0
     },
     // 逻辑处理,同步函数
     mutations: {
-        OPEN_SNACKBAR(state:any , options:any) {
-            state.visible = true
+        OPEN_SNACKBAR(state: any, options: any) {
             state.msg = options.msg
-            state.color = options.color
+            // state.color = options.color
+            state.visible = true
         },
-        CLOSE_SNACKBAR(state:any) {
+        CLOSE_SNACKBAR(state: any) {
             state.visible = false
 
         },
-        setShowClose(state:any, isShow:any) {
-            state.showClose = isShow
-        },
-        setTimeout(state:any, timeout:any) {
+        setTimeout(state: any, timeout: any) {
             state.timeout = timeout
         },
     },
     // 逻辑处理,异步函数
-    actions :{
-        openSnackbar (context:any,options:any){
+    actions: {
+        openSnackbar(context: any, options: any) {
             let timeout = context.state.timeout
-            context.commit('OPEN_SNACKBAR',{
-                msg:options.msg,
-                color:options.color
+            context.state.progress = timeout;
+            context.commit('OPEN_SNACKBAR', {
+                msg: options.msg,
+                // color: options.color
             })
-            setTimeout(()=>{
+            var interval = setInterval(function () {
+                context.state.progress -= 1000;
+            }, 1000)
+            setTimeout(() => {
+                clearInterval(interval)
                 context.commit('CLOSE_SNACKBAR')
-            },timeout)
+            }, timeout)
         }
     }
 }

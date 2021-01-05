@@ -2,9 +2,12 @@
     <div class="article">
         <vs-row justify="space-between">
             <vs-col :lg="9" :md="9" :sm="12" :xs="12">
+                <div class="article-top-nav">
+                    首页/{{articleData.articleSort.sortName}}/{{articleData.artInfoTitle}}/正文
+                </div>
                 <div class="article-left">
                     <div v-if="articleData.coverUrl">
-                        <img :src="articleData.coverUrl">
+                        <img style="width: 100%" :src="articleData.coverUrl">
                     </div>
                     <span class="article-sort">{{articleData.articleSort.sortName}}</span>
                     <div class="article-content">
@@ -30,7 +33,7 @@
                     </div>
                 </div>
             </vs-col>
-            <vs-col :lg="3" :md="3" :sm="12" :xs="12">
+            <vs-col :lg="3" :md="3" :sm="0" :xs="0" v-if="device!='mobile'">
                 <div class="article-right">
                     <div class="menus-box" :class="auto_fixed">
                         <div style="margin-bottom: 10px">文章导航</div>
@@ -91,34 +94,43 @@
             let that = this;
             that.getAllTitle();
         },
+        computed: {
+            device() {
+                return this.$store.state.app.device;
+            },
+        },
         methods: {
             $scrollListenCallback() {
-                let that = this;
-                let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-                scrollTop += 60;
-                const titleList = [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')];
-                const scrollTopList = titleList.map(el => {
-                    const elEmentOffsetTop = this.getElementToPageTop(el);
-                    return {
-                        scrollTop: elEmentOffsetTop,
-                        el
-                    }
-                });
-                scrollTopList.reverse();
-                for (const item of scrollTopList) {
-                    const _scrollTop = scrollTop - item.scrollTop;
-                    if (_scrollTop >= 0) {
-                        let a = item.el.getElementsByTagName("a")[0]
-                        if (a != undefined) {
-                            let id = a.getAttribute("id");
-                            document.querySelectorAll(".artMenuIndex").forEach(item => {
-                                item.classList.remove("active");
-                            });
-                            document.getElementsByClassName("menu-" + id)[0].classList.add("active")
+                if (this.$store.state["app/device"] != 'mobile') {
+
+                    let that = this;
+                    let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+                    scrollTop += 60;
+                    const titleList = [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')];
+                    const scrollTopList = titleList.map(el => {
+                        const elEmentOffsetTop = this.getElementToPageTop(el);
+                        return {
+                            scrollTop: elEmentOffsetTop,
+                            el
                         }
-                        break;
+                    });
+                    scrollTopList.reverse();
+                    for (const item of scrollTopList) {
+                        const _scrollTop = scrollTop - item.scrollTop;
+                        if (_scrollTop >= 0) {
+                            let a = item.el.getElementsByTagName("a")[0]
+                            if (a != undefined) {
+                                let id = a.getAttribute("id");
+                                document.querySelectorAll(".artMenuIndex").forEach(item => {
+                                    item.classList.remove("active");
+                                });
+                                document.getElementsByClassName("menu-" + id)[0].classList.add("active")
+                            }
+                            break;
+                        }
                     }
                 }
+
 
             },
             //监听文章导航
@@ -147,7 +159,7 @@
             },
             initMenuScrollListen() {
                 window.addEventListener('scroll', this.$scrollListenCallback);
-                // window.addEventListener('scroll', this.onScroll)
+                window.addEventListener('scroll', this.onScroll)
             },
 
             getAllTitle() {
@@ -194,6 +206,13 @@
         position: relative;
     }
 
+    .article-top-nav {
+        background-color: var(--theme-card-bg);
+        border-radius: 20px;
+        padding: 12px;
+        margin-bottom: 6px;
+    }
+
     .article-left {
         background-color: var(--theme-card-bg);
         border-radius: 20px;
@@ -201,7 +220,7 @@
     }
 
     .article-right {
-        padding: 0 24px;
+        padding: 0 12px;
     }
 
     .article-content {

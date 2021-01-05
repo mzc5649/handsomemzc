@@ -1,13 +1,16 @@
 <template>
-    <v-snackbar top text v-model="visible" :color="color">
-        {{ this.$store.state.snackbar.msg }}
-        <!-- 关闭按钮 -->
-        <template v-slot:action="{ attrs }" >
-            <v-btn v-bind="attrs" v-if="showClose" icon @click="close" :color="color"
-            ><v-icon>fa-close</v-icon>
-            </v-btn>
+    <vs-alert
+            relief
+            v-if="visible"
+            v-model="visible"
+            :color="color"
+            style="position: fixed;top: 0;z-index: 99999">
+        <template #title>
+            错误
         </template>
-    </v-snackbar>
+        {{ msg }}
+        <span style="float: right;display: flex;align-items: center"><i class="fas fa-clock"></i>{{progress}}</span>
+    </vs-alert>
 </template>
 <script>
     export default {
@@ -15,15 +18,24 @@
             return {};
         },
         computed: {
-            visible() {
-                return this.$store.state.snackbar.visible;
-            },
-            showClose() {
-                return this.$store.state.snackbar.showClose;
+            visible: {
+                get() {
+                    return this.$store.state.snackbar.visible;
+                },
+                set(val) {
+                    this.$store.state.snackbar.visible = val;
+                }
+
             },
             color() {
                 return this.$store.state.snackbar.color;
             },
+            progress() {
+                return this.$store.state.snackbar.progress / 1000;
+            },
+            msg() {
+                return this.$store.state.snackbar.msg;
+            }
         },
         methods: {
             close() {

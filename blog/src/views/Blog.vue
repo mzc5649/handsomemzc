@@ -43,10 +43,7 @@
         </vs-navbar>
         <div style="margin-top: 84px">
             <vs-row justify="center">
-                <vs-col :lg="2" :md="2" :sm="0" :xs="0" v-if="device !== 'mobile'">
-                    <LeftSide></LeftSide>
-                </vs-col>
-                <vs-col :lg="8" :md="8" :sm="12" :xs="12">
+                <vs-col :lg="10" :md="10" :sm="12" :xs="12">
                     <transition
                             :duration="500"
                             name="custom-classes-transition"
@@ -56,13 +53,10 @@
                     >
                         <router-view />
                     </transition>
-
                 </vs-col>
             </vs-row>
         </div>
-        <!--        <v-footer app absolute padless>-->
         <Footer></Footer>
-        <!--        </v-footer>-->
         <div id="aplayer" ref="aplayer" class="aplayer"></div>
         <div
                 ref="audioLoading"
@@ -70,13 +64,12 @@
                 style="position: fixed;z-index: 100;bottom: 0;left: 0;width: 84px;height: 66px;background-color: white"
         ></div>
                 <LoginOrRegister></LoginOrRegister>
-        <!--        <Snackbar/>-->
+                <Snackbar/>
         <!--        <Navigation v-if="device === 'mobile'"></Navigation>-->
     </div>
 </template>
 
 <script>
-    import axios from "axios";
     import "aplayer/dist/APlayer.min.css";
     import APlayer from "aplayer";
     import {mapMutations, mapState, mapActions} from "vuex";
@@ -88,7 +81,6 @@
     import Footer from "../components/Footer";
     import Music from "../api/music";
     import LeftSide from "../components/LeftSide";
-
     export default {
         name: "Blog",
         components: {
@@ -97,7 +89,7 @@
             Navigation,
             CurrentUser,
             LoginOrRegister,
-            Snackbar
+            Snackbar,
         },
         data() {
             return {
@@ -109,7 +101,7 @@
         mixins: [ResizeHandler],
         created() {
             const that = this;
-            that.serverInit(that);
+            that.serverInit();
         },
         mounted() {
             const that = this;

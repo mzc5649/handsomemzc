@@ -30,6 +30,7 @@
                 </vs-avatar>
             </template>
         </vs-card>
+
     </div>
 </template>
 

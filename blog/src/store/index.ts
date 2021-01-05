@@ -3,13 +3,15 @@ import Vuex from "vuex";
 import axios from "axios";
 import snackbar from "@/store/modules/snackbar";
 import app from '@/store/modules/app'
-Vue.use(Vuex);
+import VueCookies from 'vue-cookies'
 
+Vue.use(VueCookies)
+Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
-        LoginOrRegisterDialog: true,
-        token: localStorage.getItem("token"),
-        user: localStorage.getItem("user"),
+        LoginOrRegisterDialog: false,
+        token: Vue.$cookies.get('token'),
+        user: '',
     },
     mutations: {
         SET_LOGIN_OR_REGISTER_DIALOG(state) {
@@ -23,8 +25,9 @@ export default new Vuex.Store({
         },
     },
     actions: {
-        serverInit({commit}, app) {
-            const token = app.$cookies.get("token")
+        //初始化用户信息
+        serverInit({commit, state}) {
+            const token = state.token;
             if (token) {
                 axios.get("/blog-api/user/info", {
                     headers: {
@@ -32,18 +35,21 @@ export default new Vuex.Store({
                     }
                 }).then(function (res) {
                     commit("SET_USER", res.data.data.user)
-                    commit("SET_TOKEN", res.data.data.token)
-                    app.$cookies.set("token", res.data.data.token, 3600)
+                    //刷新token
+                    Vue.$cookies.set("token", res.data.data.token, 3600)
+                }).catch(res => {
+                    commit("SET_USER", '')
+                    Vue.$cookies.remove("token")
                 })
             } else {
                 commit("SET_USER", '')
-                commit("SET_TOKEN", '')
             }
         },
-        serverExit({commit}, app) {
+        //注销
+        serverExit({commit}) {
             commit("SET_USER", '')
             commit("SET_TOKEN", '')
-            app.$cookies.remove("token");
+            Vue.$cookies.remove("token");
         }
 
     },

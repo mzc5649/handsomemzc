@@ -1,13 +1,16 @@
 <template>
     <div class="index">
-            <vs-row>
-                <vs-col :lg="8" :md="8" :sm="12" :xs="12">
-                        <ArticleList  :articleStore="articleStore" @loadData="loadData"></ArticleList>
-                </vs-col>
-                <vs-col :lg="4" :md="4" :sm="12" :xs="12">
-                    <ArticleSortList :sortId="id" @toArticleSort="toArticleSort"></ArticleSortList>
-                </vs-col>
-            </vs-row>
+        <vs-row>
+            <vs-col :lg="3" :md="3" :sm="0" :xs="0" v-if="device !== 'mobile'">
+                <LeftSide></LeftSide>
+            </vs-col>
+            <vs-col :lg="6" :md="6" :sm="12" :xs="12">
+                <ArticleList :articleStore="articleStore" @loadData="loadData"></ArticleList>
+            </vs-col>
+            <vs-col :lg="3" :md="3" :sm="12" :xs="12">
+                <ArticleSortList :sortId="id" @toArticleSort="toArticleSort"></ArticleSortList>
+            </vs-col>
+        </vs-row>
     </div>
 </template>
 
@@ -15,10 +18,11 @@
     import ArticleList from "@/components/article/ArticleList";
     import {getArticleDataBySort} from "@/api/sort"
     import ArticleSortList from "@/components/ArticleSortList";
+    import LeftSide from "../../components/LeftSide";
 
     export default {
         name: "Index",
-        components: {ArticleSortList, ArticleList},
+        components: {LeftSide, ArticleSortList, ArticleList},
         data() {
             return {
                 articleStore: {
@@ -37,6 +41,11 @@
         },
         mounted() {
             this.getArticleData();
+        },
+        computed: {
+            device() {
+                return this.$store.state.app.device;
+            },
         },
         methods: {
             async loadData(data) {

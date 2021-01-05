@@ -1,18 +1,15 @@
 <template>
-    <v-menu :nudge-left="46" :nudge-bottom="10" offset-y >
-        <template v-slot:activator="{on}" >
-            <v-avatar size="36" v-on="on" style="cursor: pointer;">
-                <img :src="user.uIcon"/>
-            </v-avatar>
-        </template>
-        <v-list v-for="item in userNavs" :key="item.key">
-            <v-btn block text elevation="0" class="justify-start" @click="handlerUserNavs(item.key)">
-                <v-icon>{{item.icon}}</v-icon>
-                {{item.title}}
-            </v-btn>
-        </v-list>
+    <div>
+        <!--头像-->
+        <vs-avatar  circle size="36" style="border: 2px white solid">
+            <img
+                    v-if="user.uIcon"
+                    :src="user.uIcon"
+            />
+            <span v-else style="">头像</span>
 
-    </v-menu>
+        </vs-avatar>
+    </div>
 </template>
 
 <script>
@@ -43,7 +40,7 @@
             handlerUserNavs(type){
                 let that=this;
                 if(type=='exit'){
-                    that.serverExit(that);
+                    that.serverExit();
                 }
             }
         }

@@ -20,10 +20,9 @@ Vue.use(ElementUI);
 // @ts-ignore
 import Vuesax from 'vuesax'
 import 'vuesax/dist/vuesax.css' //Vuesax styles
- Vue.use(Vuesax, {
-     // options here
-     theme : 'dark'
- })
+Vue.use(Vuesax, {
+    // options here
+})
 //fontawesome
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all'

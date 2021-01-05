@@ -1,7 +1,10 @@
 <template>
   <div class="index">
-    <vs-row>
-      <vs-col :lg="8" :md="8" :sm="12" :xs="12">
+    <vs-row justify="center">
+      <vs-col :lg="3" :md="3" :sm="0" :xs="0" v-if="device !== 'mobile'">
+        <LeftSide></LeftSide>
+      </vs-col>
+      <vs-col :lg="6" :md="6" :sm="12" :xs="12">
           <div ref="articleList">
             <ArticleList
               :articleStore="articleStore"
@@ -9,7 +12,7 @@
             ></ArticleList>
           </div>
       </vs-col>
-      <vs-col :lg="4" :md="4" :sm="12" :xs="12">
+      <vs-col :lg="3" :md="3" :sm="12" :xs="12">
         <ArticleSortList @toArticleSort="toArticleSort"></ArticleSortList>
       </vs-col>
     </vs-row>
@@ -20,24 +23,29 @@
 import { getArticleData } from "@/api/article";
 import ArticleList from "@/components/article/ArticleList";
 import ArticleSortList from "../../components/ArticleSortList";
+import LeftSide from "../../components/LeftSide";
 
 export default {
   name: "Index",
-  components: { ArticleSortList, ArticleList },
+  components: {LeftSide, ArticleSortList, ArticleList },
   data() {
     return {
       articleStore: {
         list: [],
         total: 0,
         currentPage: 1,
-        pageSize: 2
+        pageSize: 5
       },
       articleLoading: true
     };
   },
   async created() {
-    const that = this;
     await this.getArticleData();
+  },
+  computed:{
+    device() {
+      return this.$store.state.app.device;
+    },
   },
   async mounted() {},
   methods: {

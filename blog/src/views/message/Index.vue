@@ -13,6 +13,7 @@
             </v-pagination>
         </v-container>
     </div>
+
 </template>
 
 <script>
@@ -25,6 +26,7 @@
         components: {MessageList, CommentBox},
         data() {
             return {
+                color: 'danger',
                 comments: null,
                 page: {
                     currentPage: 1,
@@ -71,4 +73,9 @@
 
 <style scoped>
 
+</style>
+<style>
+    .vs-alert__content {
+        min-height: 0px !important;
+    }
 </style>

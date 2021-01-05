@@ -51,7 +51,7 @@
                                 </template>
                             </vs-input>
                         </ValidationProvider>
-                        <ValidationProvider rules="required|email" v-slot="v">
+                        <ValidationProvider ref="email" rules="required|email" v-slot="v">
                             <vs-input v-model="registerForm.email" placeholder="邮箱">
                                 <template #icon>
                                     <i class="fas fa-envelope"></i>
@@ -106,8 +106,11 @@
 
             </div>
             <template #footer>
-                <vs-button dark block @click="handleSubmit">
+                <vs-button dark block @click="handleSubmit" :loading="submitBtnLoading" animation-type="vertical">
                     继续
+                    <template #animate>
+                        {{type|typeName}}
+                    </template>
                 </vs-button>
                 <div class="new">
                     <span v-show="isLogin">还没有账号，</span>
@@ -116,119 +119,8 @@
                 </div>
             </template>
         </vs-dialog>
-        <!--        <v-dialog :z-index="9999" persistent width="400" v-model="LoginOrRegisterDialog">-->
-        <!--            <v-card>-->
-        <!--                <div class="back-btn-box">-->
-        <!--                    <v-btn elevation="0" text @click="SET_LOGIN_OR_REGISTER_DIALOG">-->
-        <!--                        <v-icon>fa-arrow-left</v-icon>-->
-        <!--                    </v-btn>-->
-        <!--                </div>-->
-        <!--                <div class="login-box">-->
-        <!--                    <header>-->
-        <!--                        <h2 class="login-box-header">欢迎你，-->
-        <!--                            <v-btn color="#E91E63" text class="login-box-header-btn" @click="setType(type==1?2:1)">-->
-        <!--                                去{{type|typeNameReserve}}-->
-        <!--                            </v-btn>-->
-        <!--                        </h2>-->
-        <!--                        <h3>请填写以下信息进行{{type|typeName}}</h3>-->
-        <!--                    </header>-->
-        <!--                    &lt;!&ndash;登录&ndash;&gt;-->
-        <!--                    <v-form v-show="isLogin" ref="loginForm" v-model="loginValid" lazy-validation>-->
-        <!--                        <div class="form-filed">-->
-        <!--                            <label>用户名/邮箱</label>-->
-        <!--                            <v-text-field v-model="loginForm.login" :rules="validators.LOGINUSERNAME"></v-text-field>-->
-        <!--                        </div>-->
-        <!--                        <div class="form-filed">-->
-        <!--                            <label>密码</label>-->
-        <!--                            <v-text-field v-show="loginForm.pwdType" v-model="loginForm.pass" type="password"-->
-        <!--                                          :rules="validators.PASSWORD">-->
-        <!--                                <div slot="append">-->
-        <!--                                    <v-btn elevation="0" text @click="setLoginPwdType">-->
-        <!--                                        <v-icon>fa-eye-slash</v-icon>-->
-        <!--                                    </v-btn>-->
-        <!--                                </div>-->
-        <!--                            </v-text-field>-->
-        <!--                            <v-text-field v-show="!loginForm.pwdType" v-model="loginForm.pass"-->
-        <!--                                          :rules="validators.PASSWORD">-->
-        <!--                                <div slot="append">-->
-        <!--                                    <v-btn elevation="0" text @click="setLoginPwdType">-->
-        <!--                                        <v-icon>fa-eye</v-icon>-->
-        <!--                                    </v-btn>-->
-        <!--                                </div>-->
-        <!--                            </v-text-field>-->
-        <!--                        </div>-->
-        <!--                    </v-form>-->
-        <!--                    &lt;!&ndash;注册&ndash;&gt;-->
-        <!--                    <v-form v-show="isRegister" ref="registerForm" v-model="registerValid" lazy-validation>-->
-        <!--                        <div class="form-filed">-->
-        <!--                            <label>用户名</label>-->
-        <!--                            <v-text-field v-model="registerForm.login" :rules="validators.USERNAME"></v-text-field>-->
-        <!--                        </div>-->
-        <!--                        <div class="form-filed">-->
-        <!--                            <label>邮箱</label>-->
-        <!--                            <v-text-field v-model="registerForm.email" :rules="validators.EMAIL"></v-text-field>-->
-        <!--                        </div>-->
-        <!--                        <div class="form-filed">-->
-        <!--                            <label>验证码</label>-->
-        <!--                            <v-text-field v-model="registerForm.code" :rules="validators.REQUIRED">-->
-        <!--                                <div class="email_box" slot="append-outer">-->
-        <!--                                    <v-btn-->
-        <!--                                            text-->
-        <!--                                            :loading="email.loading"-->
-        <!--                                            :disabled="email.isSend"-->
-        <!--                                            @click="handleGetCode"-->
-        <!--                                    >-->
-        <!--                                        <v-icon v-if="!email.isSend">fa-envelope</v-icon>-->
-        <!--                                        <span v-else>{{email.num}}</span>-->
-        <!--                                    </v-btn>-->
-        <!--                                </div>-->
-        <!--                            </v-text-field>-->
-        <!--                        </div>-->
-
-        <!--                        <div class="form-filed">-->
-        <!--                            <label>密码</label>-->
-        <!--                            <v-text-field v-show="registerForm.pwdType" v-model="registerForm.pass"-->
-        <!--                                          :rules="validators.PASSWORD"-->
-        <!--                                          type="password" required>-->
-        <!--                                <div slot="append">-->
-        <!--                                    <v-btn elevation="0" text @click="setRegPwdType">-->
-        <!--                                        <v-icon>fa-eye-slash</v-icon>-->
-        <!--                                    </v-btn>-->
-
-        <!--                                </div>-->
-        <!--                            </v-text-field>-->
-        <!--                            <v-text-field v-show="!registerForm.pwdType" v-model="registerForm.pass"-->
-        <!--                                          :rules="validators.PASSWORD"-->
-        <!--                                          required>-->
-        <!--                                <div slot="append">-->
-        <!--                                    <v-btn elevation="0" text @click="setRegPwdType">-->
-        <!--                                        <v-icon>fa-eye</v-icon>-->
-        <!--                                    </v-btn>-->
-        <!--                                </div>-->
-        <!--                            </v-text-field>-->
-        <!--                        </div>-->
-        <!--                    </v-form>-->
-        <!--                    <div class="d-flex justify-center mt-4">-->
-        <!--                        <v-btn @click="handleSubmit" large elevation="0" class="continue-btn">-->
-        <!--                            继续-->
-        <!--                        </v-btn>-->
-        <!--                    </div>-->
-
-        <!--                </div>-->
-        <!--            </v-card>-->
-        <!--        </v-dialog>-->
-        <!--        <v-snackbar-->
-        <!--                v-model="snackbar.show"-->
-        <!--                top-->
-        <!--                :timeout="2000"-->
-        <!--        >-->
-        <!--            <v-icon>fa-lightbulb-o</v-icon>-->
-        <!--            ：{{snackbar.msg}}-->
-
-        <!--        </v-snackbar>-->
     </div>
 </template>
-
 <script>
     import {mapMutations, mapState, mapActions} from 'vuex';
     import {login, register, sendMailCode} from '@/api/user'
@@ -247,32 +139,32 @@
         message: '此处不可为空'
     })
     //规则 邮箱
-    extend('email',{
-        validate(value){
+    extend('email', {
+        validate(value) {
             return email.validate(value);
         },
-        message:'请输入正确的邮箱地址'
+        message: '请输入正确的邮箱地址'
     });
     //规则 用户名
-    extend('user',{
-        validate(value){
+    extend('user', {
+        validate(value) {
             return /^[_a-zA-Z0-9-.\u4e00-\u9fa5]+$/.test(value);
         },
-        message:'包含特殊字符'
+        message: '包含特殊字符'
     });
     //规则 输入长度
-    extend('userLength',{
-        validate(value){
+    extend('userLength', {
+        validate(value) {
             return value.length <= 20 && value.length >= 3;
         },
-        message:'长度应该为3-20之间'
+        message: '长度应该为3-20之间'
     });
     //规则 输入长度
-    extend('pwdLength',{
-        validate(value){
+    extend('pwdLength', {
+        validate(value) {
             return value.length <= 20 && value.length >= 6;
         },
-        message:'长度应该为6-20之间'
+        message: '长度应该为6-20之间'
     });
     export default {
         name: "LoginOrRegister",
@@ -280,26 +172,17 @@
         data() {
             return {
                 type: 1, // 1 登录 2 注册
-                loginValid: true,
                 loginForm: {
                     login: '',
                     pass: '',
                     pwdType: true,
                 },
-                registerValid: false,
                 registerForm: {
                     login: '',
                     pass: '',
                     email: '',
                     code: '',
                     pwdType: true,
-                },
-                validators: {
-                    REQUIRED: [v => !!v || '不能为空'],
-                    LOGINUSERNAME: [v => !!v || '不能为空', v => /^[_a-zA-Z0-9-@.]+$/.test(v) || '包含特殊字符', v => (v && v.length <= 20) || '超过最大长度'],
-                    USERNAME: [v => !!v || '不能为空', v => /^[_a-zA-Z0-9-]+$/.test(v) || '包含特殊字符', v => (v && v.length <= 20) || '超过最大长度'],
-                    PASSWORD: [v => !!v || '不能为空', v => (v && v.length <= 20) || '超过最大长度'],
-                    EMAIL: [v => !!v || '不能为空', v => /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(v) || '邮箱格式不正确']
                 },
                 email: {
                     loading: false,
@@ -310,9 +193,11 @@
                     tamp: '',
                     hash: ''
                 },
+                submitBtnLoading: false
             }
         },
         created() {
+
         },
         computed: {
             ...mapState(["LoginOrRegisterDialog", "token"]),
@@ -351,100 +236,108 @@
             },
             //提交按钮
             handleSubmit() {
-
-                // let that = this;
+                //按钮loading
+                this.submitBtnLoading = true;
                 const refFormName = this.type == 1 ? 'loginForm' : 'registerForm';
                 this.$refs[refFormName].validate().then(success => {
-                    if (!success) return;
+                    if (!success) {
+                        this.submitBtnLoading = false;
+                        return;
+                    }
+                    //具体操作 登录
+                    if (refFormName == 'loginForm') {
+                        const data = {
+                            login: this.loginForm.login,
+                            pass: this.loginForm.pass
+                        }
+                        login(data).then(res => {
+                            this.$vs.notification({
+                                progress: "auto",
+                                color: 'success',
+                                position: "bottom-right",
+                                title: "成功",
+                                text: "登陆成功"
+                            });
+                            //按钮loading
+                            this.submitBtnLoading = false;
+                            //关闭登录窗口
+                            this.$store.commit('SET_LOGIN_OR_REGISTER_DIALOG');
+                            //存储信息
+                            this.$store.commit('SET_USER', res.data.userinfo);
+                            this.$cookies.set("token", res.data.token, 3600)
 
-                    //具体操作
+                        }).catch(err => {
+                            //按钮loading
+                            this.submitBtnLoading = false;
+                        });
 
+                    } else if (refFormName == 'registerForm') {
+                        //验证注册
+                        const data = {
+                            tamp: localStorage.getItem("email_tamp"),
+                            hash: localStorage.getItem("email_hash"),
+                            user: {
+                                uUsername: this.registerForm.login,
+                                uPwd: this.registerForm.pass,
+                                uEmail: this.registerForm.email,
+                            }
+                        };
+                        register(this.registerForm.code, data).then(res => {
+                            this.$vs.notification({
+                                progress: "auto",
+                                color: 'success',
+                                position: "bottom-right",
+                                title: "成功",
+                                text: "注册成功"
+                            });
+                            //切换为登录
+                            this.type = 1;
+                            //按钮loading
+                            this.submitBtnLoading = false;
+                        }).catch(err => {
+                            //按钮loading
+                            this.submitBtnLoading = false;
+                        });
+                    }
                 })
-
-                // // 验证
-                // const isValidate = that.$refs[formElName].validate();
-                //
-                // if (isValidate) {
-                //     if (formElName == 'loginForm') {
-                //         //登录
-                //         const data = {
-                //             login: that.loginForm.login,
-                //             pass: that.loginForm.pass
-                //         }
-                //         login(data).then(function (res) {
-                //             that.$store.dispatch("snackbar/openSnackbar", {
-                //                 msg: '登录成功',
-                //                 color: 'success'
-                //             })
-                //             that.$store.commit('SET_LOGIN_OR_REGISTER_DIALOG');
-                //             that.$store.commit('SET_TOKEN', res.data.token);
-                //             that.$cookies.set("token", res.data.token, 3600)
-                //             that.serverInit(that)
-                //         })
-                //     } else if (formElName == 'registerForm') {
-                //         //验证注册
-                //         const data = {
-                //             tamp: localStorage.getItem("email_tamp"),
-                //             hash: localStorage.getItem("email_hash"),
-                //             user: {
-                //                 uUsername: that.registerForm.login,
-                //                 uPwd: that.registerForm.pass,
-                //                 uEmail: that.registerForm.email,
-                //             }
-                //         }
-                //         register(that.registerForm.code, data).then(function (res) {
-                //             that.$store.dispatch("snackbar/openSnackbar", {
-                //                 msg: res.msg,
-                //                 color: 'success'
-                //             })
-                //         })
-                //     }
-                // }
-
             },
             //发送邮件
             handleGetCode() {
-                const email = this.registerForm.email;
-                let flag = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(email);
-                if (!flag) {
-                    this.$vs.notification({
-                        progress: "auto",
-                        color: 'danger',
-                        position: "top-center",
-                        title: '错误',
-                        text: "请输入正确格式的邮箱地址"
-                    });
-                    return;
-                }
-                const mailDto = {
-                    to: email
-                }
-                this.email.loading = true;
-                //正在发送邮件
-                sendMailCode(mailDto).then(res => {
-                        this.email.loading = false;
-                        this.$vs.notification({
-                            progress: "auto",
-                            color: 'success',
-                            position: "top-center",
-                            title: '成功',
-                            text: "验证码发送成功，请注意查收"
-                        });
-
-                        localStorage.setItem("email_tamp", res.data.tamp);
-                        localStorage.setItem("email_hash", res.data.hash);
-                        this.email.isSend = true;
-                        this.email.num = 60;
-                        //计时开始 60秒
-                        let timer = setInterval(() => {
-                            this.email.num--;
-                            if (this.email.num == 0) {
-                                this.email.isSend = false;
-                                clearInterval(timer);
-                            }
-                        }, 1000)
+                const that = this;
+                this.$refs['email'].validate().then(success => {
+                    if (!success.valid) {
+                        return;
                     }
-                )
+                    const mailDto = {
+                        to: this.registerForm.email
+                    }
+                    this.email.loading = true;
+                    //正在发送邮件
+                    sendMailCode(mailDto).then(res => {
+                            this.email.loading = false;
+                            this.$vs.notification({
+                                progress: "auto",
+                                color: 'success',
+                                position: "top-center",
+                                title: '成功',
+                                text: "验证码发送成功，请注意查收"
+                            });
+                            localStorage.setItem("email_tamp", res.data.tamp);
+                            localStorage.setItem("email_hash", res.data.hash);
+                            this.email.isSend = true;
+                            this.email.num = 60;
+                            //计时开始 60秒
+                            let timer = setInterval(() => {
+                                this.email.num--;
+                                if (this.email.num == 0) {
+                                    this.email.isSend = false;
+                                    clearInterval(timer);
+                                }
+                            }, 1000)
+                        }
+                    )
+                })
+
             }
         }
     }
