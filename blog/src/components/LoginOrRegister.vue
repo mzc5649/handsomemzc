@@ -5,7 +5,7 @@
                 blur
                 overflow-hidden
                 not-center
-                @close="SET_LOGIN_OR_REGISTER_DIALOG"
+
                 prevent-close>
             <template #header>
                 <h4>
@@ -200,7 +200,15 @@
 
         },
         computed: {
-            ...mapState(["LoginOrRegisterDialog", "token"]),
+            ...mapState(["token"]),
+            LoginOrRegisterDialog: {
+                get() {
+                    return this.$store.state.LoginOrRegisterDialog;
+                },
+                set(value) {
+                    this.$store.state.LoginOrRegisterDialog = value;
+                }
+            },
             isLogin() {
                 return this.isType(1)
             },
