@@ -21,7 +21,7 @@
                     </template>
                 </vs-tooltip>
                 <vs-tooltip v-show="!dark" bottom>
-                    <vs-button icon shadow @click="handleChangeTheme" >
+                    <vs-button icon shadow @click="handleChangeTheme">
                         <i class="fas fa-moon fa-lg"></i>
                     </vs-button>
                     <template #tooltip>
@@ -51,7 +51,7 @@
                             leave-active-class="animate__animated animate__fadeOut"
                             mode="out-in"
                     >
-                        <router-view />
+                        <router-view/>
                     </transition>
                 </vs-col>
             </vs-row>
@@ -63,8 +63,8 @@
                 v-if="!audios"
                 style="position: fixed;z-index: 100;bottom: 0;left: 0;width: 84px;height: 66px;background-color: white"
         ></div>
-                <LoginOrRegister></LoginOrRegister>
-                <Snackbar/>
+        <LoginOrRegister></LoginOrRegister>
+        <Snackbar/>
         <!--        <Navigation v-if="device === 'mobile'"></Navigation>-->
     </div>
 </template>
@@ -81,6 +81,7 @@
     import Footer from "../components/Footer";
     import Music from "../api/music";
     import LeftSide from "../components/LeftSide";
+
     export default {
         name: "Blog",
         components: {

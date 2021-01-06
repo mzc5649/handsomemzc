@@ -1,12 +1,8 @@
 <template>
     <div class="left-side">
-        <vs-card type="5" style="position: sticky;
-        top: 50px;">
+        <vs-card type="5">
             <template #title>
-                <h3 style="overflow: hidden;
-    text-overflow: ellipsis;">{{master.uname}}</h3>
-                <div>
-                </div>
+                <h3 style="overflow: hidden;text-overflow: ellipsis;">{{master.uname}}</h3>
             </template>
             <template #text>
                 <div>
@@ -30,7 +26,9 @@
                 </vs-avatar>
             </template>
         </vs-card>
+        <div>
 
+        </div>
     </div>
 </template>
 
@@ -61,7 +59,6 @@
 <style scoped>
     .left-side {
         padding: 12px;
-
     }
 
     .info {

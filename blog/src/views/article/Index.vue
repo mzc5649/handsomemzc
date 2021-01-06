@@ -3,7 +3,11 @@
         <vs-row justify="space-between">
             <vs-col :lg="9" :md="9" :sm="12" :xs="12">
                 <div class="article-top-nav">
-                    首页/{{articleData.articleSort.sortName}}/{{articleData.artInfoTitle}}/正文
+                    <router-link to="/blog">首页</router-link>
+                    /
+                    <router-link :to="'/blog/sort/'+articleData.articleSort.sortId">{{articleData.articleSort.sortName}}</router-link>
+                    /
+                    {{articleData.artInfoTitle}}
                 </div>
                 <div class="article-left">
                     <div v-if="articleData.coverUrl">
@@ -35,13 +39,19 @@
             </vs-col>
             <vs-col :lg="3" :md="3" :sm="0" :xs="0" v-if="device!='mobile'">
                 <div class="article-right">
-                    <div class="menus-box" :class="auto_fixed">
+                    <div class="menus-box" :class="auto_fixed" v-show="!navLoading">
                         <div style="margin-bottom: 10px">文章导航</div>
                         <div style="display: flex;justify-content: center;padding: 10px 0">
                             {{articleData.artInfoTitle}}
                         </div>
-                        <ul v-show="!navLoading">
+                        <ul>
                             <div class="menus" ref="navList">
+                                <template v-for="item in articleNav">
+                                    <li @click="jumpToTitle(item.id)" class="artMenuIndex"
+                                        :class="['menu-lev'+item.lev,'menu-'+item.id]">
+                                        {{item.name}}
+                                    </li>
+                                </template>
                             </div>
                         </ul>
                     </div>
@@ -67,6 +77,7 @@
                     articleContent: {},
                     articleSort: {}
                 },
+                articleNav: [],
                 content: '',
                 navList: [],
                 navData: [],
@@ -91,8 +102,6 @@
             })
         },
         updated() {
-            let that = this;
-            that.getAllTitle();
         },
         computed: {
             device() {
@@ -102,7 +111,6 @@
         methods: {
             $scrollListenCallback() {
                 if (this.$store.state["app/device"] != 'mobile') {
-
                     let that = this;
                     let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
                     scrollTop += 60;
@@ -154,46 +162,35 @@
                     that.articleLoading = false
                     that.articleData = res.data;
                     that.content = that.articleData.articleContent.artContent
-
+                    that.getMdNav();
                 })
             },
             initMenuScrollListen() {
                 window.addEventListener('scroll', this.$scrollListenCallback);
                 window.addEventListener('scroll', this.onScroll)
             },
-
-            getAllTitle() {
-                let that = this;
-                if (that.navFlag) {
-                    var content = that.$refs['content'];
-                    if (content) {
-                        that.navFlag = false
-                        var navList = that.$refs['navList'];
-                        that.navList = Array.from(content.querySelectorAll("h1,h2,h3,h4,h5,h6"))
-                        that.navList.forEach(item => {
-                            let index = item.localName.indexOf("h");
-                            let lev = item.localName.substr(index + 1);
-                            let id = item.querySelector("a").getAttribute('id');
-                            let name = item.innerHTML.substr(item.innerHTML.indexOf("</a>") + 4);
-                            let obj = {};
-                            obj.lev = lev;
-                            obj.id = id;
-                            obj.name = name;
-                            let li = document.createElement("li");
-                            li.innerHTML = name;
-                            li.classList.add("artMenuIndex")
-                            li.classList.add("menu-lev" + lev)
-                            li.classList.add('menu-' + id);
-                            li.onclick = function () {
-                                let $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
-                                $body.animate({scrollTop: $('#' + id).offset().top - 50}, 1000);
-                                return false;
-                            }
-                            navList.appendChild(li)
-                        })
-                        that.navLoading = false
-                    }
-                }
+            //getMd导航
+            getMdNav() {
+                const data = this.articleData.articleContent.artContent;
+                var myRegex = /<h\d>.*<\/h\d>/g;
+                var array = data.match(myRegex)
+                let artNav = [];
+                array.forEach(item => {
+                    let lev = item.charAt(2)
+                    let id = item.substring(item.indexOf('<a id="') + 7, item.indexOf('"></a>'))
+                    let name = item.substring(item.indexOf('</a>') + 4, item.lastIndexOf('</'))
+                    let obj = {};
+                    obj.lev = lev;
+                    obj.id = id;
+                    obj.name = name;
+                    artNav.push(obj)
+                })
+                this.articleNav = artNav;
+                this.navLoading = false;
+            },
+            jumpToTitle(id) {
+                let $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
+                $body.animate({scrollTop: $('#' + id).offset().top - 50}, 1000);
             }
         }
     }

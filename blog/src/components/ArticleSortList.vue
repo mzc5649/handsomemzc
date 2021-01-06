@@ -6,6 +6,9 @@
         <div style="display:flex;">
             <template v-for="item in articleSortData" >
                 <vs-button :key="item.sortId"
+                           dark
+                           border
+                           shadow
                            @click="toArticleSort(item.sortId)"
                            :disabled="sortId == item.sortId"
 

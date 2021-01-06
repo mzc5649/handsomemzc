@@ -29,10 +29,10 @@ const routes: Array<RouteConfig> = [
             title: '博客'
         },
         children: [
-            {path: 'index', name: 'BlogIndex', meta: {title: '博客首页'}, component: BlogIndex},
-            {path: 'msg', name: 'BlogMessage', meta: {title: '留言'}, component: BlogMessage},
-            {path: 'article/:id', name: 'Article', meta: {title: '文章详情'}, component: Article},
-            {path: 'sort/:id', name: 'ArticleSort', meta: {title: '分类详情'}, component: ArticleSort},
+            {path: 'index', name: 'BlogIndex', meta: {title: '博客首页',keepAlive:true}, component: BlogIndex},
+            {path: 'msg', name: 'BlogMessage', meta: {title: '留言',keepAlive:true}, component: BlogMessage},
+            {path: 'article/:id', name: 'Article', meta: {title: '文章详情',keepAlive:false}, component: Article},
+            {path: 'sort/:id', name: 'ArticleSort', meta: {title: '分类详情',keepAlive:true}, component: ArticleSort},
         ]
 
     },
