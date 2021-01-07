@@ -1,6 +1,6 @@
 <template>
     <div class="sort-list">
-        <div>
+        <div style="padding: 12px">
             分类标签
         </div>
         <content-placeholders v-if="loading">
@@ -21,7 +21,7 @@
                 </vs-button>
             </template>
         </div>
-        <svg class="pie-chart animate__animated animate__zoomIn"></svg>
+        <svg  class="pie-chart"></svg>
     </div>
 </template>
 

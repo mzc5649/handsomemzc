@@ -26,6 +26,8 @@ import '@fortawesome/fontawesome-free/js/all'
 // @ts-ignore
 import VueContentPlaceholders from 'vue-content-placeholders'
 Vue.use(VueContentPlaceholders)
+
+
 new Vue({
     router,
     store,

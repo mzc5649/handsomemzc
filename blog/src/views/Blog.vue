@@ -82,6 +82,7 @@
     import Music from "../api/music";
     import LeftSide from "../components/LeftSide";
 
+
     export default {
         name: "Blog",
         components: {
@@ -96,7 +97,7 @@
             return {
                 active: "blog",
                 isSideNavShow: false,
-                audios: ""
+                audios: "",
             };
         },
         mixins: [ResizeHandler],
@@ -106,42 +107,46 @@
         },
         mounted() {
             const that = this;
-            const audioLoading = this.$vs.loading({
-                target: this.$refs["audioLoading"],
-                type: "square",
-                // color: "#d5397b",
-                text: "Loading..."
-            });
-            const h = new Date().getHours();
-            const flag = (h >= 19 && h <= 24) || (h >= 0 && h <= 7);
-            if (flag) {
-                this.$store.dispatch("app/toggleDark", flag);
-                if (!document.body.hasAttribute("vs-theme")) {
-                    document.body.setAttribute("vs-theme", "dark");
-                }
-                //通知
-                that.$vs.notification({
-                    progress: "auto",
-                    position: "bottom-right",
-                    title: "夜间模式",
-                    text: "夜晚到了，已自动为您开启夜间模式，右上角可切换。"
+            this.$nextTick(() => {
+                const audioLoading = this.$vs.loading({
+                    target: this.$refs["audioLoading"],
+                    type: "square",
+                    // color: "#d5397b",
+                    text: "Loading..."
                 });
-            }
-            const music = new Music();
-            music.getAplayerDataById({id: "5197713080"}).then(res => {
-                this.audios = res;
-                const options = {
-                    container: document.getElementById("aplayer"),
-                    lrcType: 2,
-                    fixed: true,
-                    autoplay: false,
-                    listFolded: false,
-                    order: "list",
-                    preload: "auto",
-                    audio: this.audios
-                };
-                const ap = new APlayer(options);
-            });
+                const h = new Date().getHours();
+                const flag = (h >= 19 && h <= 24) || (h >= 0 && h <= 7);
+                if (flag) {
+                    this.$store.dispatch("app/toggleDark", flag);
+                    if (!document.body.hasAttribute("vs-theme")) {
+                        document.body.setAttribute("vs-theme", "dark");
+                    }
+                    //通知
+                    that.$vs.notification({
+                        progress: "auto",
+                        position: "bottom-right",
+                        title: "夜间模式",
+                        text: "夜晚到了，已自动为您开启夜间模式，右上角可切换。"
+                    });
+                }
+                const music = new Music();
+                music.getAplayerDataById({id: "5197713080"}).then(res => {
+                    this.audios = res;
+                    const options = {
+                        container: document.getElementById("aplayer"),
+                        lrcType: 2,
+                        fixed: true,
+                        autoplay: false,
+                        listFolded: false,
+                        order: "list",
+                        preload: "auto",
+                        audio: this.audios
+                    };
+                    const ap = new APlayer(options);
+                });
+
+
+            })
         },
         computed: {
             ...mapState(["user"]),
@@ -183,6 +188,8 @@
             openSideNav() {
                 this.$store.dispatch("app/toggleSideNav", true);
             }
+        },
+        destroyed() {
         }
     };
 </script>
@@ -223,13 +230,27 @@
     ::-webkit-scrollbar-track-piece {
         background: #eee;
     }
+
     #nprogress {
         .bar {
             z-index: 15031;
         }
+
         .spinner {
             z-index: 15031;
         }
+    }
+
+    [data-scroll] {
+        transition: opacity 1s;
+    }
+
+    [data-scroll="in"] {
+        opacity: 1;
+    }
+
+    [data-scroll="out"] {
+        opacity: 0;
     }
 </style>
 <style lang="scss" scoped></style>
