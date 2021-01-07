@@ -6,6 +6,7 @@
         <content-placeholders v-if="loading">
             <content-placeholders-heading></content-placeholders-heading>
             <content-placeholders-heading></content-placeholders-heading>
+            <content-placeholders-img></content-placeholders-img>
         </content-placeholders>
         <div style="display:flex;" v-if="!loading">
             <template v-for="item in articleSortData">
@@ -20,6 +21,7 @@
                 </vs-button>
             </template>
         </div>
+        <svg class="pie-chart animate__animated animate__zoomIn"></svg>
     </div>
 </template>
 
@@ -37,29 +39,71 @@
 
             }
         },
-        created() {
+        async created() {
             this.sortId = this.$route.params.id;
-            getArticleSortTag().then(res => {
-                this.loading = false
-                this.articleSortData = res.data
+
+
+        },
+        mounted() {
+            this.$nextTick(() => {
+                getArticleSortTag().then(res => {
+                    this.articleSortData = res.data
+                    this.getChart()
+                })
             })
         },
         methods: {
             toArticleSort(id) {
                 this.sortId = id
                 this.$emit("toArticleSort", id)
+            },
+            getChart() {
+                const svg = document.querySelector('.pie-chart');
+                var chartData = {
+                    title: '',
+                    data: {
+                        labels: [],
+                        datasets: []
+                    },
+                    options: { // optional
+                        innerRadius: 0.5,
+                        legendPosition: chartXkcd.config.positionType.upLeft,
+                    }
+                };
+                chartData.title = '';
+                let labels = new Array();
+                let datasets1 = {
+                    data:[]
+                };
+                this.articleSortData.forEach(item => {
+                    labels.push(item.sortName)
+                    datasets1.data.push(item.sortNumber)
+                })
+                chartData.data.labels=labels;
+                chartData.data.datasets.push(datasets1);
+                const pieChart = new chartXkcd.Pie(svg, chartData);
+                this.loading = false
             }
         }
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .sort-list {
         color: var(--theme-text);
         background-color: var(--theme-card-bg);
         border-radius: 20px;
-        padding: 12px;
+
         box-shadow: rgba(0, 0, 0, 0.05) 0px 5px 20px 0px;
         margin-bottom: 10px;
+    }
+
+    .pie-chart {
+        width: 100%;
+        background: var(--theme-card-bg) !important;
+
+        text {
+            color: var(--theme-text) !important;
+        }
     }
 </style>

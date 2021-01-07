@@ -2,6 +2,7 @@
     <div class="right-side">
         <UserCard></UserCard>
         <ArticleSortList  @toArticleSort="toArticleSort"></ArticleSortList>
+
     </div>
 </template>
 
@@ -12,6 +13,9 @@
     export default {
         name: "RightSide",
         components: {UserCard, ArticleSortList},
+        mounted() {
+
+        },
         methods:{
             toArticleSort(id) {
                 this.$emit("toArticleSort", id)
