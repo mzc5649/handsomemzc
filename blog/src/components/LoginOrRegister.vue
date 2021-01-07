@@ -17,7 +17,7 @@
                 <div v-show="isLogin">
                     <ValidationObserver ref="loginForm">
                         <ValidationProvider rules="required" v-slot="v">
-                            <vs-input v-model="loginForm.login" placeholder="用户名/邮箱">
+                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="loginForm.login" placeholder="用户名/邮箱">
                                 <template #icon>
                                     <i class="fas fa-user"></i>
                                 </template>
@@ -26,8 +26,8 @@
                                 </template>
                             </vs-input>
                         </ValidationProvider>
-                        <ValidationProvider rules="required" v-slot="v">
-                            <vs-input v-model="loginForm.pass" placeholder="密码" type="password">
+                        <ValidationProvider  rules="required" v-slot="v">
+                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="loginForm.pass" placeholder="密码" type="password">
                                 <template #icon>
                                     <i class="fas fa-lock"></i>
                                 </template>
@@ -42,7 +42,7 @@
                     <ValidationObserver ref="registerForm">
 
                         <ValidationProvider rules="required|user|userLength" v-slot="v">
-                            <vs-input v-model="registerForm.login" placeholder="用户名">
+                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="registerForm.login" placeholder="用户名">
                                 <template #icon>
                                     <i class="fas fa-user"></i>
                                 </template>
@@ -52,7 +52,7 @@
                             </vs-input>
                         </ValidationProvider>
                         <ValidationProvider ref="email" rules="required|email" v-slot="v">
-                            <vs-input v-model="registerForm.email" placeholder="邮箱">
+                            <vs-input dark :state="v.errors[0]?'danger':''"  v-model="registerForm.email" placeholder="邮箱">
                                 <template #icon>
                                     <i class="fas fa-envelope"></i>
                                 </template>
@@ -63,7 +63,7 @@
                         </ValidationProvider>
                         <ValidationProvider rules="required" v-slot="v">
                             <div style="display: flex;">
-                                <vs-input v-model="registerForm.code" placeholder="验证码" style="width: 100%">
+                                <vs-input dark :state="v.errors[0]?'danger':''" v-model="registerForm.code" placeholder="验证码" style="width: 100%">
                                     <template #icon>
                                         <i class="fas fa-keyboard"></i>
                                     </template>
@@ -92,7 +92,7 @@
                         </ValidationProvider>
 
                         <ValidationProvider rules="required|pwdLength" v-slot="v">
-                            <vs-input v-model="registerForm.pass" placeholder="密码" type="password">
+                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="registerForm.pass" placeholder="密码" type="password">
                                 <template #icon>
                                     <i class="fas fa-lock"></i>
                                 </template>

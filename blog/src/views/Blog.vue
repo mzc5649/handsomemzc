@@ -223,5 +223,13 @@
     ::-webkit-scrollbar-track-piece {
         background: #eee;
     }
+    #nprogress {
+        .bar {
+            z-index: 15031;
+        }
+        .spinner {
+            z-index: 15031;
+        }
+    }
 </style>
 <style lang="scss" scoped></style>

@@ -2,15 +2,14 @@
     <vs-card type="1" style="margin-bottom: 30px;">
         <template #title>
             <div class="title">
-        <span v-if="article.artInfoIsTop == 1" class="span">[置顶]</span
-        >{{ article.artInfoTitle }}
+                <span v-if="article.artInfoIsTop == 1" class="span">[置顶]</span>
+                <span style="font-weight: 700">{{ article.artInfoTitle }}</span>
             </div>
 
         </template>
         <template #img>
             <img
                     :src="article.coverUrl + '/thumbnail800'"
-                    style="height: 100%;width: 100%"
                     v-if="article.coverUrl"
             />
         </template>
@@ -37,7 +36,7 @@
             <div style="display: flex;justify-content: space-between;padding: 0 15px">
                 <div style="display: flex;align-items: center">
                     <vs-button shadow size="small" circle animation-type="rotate"
-                              class="info"
+                               style="font-weight: 700"
                                @click="toArticleSort(article.articleSort.sortId)">
                         {{ article.articleSort.sortName }}
                         <template #animate>
@@ -57,31 +56,6 @@
                 </vs-button>
             </div>
         </template>
-        <!--        <v-chip :class="{sort:article.coverUrl}"-->
-        <!--                label-->
-        <!--                @click="toArticleSort(article.articleSort.sortId)">{{article.articleSort.sortName}}-->
-        <!--        </v-chip>-->
-        <!--        <v-lazy>-->
-        <!--            <v-img-->
-        <!--                    :aspect-ratio="18/9"-->
-        <!--                    v-if="article.coverUrl"-->
-        <!--                    :src="article.coverUrl+'/thumbnail800'"-->
-        <!--                    :lazy-src="article.coverUrl+'/thumbnail100'"-->
-        <!--                    style="border-top-left-radius: 4px;border-top-right-radius: 4px"-->
-        <!--            />-->
-        <!--        </v-lazy>-->
-
-        <!--        <v-card-title>-->
-        <!--            <div @click="toArticle(article.artInfoId)" class="title_a" style="cursor: pointer">-->
-        <!--                <span v-if="article.artInfoIsTop == 1" class="body-2">[置顶]</span>-->
-        <!--                {{article.artInfoTitle}}-->
-        <!--            </div>-->
-        <!--        </v-card-title>-->
-        <!--        <v-card-subtitle>{{article.artInfoCreatedTime}}</v-card-subtitle>-->
-        <!--        <v-card-text class="text&#45;&#45;primary article-summary" v-html="article.artInfoSummary"></v-card-text>-->
-        <!--        <v-card-actions class="justify-space-between">-->
-        <!--            <v-btn text color="error" @click="toArticle(article.artInfoId)">开始阅读</v-btn>-->
-        <!--        </v-card-actions>-->
     </vs-card>
 </template>
 
@@ -132,7 +106,7 @@
         max-width: 100%;
     }
 
-    .span{
+    .span {
         font-weight: 700;
     }
 </style>
@@ -140,11 +114,13 @@
     .article-item {
         /*position: relative;*/
     }
+
     .info {
         margin-right: 10px;
         font-size: 13px;
         color: #A0A0A0;
     }
+
     .title {
         overflow: hidden;
         white-space: nowrap;

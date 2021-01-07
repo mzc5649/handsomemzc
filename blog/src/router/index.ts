@@ -8,7 +8,8 @@ const Blog = () => import('@/views/Blog.vue')
 const BlogIndex = () => import('@/views/blog/Index.vue')
 const BlogMessage = () => import('@/views/message/Index.vue')
 const Article = () => import('@/views/article/Index.vue')
-const ArticleSort = () => import('@/views/sort/Index.vue')
+const ArticleCategory = () => import('@/views/category/Index.vue')
+const Member = () => import('@/views/member/Index.vue')
 const routes: Array<RouteConfig> = [
     {
         path: "/",
@@ -29,10 +30,16 @@ const routes: Array<RouteConfig> = [
             title: '博客'
         },
         children: [
-            {path: 'index', name: 'BlogIndex', meta: {title: '博客首页',keepAlive:true}, component: BlogIndex},
-            {path: 'msg', name: 'BlogMessage', meta: {title: '留言',keepAlive:true}, component: BlogMessage},
-            {path: 'article/:id', name: 'Article', meta: {title: '文章详情',keepAlive:false}, component: Article},
-            {path: 'sort/:id', name: 'ArticleSort', meta: {title: '分类详情',keepAlive:true}, component: ArticleSort},
+            {path: 'index', name: 'BlogIndex', meta: {title: '博客首页', keepAlive: false}, component: BlogIndex},
+            {path: 'msg', name: 'BlogMessage', meta: {title: '留言', keepAlive: false}, component: BlogMessage},
+            {path: 'article/:id', name: 'Article', meta: {title: '文章详情', keepAlive: false}, component: Article},
+            {
+                path: 'category/:id',
+                name: 'ArticleCategory',
+                meta: {title: '分类详情', keepAlive: false},
+                component: ArticleCategory
+            },
+            {path: 'member/:id', name: 'Member', meta: {title: '用户中心', keepAlive: false}, component: Member},
         ]
 
     },
@@ -40,7 +47,9 @@ const routes: Array<RouteConfig> = [
 ];
 
 const router = new VueRouter({
-    scrollBehavior: () => {y:0},
+    scrollBehavior: () => {
+        return {x:0,y:0}
+    },
     routes,
 });
 

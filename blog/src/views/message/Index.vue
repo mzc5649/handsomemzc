@@ -1,17 +1,17 @@
 <template>
     <div class="index">
-        <v-container>
-            <MessageList :comments="comments"></MessageList>
-            <div ref="commentList">
-                <CommentBox :message-loading="messageLoading" :comments="comments"></CommentBox>
-            </div>
-            <v-pagination
-                    :length="page.pageTotal"
-                    :value="page.currentPage"
-                    @input="pageChange"
-            >
-            </v-pagination>
-        </v-container>
+<!--        <v-container>-->
+<!--            <MessageList :comments="comments"></MessageList>-->
+<!--            <div ref="commentList">-->
+<!--                <CommentBox :message-loading="messageLoading" :comments="comments"></CommentBox>-->
+<!--            </div>-->
+<!--            <v-pagination-->
+<!--                    :length="page.pageTotal"-->
+<!--                    :value="page.currentPage"-->
+<!--                    @input="pageChange"-->
+<!--            >-->
+<!--            </v-pagination>-->
+<!--        </v-container>-->
     </div>
 
 </template>

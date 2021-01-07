@@ -1,14 +1,13 @@
 <template>
     <div class="Index">
-        <v-app-bar app dense :height="56" flat fixed style="background-color: transparent;">
-            <div class="toolbar-content container">
+        <div style="background-color: transparent;position: fixed;top: 0;height: 56px;z-index: 9999">
                 <div class="toolbar-title">handsomemzc</div>
                 <div class="toolbar-nav">
-                    <v-btn elevation="0" tile text to="/">welcome</v-btn>
-                    <v-btn elevation="0" tile text to="/blog/index">博客</v-btn>
+                    <button to="/blog/index">
+                        <RouterLink to="/blog"> 博客</RouterLink>
+                    </button>
                 </div>
-            </div>
-        </v-app-bar>
+        </div>
         <div id='background' class="background">
         </div>
         <button class="btn-nav pre-button" direction='pre'>
@@ -212,14 +211,6 @@
         .toolbar-nav {
             height: 100%;
 
-            .v-btn {
-                font-size: 20px;
-                color: white;
-                min-width: 80px;
-                margin: 0 6px;
-                height: 100%;
-                border: none;
-            }
         }
 
         .toolbar-title {

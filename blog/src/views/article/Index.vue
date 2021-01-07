@@ -2,58 +2,73 @@
     <div class="article">
         <vs-row justify="space-between">
             <vs-col :lg="9" :md="9" :sm="12" :xs="12">
-                <div class="article-top-nav">
-                    <router-link to="/blog">首页</router-link>
-                    /
-                    <router-link :to="'/blog/sort/'+articleData.articleSort.sortId">{{articleData.articleSort.sortName}}</router-link>
-                    /
-                    {{articleData.artInfoTitle}}
-                </div>
-                <div class="article-left">
+                <content-placeholders v-if="articleLoading">
+                    <content-placeholders-text :lines="1"></content-placeholders-text>
+                    <content-placeholders-img></content-placeholders-img>
+                    <content-placeholders-heading></content-placeholders-heading>
+                    <content-placeholders-heading img></content-placeholders-heading>
+                    <content-placeholders-text :lines="20"></content-placeholders-text>
+                </content-placeholders>
+                <div class="article-left" v-if="!articleLoading">
+                    <div class="article-top-nav">
+                        <router-link to="/blog/index">首页</router-link>
+                        /
+                        <router-link :to="'/blog/category/'+articleData.articleSort.sortId">
+                            {{articleData.articleSort.sortName}}
+                        </router-link>
+                        /
+                        <span style="opacity: 0.7">{{articleData.artInfoTitle}}</span>
+                    </div>
                     <div v-if="articleData.coverUrl">
                         <img style="width: 100%" :src="articleData.coverUrl">
                     </div>
-                    <span class="article-sort">{{articleData.articleSort.sortName}}</span>
                     <div class="article-content">
                         <h1 class=" article_title">{{articleData.artInfoTitle}}</h1>
-                        <div class="article-info">
+                        <div class="article-user">
                             <div>
-                                <vs-avatar circle size="48" style="border: 2px white solid">
+                                <vs-avatar circle size="54" style="border: 2px white solid">
                                     <img
                                             :src="articleData.user.uIcon"
                                     />
                                 </vs-avatar>
                             </div>
                             <div style="margin-left: 15px">
-                                <div>{{articleData.user.uUsername}}</div>
-                                <div>{{articleData.artInfoCreatedTime}}</div>
+                                <div class="article-user-name">{{articleData.user.uUsername}}</div>
+                                <div class="article-user-info">{{articleData.artInfoCreatedTime}}</div>
                             </div>
                         </div>
                         <div class="article-body">
                             <div class="markdown-body" ref="content" v-html="articleData.articleContent.artContent">
                             </div>
                         </div>
-                        <div>最后修改于：{{articleData.artInfoModifiedTime}}</div>
+                        <div style="opacity: 0.7;font-size: 13px">最后修改于：{{articleData.artInfoModifiedTime}}</div>
                     </div>
                 </div>
             </vs-col>
             <vs-col :lg="3" :md="3" :sm="0" :xs="0" v-if="device!='mobile'">
                 <div class="article-right">
-                    <div class="menus-box" :class="auto_fixed" v-show="!navLoading">
-                        <div style="margin-bottom: 10px">文章导航</div>
-                        <div style="display: flex;justify-content: center;padding: 10px 0">
-                            {{articleData.artInfoTitle}}
-                        </div>
-                        <ul>
-                            <div class="menus" ref="navList">
-                                <template v-for="item in articleNav">
-                                    <li @click="jumpToTitle(item.id)" class="artMenuIndex"
-                                        :class="['menu-lev'+item.lev,'menu-'+item.id]">
-                                        {{item.name}}
-                                    </li>
-                                </template>
+                    <ArticleSortList></ArticleSortList>
+                    <div class="menus-box" :class="auto_fixed">
+                        <ContentPlaceholders v-if="navLoading">
+                            <content-placeholders-heading></content-placeholders-heading>
+                            <content-placeholders-text :lines="10"></content-placeholders-text>
+                        </ContentPlaceholders>
+                        <div v-if="!navLoading">
+                            <div style="margin-bottom: 10px">文章导航</div>
+                            <div style="display: flex;justify-content: center;padding: 10px 0">
+                                {{articleData.artInfoTitle}}
                             </div>
-                        </ul>
+                            <ul>
+                                <div class="menus" ref="navList">
+                                    <template v-for="item in articleNav">
+                                        <li @click="jumpToTitle(item.id)" class="artMenuIndex"
+                                            :class="['menu-lev'+item.lev,'menu-'+item.id]">
+                                            {{item.name}}
+                                        </li>
+                                    </template>
+                                </div>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </vs-col>
@@ -64,10 +79,12 @@
 
 <script>
     import {getArticleDataById} from '@/api/article'
+    import ArticleSortList from "../../components/ArticleSortList";
 
     export default {
 
         name: "Index",
+        components: {ArticleSortList},
         data() {
             return {
                 markdownOption: {},
@@ -85,7 +102,9 @@
                 articleLoading: true,
                 navLoading: true,
                 auto_fixed: {
-                    menu_fixed: false
+                    menu_fixed: false,
+                    animate__animated: true,
+                    animate__zoomInLeft: false
                 }
             }
         },
@@ -144,10 +163,9 @@
             //监听文章导航
             onScroll() {
                 let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-                let header_height = 44
-                this.auto_fixed = {
-                    menu_fixed: scrollTop >= header_height
-                }
+                let header_height = 150
+                this.auto_fixed.menu_fixed=scrollTop >= header_height
+                this.auto_fixed.animate__zoomInLeft=scrollTop >= header_height
 
             },
             getElementToPageTop(el) {
@@ -200,14 +218,22 @@
 <style lang="scss" scoped>
     .article {
         padding: 12px;
-        position: relative;
     }
 
     .article-top-nav {
-        background-color: var(--theme-card-bg);
-        border-radius: 20px;
         padding: 12px;
-        margin-bottom: 6px;
+        color: var(--theme-text);
+        font-size: 15px;
+        font-weight: 700;
+
+        a {
+            text-decoration-line: none;
+            color: var(--theme-text);
+
+            &:hover {
+                text-decoration-line: underline;
+            }
+        }
     }
 
     .article-left {
@@ -221,38 +247,47 @@
     }
 
     .article-content {
-        padding: 40px;
+        padding: 30px;
         color: var(--theme-text) !important;
 
         .article_title {
             margin-bottom: 30px;
         }
 
-        .article-info {
+        .article-user {
             display: flex;
             align-items: center;
+            margin-bottom: 30px;
+
+            .article-user-name {
+                font-weight: 700;
+            }
+
+            .article-user-info {
+                font-size: 13px;
+            }
         }
 
         .article-body {
         }
     }
 
-    .article-sort {
-        color: var(--theme-text);
-    }
-
     .menus-box {
         background-color: var(--theme-card-bg);
         border-radius: 20px;
-        width: 200px;
         padding: 12px;
         color: var(--theme-text);
-        box-shadow: rgba(0, 0, 0, 0.3) 0px 5px 20px 0px;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 5px 20px 0px;
+        ul {
+            padding: 0;
+        }
     }
 
     .menu_fixed {
         position: fixed;
         top: 56px;
+        z-index: 9999;
+        right: 0;
     }
 </style>
 <style lang="scss">

@@ -50,7 +50,6 @@
         methods: {
             loadData() {
                 const that = this;
-
                 this.$emit("loadData", that.$data);
             }
         },
