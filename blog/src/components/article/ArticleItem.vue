@@ -1,9 +1,9 @@
 <template>
-    <div data-scroll="in"  class="article-item">
+    <div class="article-item">
         <vs-card type="1" style="margin-bottom: 30px;">
             <template #title>
                 <div class="title">
-                    <span v-if="article.artInfoIsTop == 1" class="span" >[置顶]</span>
+                    <span v-if="article.artInfoIsTop == 1" class="span">[置顶]</span>
                     <span style="font-weight: 700">{{ article.artInfoTitle }}</span>
                 </div>
             </template>
@@ -62,7 +62,6 @@
 </template>
 
 <script>
-    import ScrollOut from "scroll-out";
     export default {
         name: "ArticleItem",
         props: {
@@ -84,16 +83,6 @@
             }
         },
         mounted() {
-            this.$nextTick(() => {
-                ScrollOut({
-                    onShown: function (el) {
-
-                    },
-                    onHidden: function (el) {
-                        // hide the element initially
-                    }
-                });
-            })
         },
         methods: {
             toArticle(id) {

@@ -8,16 +8,17 @@
 
                 prevent-close>
             <template #header>
-                <h4>
+                <h1>
                     欢迎你
-                </h4>
+                </h1>
             </template>
             <div class="login-form">
                 <h3 style="margin: 10px 0">请填写以下信息进行{{type|typeName}}</h3>
                 <div v-show="isLogin">
                     <ValidationObserver ref="loginForm">
                         <ValidationProvider rules="required" v-slot="v">
-                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="loginForm.login" placeholder="用户名/邮箱">
+                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="loginForm.login"
+                                      placeholder="用户名/邮箱">
                                 <template #icon>
                                     <i class="fas fa-user"></i>
                                 </template>
@@ -26,8 +27,9 @@
                                 </template>
                             </vs-input>
                         </ValidationProvider>
-                        <ValidationProvider  rules="required" v-slot="v">
-                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="loginForm.pass" placeholder="密码" type="password">
+                        <ValidationProvider rules="required" v-slot="v">
+                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="loginForm.pass" placeholder="密码"
+                                      type="password">
                                 <template #icon>
                                     <i class="fas fa-lock"></i>
                                 </template>
@@ -36,13 +38,19 @@
                                 </template>
                             </vs-input>
                         </ValidationProvider>
+                        <vs-checkbox dark v-model="isRemember">
+                            <div style="font-weight: 700">
+                                十天内免登录
+                            </div>
+                        </vs-checkbox>
                     </ValidationObserver>
                 </div>
                 <div v-show="isRegister">
                     <ValidationObserver ref="registerForm">
 
                         <ValidationProvider rules="required|user|userLength" v-slot="v">
-                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="registerForm.login" placeholder="用户名">
+                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="registerForm.login"
+                                      placeholder="用户名">
                                 <template #icon>
                                     <i class="fas fa-user"></i>
                                 </template>
@@ -52,7 +60,8 @@
                             </vs-input>
                         </ValidationProvider>
                         <ValidationProvider ref="email" rules="required|email" v-slot="v">
-                            <vs-input dark :state="v.errors[0]?'danger':''"  v-model="registerForm.email" placeholder="邮箱">
+                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="registerForm.email"
+                                      placeholder="邮箱">
                                 <template #icon>
                                     <i class="fas fa-envelope"></i>
                                 </template>
@@ -63,7 +72,8 @@
                         </ValidationProvider>
                         <ValidationProvider rules="required" v-slot="v">
                             <div style="display: flex;">
-                                <vs-input dark :state="v.errors[0]?'danger':''" v-model="registerForm.code" placeholder="验证码" style="width: 100%">
+                                <vs-input dark :state="v.errors[0]?'danger':''" v-model="registerForm.code"
+                                          placeholder="验证码" style="width: 100%">
                                     <template #icon>
                                         <i class="fas fa-keyboard"></i>
                                     </template>
@@ -92,7 +102,8 @@
                         </ValidationProvider>
 
                         <ValidationProvider rules="required|pwdLength" v-slot="v">
-                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="registerForm.pass" placeholder="密码" type="password">
+                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="registerForm.pass" placeholder="密码"
+                                      type="password">
                                 <template #icon>
                                     <i class="fas fa-lock"></i>
                                 </template>
@@ -193,7 +204,8 @@
                     tamp: '',
                     hash: ''
                 },
-                submitBtnLoading: false
+                submitBtnLoading: false,
+                isRemember: false
             }
         },
         created() {
@@ -259,6 +271,10 @@
                             pass: this.loginForm.pass
                         }
                         login(data).then(res => {
+                            if (this.isRemember) {
+                                this.$cookies.set('login', this.loginForm.login, '10D' )
+                                this.$cookies.set('pass', this.loginForm.pass, '10D' )
+                            }
                             this.$vs.notification({
                                 progress: "auto",
                                 color: 'success',

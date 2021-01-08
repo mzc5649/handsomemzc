@@ -21,7 +21,7 @@
                 </vs-button>
             </template>
         </div>
-        <svg  class="pie-chart"></svg>
+        <svg   class="pie-chart animate__animated animate__zoomInDown"></svg>
     </div>
 </template>
 

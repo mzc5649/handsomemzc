@@ -1,7 +1,7 @@
 <template>
     <div  class="right-side">
         <UserCard></UserCard>
-        <ArticleSortList data-scroll="in" @toArticleSort="toArticleSort"></ArticleSortList>
+        <ArticleSortList  @toArticleSort="toArticleSort"></ArticleSortList>
     </div>
 </template>
 
@@ -22,9 +22,7 @@
             this.$nextTick(() => {
                 this.so = ScrollOut({
                     onShown: function (el) {
-                        el.classList.remove("animate__animated", "animate__zoomInDown")
-                        void el.offsetWidth;
-                        el.classList.add("animate__animated", "animate__zoomInDown")
+
                     },
                     onHidden: function (el) {
                         // hide the element initially

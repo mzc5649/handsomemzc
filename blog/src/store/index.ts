@@ -4,6 +4,7 @@ import axios from "axios";
 import snackbar from "@/store/modules/snackbar";
 import app from '@/store/modules/app'
 import VueCookies from 'vue-cookies'
+import {login} from '@/api/user'
 
 Vue.use(VueCookies)
 Vue.use(Vuex)
@@ -42,7 +43,20 @@ export default new Vuex.Store({
                     Vue.$cookies.remove("token")
                 })
             } else {
-                commit("SET_USER", '')
+                //免登录
+                if (Vue.$cookies.get('login') && Vue.$cookies.get('pass')) {
+                    const data = {
+                        login: Vue.$cookies.get('login'),
+                        pass: Vue.$cookies.get('pass')
+                    };
+                    login(data).then(res => {
+                        commit("SET_USER", res.data.userinfo)
+                        Vue.$cookies.set("token", res.data.token, 3600)
+                    })
+                } else {
+                    commit("SET_USER", '')
+                }
+
             }
         },
         //注销
@@ -50,6 +64,8 @@ export default new Vuex.Store({
             commit("SET_USER", '')
             commit("SET_TOKEN", '')
             Vue.$cookies.remove("token");
+            Vue.$cookies.remove("login");
+            Vue.$cookies.remove("pass");
         }
 
     },
