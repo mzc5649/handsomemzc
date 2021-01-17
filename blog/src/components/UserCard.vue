@@ -1,5 +1,5 @@
 <template>
-    <div v-if="user" class="card-user">
+    <div v-if="user"  class="card-user ">
         <vs-card type="1">
             <template #title>
                 <div style="display: flex;align-items: center">
@@ -31,6 +31,9 @@
 
     export default {
         name: "UserCard",
+        mounted() {
+
+        },
         computed: {
             ...mapState(["user"])
         },

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import ArticleList from "@/components/article/ArticleList";
+    import ArticleList from "@/components/ArticleList";
     import {getArticleDataBySort} from "@/api/sort"
     import RightSide from "../../components/RightSide";
 

@@ -1,36 +1,24 @@
 <template>
     <div class="Index">
-        <div style="background-color: transparent;position: fixed;top: 0;height: 56px;z-index: 9999">
-                <div class="toolbar-title">handsomemzc</div>
-                <div class="toolbar-nav">
-                    <button to="/blog/index">
-                        <RouterLink to="/blog"> 博客</RouterLink>
-                    </button>
-                </div>
+        <div style="background-color: transparent;position: relative;z-index: 9999">
+                <button class="swap">
+                    <RouterLink to="/blog">博客</RouterLink>
+                </button>
         </div>
         <div id='background' class="background">
         </div>
-        <button class="btn-nav pre-button" direction='pre'>
-            <i class="el-icon-arrow-left"></i>
-        </button>
-        <button class="btn-nav next-button" direction='next'>
-            <i class="el-icon-arrow-right" direction='next'></i>
-        </button>
-
     </div>
 </template>
 
 <script>
-    // @ is an alias to /src
-
-    import axios from 'axios'
 
     export default {
         name: "Index",
         components: {},
         data() {
             return {
-                audios: []
+                bgInterval: null,
+                currentIndex: 0,
             }
         },
         created() {
@@ -38,8 +26,6 @@
         },
         mounted() {
             let that = this;
-            var currentIndex = 0;
-            var flag = true;
             const option = {
                 width: 1920,
                 height: 1080,
@@ -119,8 +105,6 @@
             function changeBG(pre, next) {
                 var baseTimeline = new TimelineMax({
                     onComplete: function () {
-                        //完成过渡 设置flag为可过渡
-                        flag = true;
                     }, onUpdate: function () {
                     }
                 });
@@ -128,99 +112,28 @@
                     .to(slideImages[pre], 0.5, {alpha: 0})
                     .to(slideImages[next], 0.5, {alpha: 1})
                     .to(displacementFilter.scale, 1, {x: 20, y: 20});
-            }
-
-            var navs = document.querySelectorAll('.btn-nav');
-            for (var i = 0; i < navs.length; i++) {
-                var nav = navs[i];
-                nav.onclick = function () {
-                    //过渡时不可更改
-                    if (flag) {
-                        //设置不可过渡
-                        flag = false;
-                        if (this.getAttribute('direction') === 'next') {
-                            if (currentIndex >= 0 && currentIndex < 2) {
-                                currentIndex++;
-                                changeBG(currentIndex - 1, currentIndex);
-                            } else {
-                                currentIndex = 0;
-                                changeBG(2, currentIndex);
-                            }
-                        } else {
-                            if (currentIndex <= 2 && currentIndex > 0) {
-                                currentIndex--;
-                                changeBG(currentIndex + 1, currentIndex);
-                            } else {
-                                currentIndex = 2;
-                                changeBG(0, currentIndex);
-                            }
-                        }
-                    }
-
+            };
+            this.bgInterval = setInterval(() => {
+                if (this.currentIndex >= 0 && this.currentIndex < 2) {
+                    this.currentIndex++;
+                    changeBG(this.currentIndex - 1, this.currentIndex);
+                } else {
+                    this.currentIndex = 0;
+                    changeBG(2, this.currentIndex);
                 }
-            }
-
-
+            }, 10000);
         },
         updated() {
-            let that = this;
-
         },
-        methods: {}
+        methods: {},
+        beforeDestroy() {
+            clearInterval(this.bgInterval)
+        }
     }
 
 
 </script>
 <style scoped lang="scss">
-    .pre-button {
-        position: fixed;
-        left: 16px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        color: white;
-        cursor: pointer;
-        font-size: 50px;
-        z-index: 1;
-        outline: none
-    }
-
-    .next-button {
-        position: fixed;
-        right: 16px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        color: white;
-        cursor: pointer;
-        font-size: 50px;
-        z-index: 1;
-        outline: none
-    }
-    .toolbar-content {
-        height: 100%;
-        width: 100%;
-        align-items: center;
-        justify-content: space-between;
-        display: flex;
-        padding: 0;
-        font-size: 22px;
-        color: white;
-        .toolbar-nav {
-            height: 100%;
-
-        }
-
-        .toolbar-title {
-            font-weight: 700;
-        }
-    }
-
 </style>
 <style>
-    .aplayer-lrc {
-
-    }
 </style>

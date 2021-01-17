@@ -1,6 +1,6 @@
 <template>
     <div class="sort-list">
-        <div style="padding: 12px">
+        <div style="padding: 12px" class="" >
             分类标签
         </div>
         <content-placeholders v-if="loading">
@@ -21,13 +21,12 @@
                 </vs-button>
             </template>
         </div>
-        <svg   class="pie-chart animate__animated animate__zoomInDown"></svg>
+        <svg  class="pie-chart "></svg>
     </div>
 </template>
 
 <script>
     import {getArticleSortTag} from "@/api/sort"
-
     export default {
         name: "ArticleSortList",
         props: {},
@@ -41,8 +40,7 @@
         },
         async created() {
             this.sortId = this.$route.params.id;
-
-
+            
         },
         mounted() {
             this.$nextTick(() => {
@@ -93,9 +91,9 @@
         color: var(--theme-text);
         background-color: var(--theme-card-bg);
         border-radius: 20px;
-
         box-shadow: rgba(0, 0, 0, 0.05) 0px 5px 20px 0px;
         margin-bottom: 10px;
+        padding-bottom: 10px;
     }
 
     .pie-chart {

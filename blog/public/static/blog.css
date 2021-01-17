@@ -5,3 +5,14 @@
     background-image: linear-gradient(124deg, #dec02b, #d8da69, #f5e095, #82ff59);
     background-size: 800% 800%;
 }
+[data-scroll] {
+    transition: opacity 1s;
+}
+
+[data-scroll="in"] {
+    opacity: 1;
+}
+
+[data-scroll="out"] {
+    opacity: 0;
+}

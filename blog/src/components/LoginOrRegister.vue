@@ -359,7 +359,10 @@
                                 }
                             }, 1000)
                         }
-                    )
+                    ).catch(()=>{
+                        this.email.loading = false;
+                        this.email.isSend = false;
+                    })
                 })
 
             }

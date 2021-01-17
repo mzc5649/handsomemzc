@@ -28,7 +28,7 @@
 
 <script>
     import {getArticleData} from "@/api/article";
-    import ArticleList from "@/components/article/ArticleList";
+    import ArticleList from "@/components/ArticleList";
     import RightSide from "../../components/RightSide";
 
     export default {

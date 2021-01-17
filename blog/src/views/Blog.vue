@@ -241,16 +241,6 @@
         }
     }
 
-    [data-scroll] {
-        transition: opacity 1s;
-    }
 
-    [data-scroll="in"] {
-        opacity: 1;
-    }
-
-    [data-scroll="out"] {
-        opacity: 0;
-    }
 </style>
 <style lang="scss" scoped></style>

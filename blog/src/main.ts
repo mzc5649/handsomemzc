@@ -27,6 +27,7 @@ import '@fortawesome/fontawesome-free/js/all'
 import VueContentPlaceholders from 'vue-content-placeholders'
 Vue.use(VueContentPlaceholders)
 
+import 'magic.css/dist/magic.css'
 
 new Vue({
     router,

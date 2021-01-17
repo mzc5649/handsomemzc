@@ -12,7 +12,7 @@
     "aplayer": "^1.10.1",
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
-    "element-ui": "^2.13.2",
+    "magic.css": "^1.4.6",
     "marked": "^1.2.2",
     "mavon-editor": "^2.9.0",
     "nprogress": "^0.2.0",

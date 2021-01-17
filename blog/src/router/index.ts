@@ -18,6 +18,7 @@ const routes: Array<RouteConfig> = [
     },
     {
         path: '/404',
+        name: '404',
         meta: {title: '404'},
         component: () => import('@/views/404.vue'),
     },
@@ -39,7 +40,7 @@ const routes: Array<RouteConfig> = [
                 meta: {title: '分类详情', keepAlive: false},
                 component: ArticleCategory
             },
-            {path: 'member/:id', name: 'Member', meta: {title: '用户中心', keepAlive: false}, component: Member},
+            {path: 'member', name: 'Member', meta: {title: '用户中心', keepAlive: false}, component: Member},
         ]
 
     },

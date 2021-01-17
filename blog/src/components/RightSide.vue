@@ -1,7 +1,7 @@
 <template>
-    <div  class="right-side">
-        <UserCard></UserCard>
-        <ArticleSortList  @toArticleSort="toArticleSort"></ArticleSortList>
+    <div class="right-side">
+        <UserCard data-scroll="in" class="magictime"></UserCard>
+        <ArticleSortList @toArticleSort="toArticleSort"></ArticleSortList>
     </div>
 </template>
 
@@ -14,21 +14,20 @@
         name: "RightSide",
         components: {UserCard, ArticleSortList},
         data() {
-            return {
-                so: ''
-            }
+            return {}
         },
         mounted() {
-            this.$nextTick(() => {
-                this.so = ScrollOut({
-                    onShown: function (el) {
+            ScrollOut({
+                onShown: function (el) {
+                    el.classList.add("boingInUp");
+                },
+                onHidden: function (el) {
+                    // hide the element initially
+                    el.classList.remove("boingInUp");
+                },
 
-                    },
-                    onHidden: function (el) {
-                        // hide the element initially
-                    }
-                });
-            })
+            });
+
         },
         methods: {
             toArticleSort(id) {
@@ -36,7 +35,7 @@
             }
         },
         destroyed() {
-            this.so.teardown()
+
         }
     }
 </script>
