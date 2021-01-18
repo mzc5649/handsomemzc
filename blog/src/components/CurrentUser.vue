@@ -19,7 +19,7 @@
                         <i class="fas fa-male info" v-if="user.uSex == 1" title="男"></i>
                         <i class="fas fa-female info" v-if="user.uSex == 2" title="女"></i>
                     </div>
-                    <vs-button shadow block to="/blog/member">
+                    <vs-button shadow block :to="'/blog/member/'+user.uId">
                         <i class="fas fa-user"></i>
                         个人中心
                     </vs-button>

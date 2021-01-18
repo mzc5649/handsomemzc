@@ -1,7 +1,7 @@
 <template>
     <div class="right-side">
         <UserCard data-scroll="in" class="magictime"></UserCard>
-        <ArticleSortList @toArticleSort="toArticleSort"></ArticleSortList>
+        <ArticleSortList></ArticleSortList>
     </div>
 </template>
 
@@ -30,9 +30,7 @@
 
         },
         methods: {
-            toArticleSort(id) {
-                this.$emit("toArticleSort", id)
-            }
+
         },
         destroyed() {
 

@@ -5,9 +5,9 @@ import snackbar from "@/store/modules/snackbar";
 import app from '@/store/modules/app'
 import VueCookies from 'vue-cookies'
 import {login} from '@/api/user'
-
 Vue.use(VueCookies)
 Vue.use(Vuex)
+
 export default new Vuex.Store({
     state: {
         LoginOrRegisterDialog: false,

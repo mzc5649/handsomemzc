@@ -5,7 +5,7 @@
             <vs-navbar-item :active="active == 'welcome'" to="/" id="welcome">
                 Welcome
             </vs-navbar-item>
-            <vs-navbar-item :active="active == 'blog'" to="/blog/index" id="blog">
+            <vs-navbar-item :active="active == 'blog'" to="/blog" id="blog">
                 博客
             </vs-navbar-item>
             <vs-navbar-item :active="active == 'message'" to="/blog/msg" id="message">
@@ -82,7 +82,6 @@
     import Music from "../api/music";
     import LeftSide from "../components/LeftSide";
 
-
     export default {
         name: "Blog",
         components: {
@@ -114,21 +113,29 @@
                     // color: "#d5397b",
                     text: "Loading..."
                 });
-                const h = new Date().getHours();
-                const flag = (h >= 19 && h <= 24) || (h >= 0 && h <= 7);
-                if (flag) {
-                    this.$store.dispatch("app/toggleDark", flag);
+
+                if (this.dark == 'dark') {
                     if (!document.body.hasAttribute("vs-theme")) {
                         document.body.setAttribute("vs-theme", "dark");
                     }
-                    //通知
-                    that.$vs.notification({
-                        progress: "auto",
-                        position: "bottom-right",
-                        title: "夜间模式",
-                        text: "夜晚到了，已自动为您开启夜间模式，右上角可切换。"
-                    });
+                } else {
+                    // const h = new Date().getHours();
+                    // const flag = (h >= 19 && h <= 24) || (h >= 0 && h <= 7);
+                    // if (flag) {
+                    //     this.$store.dispatch("app/toggleDark", 'dark');
+                    //     if (!document.body.hasAttribute("vs-theme")) {
+                    //         document.body.setAttribute("vs-theme", "dark");
+                    //     }
+                    //     //通知
+                    //     that.$vs.notification({
+                    //         progress: "auto",
+                    //         position: "bottom-right",
+                    //         title: "夜间模式",
+                    //         text: "夜晚到了，已自动为您开启夜间模式，右上角可切换。"
+                    //     });
+                    // }
                 }
+
                 const music = new Music();
                 music.getAplayerDataById({id: "5197713080"}).then(res => {
                     this.audios = res;
@@ -194,23 +201,14 @@
     };
 </script>
 <style lang="scss">
-    :root {
-        --theme-background: #f4f4f4;
-        --theme-text: #2c3e50;
-        --theme-card-bg: white;
-        --theme-md-bg: #f6f8fa;
-    }
+
 
     #aplayer {
     }
 
-    html {
-        font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
-        "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-    }
 
     body {
-        background-color: var(--theme-background, rgb(244, 244, 244));
+        background-color: var(--background-color);
     }
 
     ::-webkit-scrollbar {

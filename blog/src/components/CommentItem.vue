@@ -75,7 +75,6 @@
 
 <script>
     import {mapState} from 'vuex'
-    import {Loading} from 'element-ui'
     import {getMessageOfReply} from '@/api/message'
 
     export default {

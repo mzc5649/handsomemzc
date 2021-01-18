@@ -18,9 +18,9 @@
 
 <style scoped lang="scss">
     .footer {
-        color: var(--theme-text);
+        color: var(--primary-color);
         a{
-            color: var(--theme-text);
+            color: var(--primary-color);
         }
     }
 </style>

@@ -1,5 +1,11 @@
 import request from '@/utils/request'
 
+export function getUserInfoById(id:string) {
+    return request({
+        url:'/blog-api/user/'+id,
+        method:'get'
+    })
+}
 export function login(data:object) {
     return request({
         url:'/blog-api/user/login',

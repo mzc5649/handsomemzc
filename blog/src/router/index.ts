@@ -25,13 +25,14 @@ const routes: Array<RouteConfig> = [
     {
         path: '/blog',
         name: 'Blog',
-        redirect: "/blog/index",
+        redirect: "/blog",
         component: Blog,
         meta: {
             title: '博客'
         },
         children: [
-            {path: 'index', name: 'BlogIndex', meta: {title: '博客首页', keepAlive: false}, component: BlogIndex},
+            {path: '404',meta: {title: '未找到页面'} , component: () => import('@/views/404.vue')},
+            {path: '', name: 'BlogIndex', meta: {title: '博客首页', keepAlive: false}, component: BlogIndex},
             {path: 'msg', name: 'BlogMessage', meta: {title: '留言', keepAlive: false}, component: BlogMessage},
             {path: 'article/:id', name: 'Article', meta: {title: '文章详情', keepAlive: false}, component: Article},
             {
@@ -40,7 +41,19 @@ const routes: Array<RouteConfig> = [
                 meta: {title: '分类详情', keepAlive: false},
                 component: ArticleCategory
             },
-            {path: 'member', name: 'Member', meta: {title: '用户中心', keepAlive: false}, component: Member},
+            {
+                path: 'member/:id',
+                name: 'Member',
+                meta: {title: '用户中心', keepAlive: false},
+                component: Member,
+                redirect:'/blog/member',
+                children: [
+                    {
+                        path: '',
+                        component: () => import('@/views/member/userSiderbar/Index.vue')
+                    }
+                ]
+            },
         ]
 
     },
@@ -49,7 +62,7 @@ const routes: Array<RouteConfig> = [
 
 const router = new VueRouter({
     scrollBehavior: () => {
-        return {x:0,y:0}
+        return {x: 0, y: 0}
     },
     routes,
 });

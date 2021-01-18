@@ -20,7 +20,7 @@
                 </div>
             </vs-col>
             <vs-col :lg="3" :md="3" :sm="0" :xs="0" v-if="device!='mobile'">
-                <RightSide @toArticleSort="toArticleSort"></RightSide>
+                <RightSide></RightSide>
             </vs-col>
         </vs-row>
     </div>
@@ -92,15 +92,6 @@
                 this.articleLoading = true
                 this.getArticleData()
             },
-            //跳转分类
-            toArticleSort(id) {
-                this.$router.push({
-                    name: "ArticleCategory",
-                    params: {
-                        id: id
-                    }
-                })
-            }
         }
     };
 </script>

@@ -11,7 +11,7 @@
                 </content-placeholders>
                 <div class="article-left" v-if="!articleLoading">
                     <div class="article-top-nav">
-                        <router-link to="/blog/index">首页</router-link>
+                        <router-link to="/blog">首页</router-link>
                         /
                         <router-link :to="'/blog/category/'+articleData.articleSort.sortId">
                             {{articleData.articleSort.sortName}}
@@ -228,7 +228,7 @@
 
         a {
             text-decoration-line: none;
-            color: var(--theme-text);
+            color: var(--primary-color);
 
             &:hover {
                 text-decoration-line: underline;
@@ -237,18 +237,20 @@
     }
 
     .article-left {
-        background-color: var(--theme-card-bg);
+        background-color: var(--card-background-color);
         border-radius: 20px;
         padding: 12px;
+        border: 1px solid var(--border-color);
     }
 
     .article-right {
         padding: 0 12px;
+
     }
 
     .article-content {
         padding: 30px;
-        color: var(--theme-text) !important;
+        color: var(--primary-color) !important;
 
         .article_title {
             margin-bottom: 30px;
@@ -273,10 +275,10 @@
     }
 
     .menus-box {
-        background-color: var(--theme-card-bg);
+        background-color: var(--card-background-color);
         border-radius: 20px;
         padding: 12px;
-        color: var(--theme-text);
+        color: var(--primary-color);
         box-shadow: rgba(0, 0, 0, 0.05) 0px 5px 20px 0px;
         ul {
             padding: 0;
@@ -297,11 +299,12 @@
     }
 
     .markdown-body pre {
-        background-color: var(--theme-md-bg);
+        background-color: var(--md-background-color);
+
     }
 
     .markdown-body .hljs {
-        background-color: var(--theme-md-bg);
+        background-color: var(--md-background-color);
     }
 
     .artMenuIndex {

@@ -14,7 +14,7 @@
                 <ArticleList v-show="!articleLoading" :articleStore="articleStore" @loadData="loadData"></ArticleList>
             </vs-col>
             <vs-col :lg="3" :md="3" :sm="12" :xs="12" v-if="device!='mobile'">
-                <RightSide @toArticleSort="toArticleSort"></RightSide>
+                <RightSide></RightSide>
             </vs-col>
         </vs-row>
     </div>
@@ -37,7 +37,7 @@
                     pageSize: 5
                 },
                 id: 0,
-                articleLoading: true
+                articleLoading: true,
             }
         },
         created() {
@@ -87,18 +87,13 @@
                 this.articleLoading = true
                 this.getArticleData()
             },
-            //跳转分类
-            toArticleSort(id) {
-                this.id = id.toString()
-                this.$router.push({
-                    name: "ArticleCategory",
-                    params: {
-                        id: id
-                    }
-                })
-                this.initData()
-            }
-        }
+        },
+        beforeRouteUpdate(to, from, next) {
+            //路由更新前选择分类
+            this.id = to.params.id
+            this.initData()
+            next()
+        },
     }
 </script>
 

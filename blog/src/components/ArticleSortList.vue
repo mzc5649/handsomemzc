@@ -51,9 +51,15 @@
             })
         },
         methods: {
+            //跳转分类
             toArticleSort(id) {
                 this.sortId = id
-                this.$emit("toArticleSort", id)
+                this.$router.push({
+                    name: "ArticleCategory",
+                    params: {
+                        id: id
+                    }
+                })
             },
             getChart() {
                 const svg = document.querySelector('.pie-chart');
@@ -88,8 +94,8 @@
 
 <style scoped lang="scss">
     .sort-list {
-        color: var(--theme-text);
-        background-color: var(--theme-card-bg);
+        color: var(--primary-color);
+        background-color: var(--card-background-color);
         border-radius: 20px;
         box-shadow: rgba(0, 0, 0, 0.05) 0px 5px 20px 0px;
         margin-bottom: 10px;

@@ -1,7 +1,25 @@
+// darken
+import darken from "darken";
+const darkmode = new darken({
+    container: null,
+    toggle: null,
+    default: "light",
+    remember: 'darken-mode',
+    usePrefersColorScheme: true,
+    class: "darkmode-active",
+    variables: {
+        "--primary-color": ["#2c3e50", "#fafafa"],
+        "--background-color": ["#f4f4f4", "rgb(13, 17, 23)"],
+        "--card-background-color": ["#ffffff", "rgb(13, 17, 23)"],
+        "--md-background-color": ["#f6f8fa", "rgb(30, 32, 35)"],
+        "--border-color": ["#e1e4e8","#30363d"]
+    }
+});
 const state = {
     device: 'desktop',
     sideNav: false,
-    dark: false
+    dark: localStorage.getItem('darken-mode')||'light',
+    darkmode: darkmode
 }
 
 const mutations = {
@@ -26,11 +44,8 @@ const actions = {
     },
     toggleDark(context: any, data: boolean) {
         context.commit('TOGGLE_DARK', data)
+        darkmode.toggle()
         if (data) {
-            document.documentElement.style.setProperty("--theme-background", 'rgb(30, 32, 35)');
-            document.documentElement.style.setProperty("--theme-text", 'rgb(255, 255, 255)');
-            document.documentElement.style.setProperty("--theme-card-bg", 'rgb(30, 32, 35)');
-            document.documentElement.style.setProperty("--theme-md-bg", '#282c34');
             //md 黑暗模式切换
             var ele = document.createElement("link");
             ele.rel = "stylesheet";
@@ -43,10 +58,6 @@ const actions = {
             }
             headEl.appendChild(ele);
         } else {
-            document.documentElement.style.setProperty("--theme-background", 'rgb(244, 244, 244)');
-            document.documentElement.style.setProperty("--theme-text", '#2C3E50');
-            document.documentElement.style.setProperty("--theme-card-bg", 'rgb(255, 255, 255)');
-            document.documentElement.style.setProperty("--theme-md-bg", '#f6f8fa');
             var ele = document.createElement("link");
             ele.rel = "stylesheet";
             ele.classList.add('hl-theme');
