@@ -12,7 +12,7 @@
                 留言
             </vs-navbar-item>
             <template #right>
-                <vs-tooltip v-show="dark" bottom>
+                <vs-tooltip v-show="dark=='dark'" bottom>
                     <vs-button icon shadow @click="handleChangeTheme">
                         <i class="fas fa-sun fa-lg"></i>
                     </vs-button>
@@ -20,7 +20,7 @@
                         日间模式
                     </template>
                 </vs-tooltip>
-                <vs-tooltip v-show="!dark" bottom>
+                <vs-tooltip v-show="dark=='light'" bottom>
                     <vs-button icon shadow @click="handleChangeTheme">
                         <i class="fas fa-moon fa-lg"></i>
                     </vs-button>
@@ -118,24 +118,7 @@
                     if (!document.body.hasAttribute("vs-theme")) {
                         document.body.setAttribute("vs-theme", "dark");
                     }
-                } else {
-                    // const h = new Date().getHours();
-                    // const flag = (h >= 19 && h <= 24) || (h >= 0 && h <= 7);
-                    // if (flag) {
-                    //     this.$store.dispatch("app/toggleDark", 'dark');
-                    //     if (!document.body.hasAttribute("vs-theme")) {
-                    //         document.body.setAttribute("vs-theme", "dark");
-                    //     }
-                    //     //通知
-                    //     that.$vs.notification({
-                    //         progress: "auto",
-                    //         position: "bottom-right",
-                    //         title: "夜间模式",
-                    //         text: "夜晚到了，已自动为您开启夜间模式，右上角可切换。"
-                    //     });
-                    // }
                 }
-
                 const music = new Music();
                 music.getAplayerDataById({id: "5197713080"}).then(res => {
                     this.audios = res;
@@ -171,13 +154,13 @@
             handleChangeTheme() {
                 if (!document.body.hasAttribute("vs-theme")) {
                     document.body.setAttribute("vs-theme", "dark");
-                    this.$store.dispatch("app/toggleDark", true);
+                    this.$store.dispatch("app/toggleDark", 'dark');
                 } else {
                     document.body.removeAttribute("vs-theme");
-                    this.$store.dispatch("app/toggleDark", false);
+                    this.$store.dispatch("app/toggleDark", 'light');
                 }
                 const aplayer = this.$refs.aplayer;
-                if (this.$store.state.app.dark) {
+                if (this.$store.state.app.dark=='dark') {
                     if (this.audios) {
                         aplayer.style.background = "#151515";
                         aplayer.getElementsByClassName("aplayer-body")[0].style.background =

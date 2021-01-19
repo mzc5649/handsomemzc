@@ -1,42 +1,61 @@
 <template>
     <div class="member-center">
-        <div v-if="user">
-            <div id="author">
-                <div class="mask-wrapper" :style="'background-image: url('+user.uCover+')'"></div>
-                <div class="user-panel">
-                    <!--头像-->
-                    <vs-avatar size="100" style="border: 2px white solid">
-                        <img
-                                :src="user.uIcon"
-                        />
-                    </vs-avatar>
-                    <div class="user-panel-info">
-                        <div>
-                            <h1>
-                                {{user.uUsername}}
-                                <span class="info">No.{{user.uId}}</span>
-                                <i class="fas fa-male info" v-if="user.uSex == 1"></i>
-                                <i class="fas fa-female info" v-if="user.uSex == 2"></i>
-                            </h1>
-                            <p>{{user.uSign}}</p>
-                        </div>
+        <div id="author" class="magictime">
+            <input type="file" id="uploadFile" style="display: none" @change="uploadFileChange">
+            <div class="mask-wrapper" :style="'background-image: url('+user.uCover+')'">
+                <span v-if="isSelf" class="change-cover-btn">
+                    <i class="fas fa-camera"></i>上传封面图片
+                </span>
+            </div>
+            <div class="user-panel">
+                <!--头像-->
+                <vs-avatar class="user-panel-icon" size="100" style="border: 2px white solid">
+                    <img
+                            :src="user.uIcon"
+                    />
+                    <span v-if="isSelf" class="change-icon-btn" @click="changeIconHandler">
+                        <i class="fas fa-camera"></i>
+                        <span>修改我的头像</span>
+                    </span>
+                </vs-avatar>
+                <div class="user-panel-info">
+                    <div>
+                        <h1>
+                            {{user.uUsername}}
+                            <span class="info">No.{{user.uId}}</span>
+                            <i class="fas fa-male info" v-if="user.uSex == 1"></i>
+                            <i class="fas fa-female info" v-if="user.uSex == 2"></i>
+                        </h1>
+                        <p>{{user.uSign}}</p>
                     </div>
                 </div>
             </div>
-            <div class="author-table">
-                <div class="author-table-left">
-                    <template v-for="item in userSidebar">
-                        <div class="user-sidebar">
-                            <div class="user-sidebar-info">
-                                <span>{{item.title}}</span>
-                                <span> > </span>
-                            </div>
+        </div>
+        <div class="author-table">
+            <div class="author-table-left">
+                <template v-for="item in userSidebar">
+                    <div class="user-sidebar">
+                        <div class="user-sidebar-info">
+                            <span>
+                                <i :class="item.icon"></i>
+                                {{item.title}}
+                            </span>
+                            <i class="fas fa-angle-right"></i>
                         </div>
-                    </template>
+                    </div>
+                </template>
+                <div v-if="isSelf" class="user-sidebar">
+                    <div class="user-sidebar-info">
+                        <span>
+                            <i class="fas fa-cog"></i>
+                            设置
+                        </span>
+                        <i class="fas fa-angle-right"></i>
+                    </div>
                 </div>
-                <div class="author-table-right">
-                    <router-view/>
-                </div>
+            </div>
+            <div class="author-table-right">
+                <router-view/>
             </div>
         </div>
     </div>
@@ -46,18 +65,18 @@
 <script>
     import {mapMutations} from 'vuex'
     import {getUserInfoById} from '../../api/user'
+    import ScrollOut from "scroll-out";
 
     export default {
         name: "Index",
         data() {
             return {
-                user:'',
+                user: '',
                 userSidebar: [
                     {
                         title: '概览',
-                    },
-                    {
-                        title: '设置',
+                        icon: 'fas fa-address-card',
+                        hidden: false
                     }
                 ]
             }
@@ -65,18 +84,31 @@
         },
         created() {
             getUserInfoById(this.$route.params.id).then(res => {
-
                 this.user = res.data
             })
 
         },
+        mounted() {
+
+        },
         computed: {
-            user1() {
+            currentUser() {
                 return this.$store.state.user
+            },
+            isSelf() {
+                return this.currentUser.uId == this.user.uId
             }
         },
         methods: {
-            ...mapMutations(['SET_LOGIN_OR_REGISTER_DIALOG'])
+            ...mapMutations(['SET_LOGIN_OR_REGISTER_DIALOG']),
+            changeIconHandler() {
+                document.getElementById('uploadFile').click()
+            },
+            uploadFileChange() {
+                console.log(document.getElementById('uploadFile').files);
+                const formData = new FormData();
+                formData.append()
+            }
         }
     }
 </script>
@@ -100,6 +132,17 @@
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
+
+        .change-cover-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            color: white;
+            padding: 5px;
+            border: 1px solid white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
     }
 
     .user-panel {
@@ -108,6 +151,26 @@
         margin-top: -30px;
         display: flex;
         color: var(--primary-color);
+
+        .user-panel-icon:hover .change-icon-btn {
+            display: flex;
+        }
+
+        .change-icon-btn {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 35%;
+            background-color: rgba(0, 0, 0, 0.5);
+            font-size: 13px;
+            cursor: pointer;
+            display: none;
+        }
+
 
         .user-panel-info {
             padding: 30px 0 0 20px;

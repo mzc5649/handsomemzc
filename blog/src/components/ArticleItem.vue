@@ -94,13 +94,16 @@
                 });
             },
             toArticleSort(id) {
-                if (this.$route.params.id == id) return;
+                if (this.$route.name == 'ArticleCategory' && this.$route.params.id == id) {
+                    return
+                }
                 this.$router.push({
-                    name: "ArticleSort",
+                    name: "ArticleCategory",
                     params: {
                         id: id
                     }
                 });
+
             }
         }
     };

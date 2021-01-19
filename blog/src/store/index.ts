@@ -41,6 +41,7 @@ export default new Vuex.Store({
                 }).catch(res => {
                     commit("SET_USER", '')
                     Vue.$cookies.remove("token")
+
                 })
             } else {
                 //免登录
