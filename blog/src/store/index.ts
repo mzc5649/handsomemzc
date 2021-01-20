@@ -24,6 +24,9 @@ export default new Vuex.Store({
         SET_USER(state, payload) {
             state.user = payload;
         },
+        SET_USER_AVATAR(state, payload){
+
+        }
     },
     actions: {
         //初始化用户信息

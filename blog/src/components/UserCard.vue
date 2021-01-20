@@ -1,12 +1,16 @@
 <template>
     <div v-if="user"  class="card-user ">
-        <vs-card type="1">
+        <vs-card >
+            <template #img>
+                <img :src="user.uCover" alt="">
+            </template>
             <template #title>
                 <div style="display: flex;align-items: center">
                     <!--头像-->
                     <vs-avatar circle size="60" style="border: 2px white solid">
                         <img
                                 :src="user.uIcon"
+                                style="width: 100%;height: 100%"
                         />
                     </vs-avatar>
                     <div style="margin-left: 15px">

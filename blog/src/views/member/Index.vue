@@ -1,17 +1,20 @@
 <template>
     <div class="member-center">
         <div id="author" class="magictime">
-            <input type="file" id="uploadFile" style="display: none" @change="uploadFileChange">
-            <div class="mask-wrapper" :style="'background-image: url('+user.uCover+')'">
-                <span v-if="isSelf" class="change-cover-btn">
+            <input type="file" id="uploadIcon" style="display: none" @change="uploadFileChange(1)">
+            <input type="file" id="uploadCover" style="display: none" @change="uploadFileChange(2)">
+            <div ref="cover" class="mask-wrapper" :style="'background-image: url('+user.uCover+')'">
+                <span v-if="isSelf" class="change-cover-btn" @click="changeCoverHandler">
                     <i class="fas fa-camera"></i>上传封面图片
                 </span>
             </div>
             <div class="user-panel">
                 <!--头像-->
-                <vs-avatar class="user-panel-icon" size="100" style="border: 2px white solid">
+                <vs-avatar ref="avatar" class="user-panel-icon" size="100" style="border: 2px white solid">
                     <img
                             :src="user.uIcon"
+                            style="width: 100%;height: 100%"
+
                     />
                     <span v-if="isSelf" class="change-icon-btn" @click="changeIconHandler">
                         <i class="fas fa-camera"></i>
@@ -31,10 +34,11 @@
                 </div>
             </div>
         </div>
-        <div class="author-table">
+        <div class="author-table" >
+            <a name="author-table"></a>
             <div class="author-table-left">
                 <template v-for="item in userSidebar">
-                    <div class="user-sidebar">
+                    <div class="user-sidebar" @click="userSidebarJump(item.to)">
                         <div class="user-sidebar-info">
                             <span>
                                 <i :class="item.icon"></i>
@@ -45,7 +49,7 @@
                     </div>
                 </template>
                 <div v-if="isSelf" class="user-sidebar">
-                    <div class="user-sidebar-info">
+                    <div class="user-sidebar-info" @click="userSidebarJump('MemberSidebarSet')">
                         <span>
                             <i class="fas fa-cog"></i>
                             设置
@@ -55,7 +59,7 @@
                 </div>
             </div>
             <div class="author-table-right">
-                <router-view/>
+                <component :is="componentName" :userData="user"></component>
             </div>
         </div>
     </div>
@@ -64,11 +68,15 @@
 
 <script>
     import {mapMutations} from 'vuex'
-    import {getUserInfoById} from '../../api/user'
+    import {getUserInfoById, saveAvatar, saveCover} from '../../api/user'
+    import {uploadFile} from '../../api/image'
     import ScrollOut from "scroll-out";
+    import MemberSidebarIndex from "../../components/memberSidebar/MemberSidebarIndex";
+    import MemberSidebarSet from "../../components/memberSidebar/MemberSidebarSet";
 
     export default {
         name: "Index",
+        components: {MemberSidebarIndex, MemberSidebarSet},
         data() {
             return {
                 user: '',
@@ -76,9 +84,12 @@
                     {
                         title: '概览',
                         icon: 'fas fa-address-card',
-                        hidden: false
+                        hidden: false,
+                        to: 'MemberSidebarIndex'
                     }
-                ]
+                ],
+                uploadProgress: 0,
+                componentName: 'MemberSidebarIndex'
             }
 
         },
@@ -97,17 +108,74 @@
             },
             isSelf() {
                 return this.currentUser.uId == this.user.uId
+            },
+            token() {
+                return this.$store.state.token
             }
         },
         methods: {
             ...mapMutations(['SET_LOGIN_OR_REGISTER_DIALOG']),
             changeIconHandler() {
-                document.getElementById('uploadFile').click()
+                document.getElementById('uploadIcon').click()
             },
-            uploadFileChange() {
-                console.log(document.getElementById('uploadFile').files);
+            changeCoverHandler() {
+                document.getElementById('uploadCover').click()
+            },
+            uploadFileChange(type) {
+                if (type != 1 && type != 2) return;
                 const formData = new FormData();
-                formData.append()
+                let img;
+                if (type == 1) {
+                    img = document.getElementById('uploadIcon').files[0]
+                } else if (type == 2) {
+                    img = document.getElementById('uploadCover').files[0]
+                }
+                if (img == null) return;
+                formData.append('image', img)
+                // loading
+                const loading = this.$vs.loading({
+                    target: type == 1 ? this.$refs['avatar'] : this.$refs['cover'],
+                    scale: '1',
+                    opacity: 1,
+                })
+                uploadFile(formData, this.token, e => {
+                    const completeProgress = ((e.loaded / e.total * 100) | 0)
+                    this.uploadProgress = completeProgress
+                    loading.changePercent(`${this.uploadProgress}%`)
+                }).then(res => {
+                    const data = {
+                        id: res.data.id,
+                        url: res.data.url
+                    }
+                    if (type == 1) {
+                        saveAvatar(data, this.token).then(res => {
+                            this.currentUser.uIcon = res.data
+                            this.user.uIcon = res.data
+                            loading.close()
+                        }).catch(err => {
+                            loading.close()
+                        })
+                    } else if (type == 2) {
+                        saveCover(data, this.token).then(res => {
+                            this.currentUser.uCover = res.data
+                            this.user.uCover = res.data
+                            loading.close()
+                        }).catch(err => {
+                            loading.close()
+                        })
+                    }
+                }).catch(err => {
+                    loading.close()
+                    if (type == 1) {
+                        document.getElementById('uploadIcon').value = null
+                    } else if (type == 2) {
+                        document.getElementById('uploadCover').value = null
+                    }
+                })
+            },
+            userSidebarJump(to) {
+                this.componentName = to
+                location.href = '#author-table'
             }
         }
     }
@@ -137,9 +205,9 @@
             position: absolute;
             right: 10px;
             top: 10px;
-            color: white;
+            color: var(--primary-color);
             padding: 5px;
-            border: 1px solid white;
+            border: 1px solid var(--primary-color);
             border-radius: 10px;
             cursor: pointer;
         }
@@ -199,11 +267,13 @@
         .author-table-left {
             margin-right: 30px;
             width: 300px;
+            min-width: 300px;
             background-color: var(--card-background-color);
             color: var(--primary-color);
 
             .user-sidebar {
                 border-bottom: 1px solid var(--border-color);
+                cursor: pointer;
 
                 .user-sidebar-info {
                     padding: 16px;
@@ -212,6 +282,14 @@
                     align-items: center;
                 }
             }
+        }
+
+        .author-table-right {
+            width: 100%;
+            background-color: var(--card-background-color);
+            color: var(--primary-color);
+            padding: 20px;
+
         }
     }
 </style>

@@ -46,13 +46,6 @@ const routes: Array<RouteConfig> = [
                 name: 'Member',
                 meta: {title: '用户中心', keepAlive: false},
                 component: Member,
-                redirect:'/blog/member',
-                children: [
-                    {
-                        path: '',
-                        component: () => import('@/views/member/userSiderbar/Index.vue')
-                    }
-                ]
             },
         ]
 

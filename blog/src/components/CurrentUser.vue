@@ -6,6 +6,7 @@
                 <img
                         v-if="user.uIcon"
                         :src="user.uIcon"
+                        style="width: 100%;height: 100%"
                 />
                 <span v-else style="">头像</span>
             </vs-avatar>

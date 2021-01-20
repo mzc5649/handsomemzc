@@ -28,3 +28,32 @@ export function sendMailCode(data:object) {
         data
     })
 }
+
+/**
+ * 保存头像
+ * @param data
+ */
+export function saveAvatar(data:object,token:string) {
+    return request({
+        url:'/blog-api/user/saveAvatar',
+        method:'put',
+        headers:{
+            "token":token
+        },
+        data:data
+    })
+}
+/**
+ * 保存封面
+ * @param data
+ */
+export function saveCover(data:object,token:string) {
+    return request({
+        url:'/blog-api/user/saveCover',
+        method:'put',
+        headers:{
+            "token":token
+        },
+        data:data
+    })
+}
