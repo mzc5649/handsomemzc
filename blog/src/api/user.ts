@@ -57,3 +57,59 @@ export function saveCover(data:object,token:string) {
         data:data
     })
 }
+/**
+ * 保存用户名
+ * @param data
+ */
+export function saveUname(data:object,token:string) {
+    return request({
+        url:'/blog-api/user/saveUname',
+        method:'put',
+        headers:{
+            "token":token
+        },
+        data:data
+    })
+}
+/**
+ * 保存性别
+ * @param data
+ */
+export function saveSex(data:object,token:string) {
+    return request({
+        url:'/blog-api/user/saveSex',
+        method:'put',
+        headers:{
+            "token":token
+        },
+        data:data
+    })
+}
+/**
+ * 保存签名
+ * @param data
+ */
+export function saveSign(data:object,token:string) {
+    return request({
+        url:'/blog-api/user/saveSign',
+        method:'put',
+        headers:{
+            "token":token
+        },
+        data:data
+    })
+}
+/**
+ * 保存邮箱
+ * @param data
+ */
+export function saveEmail(data:object,token:string) {
+    return request({
+        url:'/blog-api/user/saveEmail',
+        method:'put',
+        headers:{
+            "token":token
+        },
+        data:data
+    })
+}

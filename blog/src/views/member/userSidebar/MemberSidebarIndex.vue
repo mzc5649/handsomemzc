@@ -7,8 +7,8 @@
         <div class="user-info-item">
             <span class="user-info-item-title">性别：</span>
             <span>
-                <i class="fas fa-male info" v-if="userData.uSex == 1"></i>
-                <i class="fas fa-female info" v-if="userData.uSex == 2"></i>
+                <span class="info" v-if="userData.uSex == 1">男</span>
+                <span class="info" v-else>女</span>
             </span>
         </div>
         <div class="user-info-item">
@@ -50,8 +50,6 @@
     }
 
     .MemberSidebarIndex {
-        background-color: var(--card-background-color);
-        color: var(--primary-color);
         width: 100%;
 
         .user-info-item {
@@ -60,6 +58,7 @@
 
             .user-info-item-title {
                 color: #999;
+
             }
         }
     }

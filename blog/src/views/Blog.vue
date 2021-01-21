@@ -51,7 +51,7 @@
                             leave-active-class="animate__animated animate__fadeOut"
                             mode="out-in"
                     >
-                        <router-view/>
+                        <router-view :key="$route.fullPath"/>
                     </transition>
                 </vs-col>
             </vs-row>

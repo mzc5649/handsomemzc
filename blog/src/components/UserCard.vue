@@ -16,8 +16,8 @@
                     <div style="margin-left: 15px">
                         <h3 style="overflow: hidden;text-overflow: ellipsis;">{{user.uUsername}}</h3>
                         <span class="info">No.{{user.uId}}</span>
-                        <i class="fas fa-male info" v-if="user.uSex == 1"></i>
-                        <i class="fas fa-female info" v-if="user.uSex == 2"></i>
+                        <span class="info" v-if="user.uSex == 1">男</span>
+                        <span class="info" v-else>女</span>
                     </div>
                 </div>
             </template>

@@ -46,6 +46,10 @@ const routes: Array<RouteConfig> = [
                 name: 'Member',
                 meta: {title: '用户中心', keepAlive: false},
                 component: Member,
+                children:[
+                    {path: '', name: 'MemberSidebarIndex', meta: {title: '用户概览', keepAlive: false}, component: () => import('@/views/member/userSidebar/MemberSidebarIndex.vue')},
+                    {path: 'setting', name: 'MemberSidebarSet', meta: {title: '用户设置', keepAlive: false}, component: () => import('@/views/member/userSidebar/MemberSidebarSet.vue')},
+                ]
             },
         ]
 
