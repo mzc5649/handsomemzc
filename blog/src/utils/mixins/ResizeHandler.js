@@ -1,7 +1,7 @@
 import store from '@/store/index'
 
 const { body } = document
-const WIDTH = 992 // refer to Bootstrap's responsive design
+const WIDTH = 900 // refer to Bootstrap's responsive design
 
 export default {
   watch: {
@@ -29,6 +29,8 @@ export default {
       if (!document.hidden) {
         const isMobile = this.$_isMobile()
         store.dispatch('app/toggleDevice', isMobile ? 'mobile' : 'desktop')
+        store.dispatch('app/toggleSideNav', false)
+
       }
     }
   }

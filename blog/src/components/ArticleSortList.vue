@@ -38,16 +38,24 @@
 
             }
         },
+        computed:{
+            device(){
+                return this.$store.state.app.device;
+            }
+        },
         async created() {
             this.sortId = this.$route.params.id;
             
         },
         mounted() {
             this.$nextTick(() => {
-                getArticleSortTag().then(res => {
-                    this.articleSortData = res.data
-                    this.getChart()
-                })
+                if(this.device=='desktop'){
+                    getArticleSortTag().then(res => {
+                        this.articleSortData = res.data
+                        this.getChart()
+                    })
+                }
+
             })
         },
         methods: {

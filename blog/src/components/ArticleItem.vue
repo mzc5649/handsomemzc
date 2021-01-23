@@ -46,7 +46,9 @@
                         <i class="fas fa-user info"></i>
                         <span class="info">{{article.user.uUsername}}</span>
                         <i class="fas fa-clock info"></i>
-                        <span class="info">{{article.artInfoCreatedTime }}</span>
+                        <span class="info">
+                        <timeago :datetime="article.artInfoCreatedTime" locale="zh-CN" :auto-update="60"></timeago>
+                        </span>
                     </div>
                     <vs-button shadow border dark animation-type="vertical" @click="toArticle(article.artInfoId)">
                         开始阅读
@@ -57,11 +59,14 @@
                 </div>
             </template>
         </vs-card>
+        <t
     </div>
 
 </template>
 
 <script>
+
+
     export default {
         name: "ArticleItem",
         props: {

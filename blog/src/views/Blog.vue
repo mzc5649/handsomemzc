@@ -1,16 +1,28 @@
 <template>
     <div>
-        <vs-navbar padding-scroll fixed shadow center-collapsed v-model="active">
-            <template #left>handsomemzc</template>
-            <vs-navbar-item :active="active == 'welcome'" to="/" id="welcome">
-                Welcome
-            </vs-navbar-item>
-            <vs-navbar-item :active="active == 'blog'" to="/blog" id="blog">
-                博客
-            </vs-navbar-item>
-            <vs-navbar-item :active="active == 'message'" to="/blog/msg" id="message">
-                留言
-            </vs-navbar-item>
+        <vs-navbar padding-scroll fixed shadow v-model="activeBar">
+            <template #left>
+                <span v-show="device == 'desktop'" class="magictime vanishIn">
+                  handsomemzc
+                </span>
+                <span class="magictime twisterInUp" @click="openSideNav" v-show="device == 'mobile'" style="font-size: 20px">
+                  <i class="fas fa-align-justify"></i>
+                </span>
+            </template>
+            <span v-if="device == 'desktop'">
+                <vs-navbar-item   to="/" id="Index">
+                    Welcome
+                </vs-navbar-item>
+                <vs-navbar-item :active="activeBar=='BlogIndex'"   to="/blog" id="BlogIndex">
+                    博客
+                </vs-navbar-item>
+                <vs-navbar-item :active="activeBar=='BlogMessage'"  to="/blog/msg" id="BlogMessage">
+                    留言
+                </vs-navbar-item>
+            </span>
+            <span v-show="device == 'mobile'" class="magictime vanishIn">
+                handsomemzc
+            </span>
             <template #right>
                 <vs-tooltip v-show="dark=='dark'" bottom>
                     <vs-button icon shadow @click="handleChangeTheme">
@@ -65,7 +77,8 @@
         ></div>
         <LoginOrRegister></LoginOrRegister>
         <Snackbar/>
-        <!--        <Navigation v-if="device === 'mobile'"></Navigation>-->
+        <Navigation v-if="device === 'mobile'"></Navigation>
+        <div v-if="device === 'mobile'&&sideNav" class="drawer-bg" @click="handleClickOutside"></div>
     </div>
 </template>
 
@@ -94,7 +107,7 @@
         },
         data() {
             return {
-                active: "blog",
+                activeBar:'',
                 isSideNavShow: false,
                 audios: "",
             };
@@ -102,6 +115,7 @@
         mixins: [ResizeHandler],
         created() {
             const that = this;
+            this.activeBar=this.$route.name
             that.serverInit();
         },
         mounted() {
@@ -145,7 +159,10 @@
             },
             dark() {
                 return this.$store.state.app.dark;
-            }
+            },
+            sideNav(){
+                return this.$store.state.app.sideNav;
+            },
         },
         methods: {
             ...mapMutations(["SET_LOGIN_OR_REGISTER_DIALOG"]),
@@ -160,7 +177,7 @@
                     this.$store.dispatch("app/toggleDark", 'light');
                 }
                 const aplayer = this.$refs.aplayer;
-                if (this.$store.state.app.dark=='dark') {
+                if (this.$store.state.app.dark == 'dark') {
                     if (this.audios) {
                         aplayer.style.background = "#151515";
                         aplayer.getElementsByClassName("aplayer-body")[0].style.background =
@@ -177,6 +194,9 @@
             //打开侧边栏
             openSideNav() {
                 this.$store.dispatch("app/toggleSideNav", true);
+            },
+            handleClickOutside(){
+                this.$store.dispatch("app/toggleSideNav", false);
             }
         },
         destroyed() {
@@ -192,6 +212,7 @@
 
     body {
         background-color: var(--background-color);
+
     }
 
     ::-webkit-scrollbar {
@@ -224,4 +245,16 @@
 
 
 </style>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+    .drawer-bg{
+        background: #000;
+        opacity: 0.3;
+        width: 100%;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        z-index: 9999;
+
+    }
+</style>

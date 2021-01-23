@@ -113,3 +113,18 @@ export function saveEmail(data:object,token:string) {
         data:data
     })
 }
+/**
+ * 修改密码
+ * @param data
+ */
+export function savePassword(data:object,token:string) {
+    return request({
+        url:'/blog-api/user/savePassword',
+        method:'put',
+        headers:{
+            "token":token
+        },
+        data:data
+    })
+}
+

@@ -92,13 +92,12 @@
                 this.articleLoading = true
                 this.getArticleData()
             },
-        }
+        },
     };
 </script>
 
 <style scoped>
     .text {
-        color: var(--theme-text, #2C3E50);
+        color: var(--primary-color);
     }
-
 </style>

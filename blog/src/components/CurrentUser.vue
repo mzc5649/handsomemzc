@@ -1,8 +1,8 @@
 <template>
     <div>
-        <vs-tooltip border-thick shadow not-arrow bottom interactivity>
+        <vs-tooltip   border-thick shadow not-arrow bottom interactivity >
             <!--头像-->
-            <vs-avatar circle size="36" style="border: 2px white solid">
+            <vs-avatar  circle size="36" style="border: 2px white solid;cursor: pointer">
                 <img
                         v-if="user.uIcon"
                         :src="user.uIcon"
@@ -54,7 +54,8 @@
         name: "CurrentUser",
         data() {
             return {
-                logoutActive: false
+                logoutActive: false,
+                active:false
             }
         },
         computed: {

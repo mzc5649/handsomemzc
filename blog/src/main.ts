@@ -25,7 +25,19 @@ import '@fortawesome/fontawesome-free/js/all'
 import VueContentPlaceholders from 'vue-content-placeholders'
 Vue.use(VueContentPlaceholders)
 import 'magic.css/dist/magic.css'
-
+//timeago
+// @ts-ignore
+import VueTimeago from 'vue-timeago'
+Vue.use(VueTimeago, {
+    name: 'Timeago', // Component name, `Timeago` by default
+    locale: 'en', // Default locale
+    // We use `date-fns` under the hood
+    // So you can use all locales from it
+    locales: {
+        'zh-CN': require('date-fns/locale/zh_cn'),
+        ja: require('date-fns/locale/ja')
+    }
+})
 new Vue({
     router,
     store,

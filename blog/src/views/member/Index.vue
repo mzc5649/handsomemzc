@@ -1,79 +1,97 @@
 <template>
     <div class="member-center">
-        <div id="author" class="magictime">
-            <input type="file" id="uploadIcon" style="display: none" @change="uploadFileChange(1)">
-            <input type="file" id="uploadCover" style="display: none" @change="uploadFileChange(2)">
-            <div ref="cover" class="mask-wrapper" :style="'background-image: url('+user.uCover+')'">
-                <span  v-if="isSelf" class="change-cover-btn" @click="changeCoverHandler" title="修改封面">
+        <vs-row justify="center">
+            <div id="author" class="magictime">
+                <input type="file" id="uploadIcon" style="display: none" @change="uploadFileChange(1)">
+                <input type="file" id="uploadCover" style="display: none" @change="uploadFileChange(2)">
+                <div ref="cover" class="mask-wrapper" :style="'background-image: url('+user.uCover+')'">
+                <span v-if="isSelf" class="change-cover-btn" @click="changeCoverHandler" title="修改封面">
                     <i class="fas fa-camera"></i>上传封面图片
                 </span>
-            </div>
-            <div class="user-panel">
-                <!--头像-->
-                <vs-avatar ref="avatar" class="user-panel-icon" size="100" style="border: 2px white solid">
-                    <img
-                            :src="user.uIcon"
-                            style="width: 100%;height: 100%"
+                </div>
+                <div class="user-panel">
+                    <!--头像-->
+                    <vs-avatar ref="avatar" class="user-panel-icon" size="100" style="border: 2px white solid">
+                        <img
+                                :src="user.uIcon"
+                                style="width: 100%;height: 100%"
 
-                    />
-                    <span v-if="isSelf" class="change-icon-btn" @click="changeIconHandler" title="修改头像">
+                        />
+                        <span v-if="isSelf" class="change-icon-btn" @click="changeIconHandler" title="修改头像">
                         <i class="fas fa-camera"></i>
                         <span>修改我的头像</span>
                     </span>
-                </vs-avatar>
-                <div class="user-panel-info">
-                    <div>
-                        <h1>
-                            {{user.uUsername}}
-                            <span class="info" :title="'本站第'+user.uId+'位用户'">No.{{user.uId}}</span>
-                            <span class="info" title="男" v-if="user.uSex==1">
+                    </vs-avatar>
+                    <div class="user-panel-info">
+                        <div>
+                            <h1>
+                                {{user.uUsername}}
+                                <span class="info" :title="'本站第'+user.uId+'位用户'">No.{{user.uId}}</span>
+                                <span class="info" title="男" v-if="user.uSex==1">
                                 男
                             </span>
-                            <span class="info" title="女" v-if="user.uSex==2">
+                                <span class="info" title="女" v-if="user.uSex==2">
                                 女
                             </span>
-                        </h1>
-                        <p>{{user.uSign}}</p>
+                            </h1>
+                            <p>{{user.uSign}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </vs-row>
+
         <div class="author-table">
-            <div class="author-table-left">
-                <template v-for="item in userSidebar">
-                    <div class="user-sidebar" :class="{active:$route.name==item.to}" @click="jumpToSidebar(item.to)">
-                        <div class="user-sidebar-info">
-                            <span>
-                                <i :class="item.icon"></i>
-                                {{item.title}}
-                            </span>
-                            <i class="fas fa-angle-right"></i>
-                        </div>
-                    </div>
-                </template>
-                <div v-if="isSelf" class="user-sidebar">
-                    <div class="user-sidebar-info" :class="{active:$route.name=='MemberSidebarSet'}"
-                         @click="jumpToSidebar('MemberSidebarSet')">
+            <vs-row justify="space-between">
+                <vs-col :lg="3" :md="3" :sm="12" :xs="12">
+                    <div class="author-table-left">
+                        <template v-for="item in userSidebar">
+                            <div class="user-sidebar" :class="{active:$route.name==item.to}"
+                                 @click="jumpToSidebar(item.to)">
+                                <div class="user-sidebar-info">
+                                    <span>
+                                        <i :class="item.icon"></i>
+                                        {{item.title}}
+                                    </span>
+                                    <span v-if="device=='desktop'">
+                                    <i class="fas fa-angle-right"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </template>
+                        <div v-if="isSelf" class="user-sidebar">
+                            <div class="user-sidebar-info"
+                                 :class="{active:$route.name=='MemberSidebarSet'}"
+                                 @click="jumpToSidebar('MemberSidebarSet')">
                         <span>
                             <i class="fas fa-cog"></i>
                             设置
                         </span>
-                        <i class="fas fa-angle-right"></i>
+                                <span v-if="device=='desktop'">
+                                    <i class="fas fa-angle-right"></i>
+                                </span>
+
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="author-table-right">
-                <transition
-                        :duration="500"
-                        name="custom-classes-transition"
-                        enter-active-class="animate__animated animate__fadeIn"
-                        leave-active-class="animate__animated animate__fadeOut"
-                        mode="out-in"
-                >
-                    <RouterView :userData="user"></RouterView>
-                </transition>
-            </div>
+                </vs-col>
+                <vs-col :lg="9" :md="9" :sm="12" :xs="12">
+                    <div class="author-table-right">
+                        <transition
+                                :duration="500"
+                                name="custom-classes-transition"
+                                enter-active-class="animate__animated animate__fadeIn"
+                                leave-active-class="animate__animated animate__fadeOut"
+                                mode="out-in"
+                        >
+                            <RouterView :userData="user"></RouterView>
+                        </transition>
+                    </div>
+                </vs-col>
+            </vs-row>
         </div>
+
+
     </div>
 
 </template>
@@ -93,7 +111,7 @@
                     {
                         title: '概览',
                         icon: 'fas fa-address-card',
-                        hidden: false,
+                        show: false,
                         to: 'MemberSidebarIndex'
                     }
                 ],
@@ -118,6 +136,9 @@
             },
             token() {
                 return this.$store.state.token
+            },
+            device() {
+                return this.$store.state.app.device
             }
         },
         filters: {
@@ -200,6 +221,7 @@
     }
 
     #author {
+        width: 100%;
         box-shadow: rgba(0, 0, 0, 0.05) 0px 5px 20px 0px;
         border-radius: 20px;
         background-color: var(--card-background-color);
@@ -276,14 +298,13 @@
     .author-table {
         margin-top: 20px;
         display: flex;
+        width: 100%;
 
         .author-table-left {
-            margin-right: 30px;
-            width: 300px;
-            min-width: 300px;
             background-color: var(--card-background-color);
             color: var(--primary-color);
             box-sizing: border-box;
+            margin-right: 10px;
 
             .user-sidebar {
                 border-bottom: 1px solid var(--border-color);
@@ -299,7 +320,7 @@
         }
 
         .author-table-right {
-            width: 100%;
+            border-radius: 20px;
             background-color: var(--card-background-color);
             color: var(--primary-color);
             padding: 20px;
@@ -308,6 +329,20 @@
     }
 
     .active {
-        border-right: 5px solid var(--primary-color) !important;
+        color: rgba(26, 92, 255,0.5);
     }
+
+    @media screen and (max-width: 900px) {
+        .author-table-left {
+            display: flex;
+            margin-right: 0px !important;
+            margin-bottom: 10px !important;
+            .user-sidebar {
+                width: 20%;
+                border: 0 !important;
+            }
+        }
+
+    }
+
 </style>

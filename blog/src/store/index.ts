@@ -5,6 +5,7 @@ import snackbar from "@/store/modules/snackbar";
 import app from '@/store/modules/app'
 import VueCookies from 'vue-cookies'
 import {login} from '@/api/user'
+
 Vue.use(VueCookies)
 Vue.use(Vuex)
 
@@ -30,7 +31,7 @@ export default new Vuex.Store({
     },
     actions: {
         //初始化用户信息
-        serverInit({commit, state}) {
+        serverInit({commit,dispatch, state}) {
             const token = state.token;
             if (token) {
                 axios.get("/blog-api/user/info", {
@@ -42,6 +43,9 @@ export default new Vuex.Store({
                     //刷新token
                     Vue.$cookies.set("token", res.data.data.token, 3600)
                 }).catch(res => {
+                    dispatch('snackbar/openSnackbar',{
+                        msg:'用户登录失效，请重新登录'
+                    })
                     commit("SET_USER", '')
                     Vue.$cookies.remove("token")
 

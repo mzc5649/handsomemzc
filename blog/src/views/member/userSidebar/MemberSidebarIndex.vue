@@ -51,7 +51,7 @@
 
     .MemberSidebarIndex {
         width: 100%;
-
+        font-weight: 400;
         .user-info-item {
             padding: 20px;
             border-bottom: 1px solid var(--border-color);

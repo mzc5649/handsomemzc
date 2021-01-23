@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter, {RouteConfig} from "vue-router";
-
+import store from '../store/index'
 Vue.use(VueRouter);
 //路由懒加载
 const Index = () => import('@/views/Index.vue');
@@ -63,5 +63,9 @@ const router = new VueRouter({
     },
     routes,
 });
+router.beforeEach((to,from,next)=>{
+    store.dispatch('app/toggleSideNav', false)
+    next()
+})
 
 export default router;

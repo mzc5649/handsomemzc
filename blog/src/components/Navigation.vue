@@ -1,51 +1,55 @@
 <template>
-    <v-navigation-drawer
-            v-model="sideNav"
-            fixed
-            app
-            style="z-index: 100"
-    >
-        <v-list >
-        <v-list-item
-                v-for="(item, index) in links"
-                :key="index"
-                link
-                :to="item.link"
-        >
-            <v-list-item-icon>
-                <v-icon>{{item.icon}}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-                <v-list-item-title> {{item.name}}</v-list-item-title>
-            </v-list-item-content>
-        </v-list-item>
-        </v-list>
-    </v-navigation-drawer>
+    <div>
+        <vs-sidebar  v-model="activeBar" :open="sideNav">
+            <template v-for="item in links">
+                <vs-sidebar-item  :to="item.link" :id="item.id">
+                    <template #icon>
+                        <i class='fas'  :class="item.icon"></i>
+                    </template>
+                    {{item.name}}
+                </vs-sidebar-item>
+            </template>
+            <template #footer>
+                <div v-if="user">
+                        <vs-avatar @click="jumpToMemberCenter">
+                            <img :src="user.uIcon" alt="">
+                        </vs-avatar>
+                </div>
+            </template>
+        </vs-sidebar>
+    </div>
 </template>
 
 <script>
     export default {
         name: "Navigation",
-        data(){
-            return{
-                links:[
+        data() {
+            return {
+                activeBar:'',
+                links: [
                     {
                         name: 'Welcome',
+                        id:'Index',
                         icon: 'fa-home',
                         link: '/'
                     },
                     {
                         name: '博客',
-                        icon: 'fa-edit',
-                        link: '/blog/index'
+                        id:'BlogIndex',
+                        icon: 'fa-blog',
+                        link: '/blog'
                     },
                     {
                         name: '留言',
-                        icon: 'fa-comment-o',
+                        id:'BlogMessage',
+                        icon: 'fa-comment',
                         link: '/blog/msg'
                     }
                 ]
             }
+        },
+        created() {
+            this.activeBar=this.$route.name
         },
         computed: {
             sideNav: {
@@ -55,6 +59,16 @@
                 set(val) {
                     this.$store.commit('app/TOGGLE_SIDENAV', val);
                 }
+            },
+            user(){
+                return this.$store.state.user
+            }
+        },
+        methods:{
+            jumpToMemberCenter(){
+                this.$router.push({
+                    path:'/blog/member/'+this.user.uId
+                })
             }
         }
     }

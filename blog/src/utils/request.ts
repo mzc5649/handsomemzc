@@ -24,8 +24,9 @@ service.interceptors.response.use(
         return res
     },
     error => {
+        var msg = error.response.status == 401 ? '无权限' : '服务器繁忙';
         store.dispatch('snackbar/openSnackbar', {
-            msg: '服务器繁忙',
+            msg: msg,
         });
         return Promise.reject(error)
     }

@@ -1,9 +1,8 @@
 <template>
     <div class="Index">
-        <div style="background-color: transparent;position: relative;z-index: 9999">
-                <button class="swap">
-                    <RouterLink to="/blog">博客</RouterLink>
-                </button>
+        <div class="navbar">
+
+            <vs-button shadow to="/blog">博客</vs-button>
         </div>
         <div id='background' class="background">
         </div>
@@ -134,6 +133,13 @@
 
 </script>
 <style scoped lang="scss">
+    .navbar {
+        background-color: transparent;
+        position: relative;
+        display: flex;
+        justify-content: flex-end;
+        z-index: 9999;
+    }
 </style>
 <style>
 </style>

@@ -41,6 +41,12 @@ const actions = {
     },
     toggleSideNav(context: any, data: boolean) {
         context.commit('TOGGLE_SIDENAV', data)
+        if(data){
+            document.body.style.overflow = 'hidden'
+        }else{
+            document.body.style.overflow = 'auto'
+        }
+
     },
     toggleDark(context: any, data: boolean) {
         context.commit('TOGGLE_DARK', data)

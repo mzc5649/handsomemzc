@@ -95,19 +95,26 @@
             </div>
             <div v-else>
                 <div class="edit-input">
-                    <ValidationProvider  ref="emailValid" rules="required|email" v-slot="v">
-                    <vs-input
-                            :state="v.errors[0]?'danger':''"
-                            label-placeholder="邮箱地址可用作登录"
-                            v-model="user.uEmail">
-                        <template #message-danger>
-                            {{v.errors[0]}}
-                        </template>
-                    </vs-input>
+                    <ValidationProvider ref="emailValid" rules="required|email" v-slot="v">
+                        <vs-input
+                                :state="v.errors[0]?'danger':''"
+                                label-placeholder="邮箱地址可用作登录"
+                                v-model="user.uEmail">
+                            <template #message-danger>
+                                {{v.errors[0]}}
+                            </template>
+                        </vs-input>
                     </ValidationProvider>
                 </div>
+                <div class="edit-input">
+                    <vs-input v-model="emailCode" placeholder="验证码"></vs-input>
+                    <vs-button :disabled="sendEmail.disabled" border :loading="loading.emailCode" @click="sendMailCode">
+                        <span v-if="!sendEmail.isSend">发送验证码</span>
+                        <span v-else>{{sendEmail.count}}</span>
+                    </vs-button>
+                </div>
                 <div class="save-button">
-                    <vs-button :loading="loading.email" @click="saveEmail">保存</vs-button>
+                    <vs-button :loading="loading.email" @click="saveEmail">提交</vs-button>
                     <vs-button shadow border @click="setShow.email=false">取消</vs-button>
                 </div>
             </div>
@@ -122,27 +129,34 @@
                 </span>
             </div>
             <div v-else>
-                <div class="edit-input">
-                    <vs-input
-                            type="password"
-                            v-model="newPwd"
-                            label="新密码">
-                        <template #message-warn>
-                            确保两次密码一致
-                        </template>
-                    </vs-input>
-                    <vs-input
-                            type="password"
-                            v-model="newPwdAgain"
-                            style="margin-left: 10px"
-                            label="重复新密码">
-                        <template #message-warn>
-                            修改密码后需重新登录
-                        </template>
-                    </vs-input>
+                <div>
+                    <ValidationObserver ref="pwdValid" class="edit-input">
+                        <ValidationProvider name="first" rules="required|pwdLength" v-slot="{ errors }">
+                            <vs-input
+                                    type="password"
+                                    v-model="newPwd"
+                                    label-placeholder="新密码">
+                                <template #message-danger>
+                                    {{ errors[0] }}
+                                </template>
+                            </vs-input>
+                        </ValidationProvider>
+                        <ValidationProvider rules="required|pwdLength|password:@first" v-slot="{ errors }">
+                            <vs-input
+                                    type="password"
+                                    v-model="newPwdAgain"
+                                    style="margin-left: 10px"
+                                    label-placeholder="重复新密码">
+                                <template #message-danger>
+                                    {{ errors[0] }}
+                                </template>
+                            </vs-input>
+                        </ValidationProvider>
+                    </ValidationObserver>
+                    <span style="font-size: 12px;color: gray">修改密码后请重新登录</span>
                 </div>
                 <div class="save-button">
-                    <vs-button :loading="loading.pwd">保存</vs-button>
+                    <vs-button :loading="loading.pwd" @click="savePwd">保存</vs-button>
                     <vs-button shadow border @click="setShow.pwd=false">取消</vs-button>
                 </div>
             </div>
@@ -151,8 +165,8 @@
 </template>
 
 <script>
-    import {saveUname, saveSex, saveSign,saveEmail} from '../../../api/user'
-    import {ValidationProvider, extend} from 'vee-validate';
+    import {saveUname, saveSex, saveSign, saveEmail, sendMailCode, savePassword} from '../../../api/user'
+    import {ValidationProvider, extend, ValidationObserver} from 'vee-validate';
     import {email} from "vee-validate/dist/rules";
     //规则：必须存在的字段
     extend('required', {
@@ -179,19 +193,34 @@
         },
         message: '请输入正确的邮箱地址'
     });
-    //规则 输入长度
+    //规则 用户名输入长度
     extend('userLength', {
         validate(value) {
             return value.length <= 20 && value.length >= 3;
         },
         message: '长度应该为3-20之间'
     });
-    //规则 输入长度
+    //规则 用户名输入长度
+    extend('pwdLength', {
+        validate(value) {
+            return value.length <= 20 && value.length >= 6;
+        },
+        message: '长度应该为6-20之间'
+    });
+    //规则 签名输入长度
     extend('signLength', {
         validate(value) {
             return value.length <= 40;
         },
         message: '长度应该为40以内'
+    });
+    //规则 密码
+    extend('password', {
+        params: ['target'],
+        validate(value, {target}) {
+            return value === target;
+        },
+        message: '密码不匹配'
     });
     export default {
         name: "MemberSidebarSet",
@@ -210,14 +239,22 @@
                     sex: false,
                     sign: false,
                     email: false,
-                    pwd: false
+                    pwd: false,
+                    emailCode: false
                 },
                 user: {},
                 newPwd: '',
-                newPwdAgain: ''
+                newPwdAgain: '',
+                emailCode: '',
+                sendEmail: {
+                    isSend: false,
+                    count: 0,
+                    disabled: false
+                }
+
             }
         },
-        components: {ValidationProvider},
+        components: {ValidationProvider, ValidationObserver},
         created() {
         },
         watch: {
@@ -299,13 +336,57 @@
                     })
                 })
             },
-            saveEmail(){
+            // 发送邮件
+            sendMailCode() {
+                this.$refs['emailValid'].validate().then(success => {
+                    if (!success.valid) {
+                        return;
+                    }
+                    this.loading.emailCode = true
+                    const data = {
+                        to: this.user.uEmail
+                    }
+                    sendMailCode(data).then(res => {
+                            this.loading.emailCode = false
+                            this.$vs.notification({
+                                progress: "auto",
+                                color: 'success',
+                                position: "top-center",
+                                title: '成功',
+                                text: "验证码发送成功，请注意查收"
+                            });
+                            localStorage.setItem("email_tamp", res.data.tamp);
+                            localStorage.setItem("email_hash", res.data.hash);
+                            this.sendEmail.isSend = true
+                            this.sendEmail.count = 60
+                            this.sendEmail.disabled = true
+                            var time = setInterval(() => {
+                                this.sendEmail.count--;
+                                if (this.sendEmail.count == 0) {
+                                    this.sendEmail.isSend = false
+                                    this.sendEmail.count = 0
+                                    this.sendEmail.disabled = false
+                                    clearInterval(time);
+                                }
+                            }, 1000);
+                        }
+                    ).catch(err => {
+                        this.loading.emailCode = false
+                    })
+
+                })
+            },
+            // 保存邮箱设置
+            saveEmail() {
                 this.$refs['emailValid'].validate().then(success => {
                     if (!success.valid) {
                         return;
                     }
                     const data = {
-                        uEmail: this.user.uEmail
+                        code: this.emailCode,
+                        email: this.user.uEmail,
+                        tamp: localStorage.getItem("email_tamp"),
+                        hash: localStorage.getItem("email_hash"),
                     }
                     this.loading.email = true
                     saveEmail(data, this.token).then(res => {
@@ -318,6 +399,25 @@
                     })
 
                 })
+            },
+            savePwd() {
+                this.$refs['pwdValid'].validate().then(success => {
+                    if (!success) {
+                        return
+                    }
+                    const data = {
+                        uPwd: this.newPwd
+                    }
+                    this.loading.pwd = true
+                    savePassword(data, this.token).then(res => {
+                        this.loading.pwd = false
+                        this.setShow.pwd = false
+                    }).catch(err => {
+                        this.loading.pwd = false
+                    })
+
+
+                })
             }
 
         }
@@ -326,13 +426,12 @@
 
 <style scoped lang="scss">
     .MemberSidebarSet {
-
+        width: 100%;
         .user-info-item {
             padding: 20px;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: flex-start;
-            width: 100%;
 
             .edit-name {
                 font-weight: 700;
@@ -343,6 +442,8 @@
 
             .edit-item {
                 display: flex;
+                align-items: center;
+                font-size: 18px;
             }
 
             &:hover .edit-button {
@@ -358,6 +459,7 @@
 
             .edit-input {
                 display: flex;
+                padding: 5px 0;
                 width: 100%;
             }
 
