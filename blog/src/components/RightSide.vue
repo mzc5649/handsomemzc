@@ -1,5 +1,5 @@
 <template>
-    <div class="right-side">
+    <div class="right-side" >
         <UserCard data-scroll="in" class="magictime"></UserCard>
         <ArticleSortList></ArticleSortList>
     </div>
@@ -15,6 +15,11 @@
         components: {UserCard, ArticleSortList},
         data() {
             return {}
+        },
+        computed: {
+            device() {
+                return this.$store.state.app.device;
+            },
         },
         mounted() {
             ScrollOut({

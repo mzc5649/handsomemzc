@@ -4,6 +4,9 @@ const { body } = document
 const WIDTH = 900 // refer to Bootstrap's responsive design
 
 export default {
+  created(){
+   this.$_resizeHandler()
+  },
   watch: {
   },
   beforeMount() {

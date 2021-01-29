@@ -11,7 +11,7 @@
                 </div>
                 <div class="user-panel">
                     <!--头像-->
-                    <vs-avatar ref="avatar" class="user-panel-icon" size="100" style="border: 2px white solid">
+                    <vs-avatar circle ref="avatar" class="user-panel-icon" size="120"  style="border: 2px white solid">
                         <img
                                 :src="user.uIcon"
                                 style="width: 100%;height: 100%"
@@ -231,7 +231,7 @@
         height: 0;
         width: 100%;
         position: relative;
-        padding-bottom: 20%;
+        padding-bottom: 30%;
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
@@ -240,9 +240,9 @@
             position: absolute;
             right: 10px;
             top: 10px;
-            color: var(--primary-color);
+            color: gray;
             padding: 5px;
-            border: 1px solid var(--primary-color);
+            border: 1px solid gray;
             border-radius: 10px;
             cursor: pointer;
         }
@@ -254,7 +254,9 @@
         margin-top: -30px;
         display: flex;
         color: var(--primary-color);
+        .user-panel-icon{
 
+        }
         .user-panel-icon:hover .change-icon-btn {
             display: flex;
         }
@@ -267,7 +269,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            border-radius: 35%;
+            border-radius: 50%;
             background-color: rgba(0, 0, 0, 0.5);
             font-size: 13px;
             cursor: pointer;
@@ -305,11 +307,12 @@
             color: var(--primary-color);
             box-sizing: border-box;
             margin-right: 10px;
-
+            box-shadow: rgba(0, 0, 0, 0.05) 0px 5px 20px 0px;
             .user-sidebar {
                 border-bottom: 1px solid var(--border-color);
                 cursor: pointer;
-
+                color: var(--unactive-color);
+                font-weight: 700;
                 .user-sidebar-info {
                     padding: 16px;
                     display: flex;
@@ -317,9 +320,14 @@
                     align-items: center;
                 }
             }
+            .user-sidebar:hover {
+                color: var(--active-color)
+            }
         }
 
         .author-table-right {
+            box-shadow: rgba(0, 0, 0, 0.05) 0px 5px 20px 0px;
+            border: 1px solid var(--border-color);
             border-radius: 20px;
             background-color: var(--card-background-color);
             color: var(--primary-color);
@@ -329,7 +337,7 @@
     }
 
     .active {
-        color: rgba(26, 92, 255,0.5);
+        color: var(--active-color)!important;
     }
 
     @media screen and (max-width: 900px) {

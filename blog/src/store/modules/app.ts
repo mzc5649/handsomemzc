@@ -12,7 +12,9 @@ const darkmode = new darken({
         "--background-color": ["#f4f4f4", "rgb(13, 17, 23)"],
         "--card-background-color": ["#ffffff", "rgb(13, 17, 23)"],
         "--md-background-color": ["#f6f8fa", "rgb(30, 32, 35)"],
-        "--border-color": ["#e1e4e8","#30363d"]
+        "--border-color": ["#e1e4e8","#30363d"],
+        "--unactive-color":['rgba(49,67,84,0.6)','rgba(255,255,255,0.6)'],
+        "--active-color":['rgb(49,67,84)','rgb(255,255,255)']
     }
 });
 const state = {

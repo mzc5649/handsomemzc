@@ -17,8 +17,8 @@
                 <div v-show="isLogin">
                     <ValidationObserver ref="loginForm">
                         <ValidationProvider rules="required" v-slot="v">
-                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="loginForm.login"
-                                      placeholder="用户名/邮箱">
+                            <vs-input  dark :state="v.errors[0]?'danger':''" v-model="loginForm.login"
+                                      placeholder="邮箱">
                                 <template #icon>
                                     <i class="fas fa-user"></i>
                                 </template>
@@ -50,7 +50,7 @@
 
                         <ValidationProvider rules="required|user|userLength" v-slot="v">
                             <vs-input dark :state="v.errors[0]?'danger':''" v-model="registerForm.login"
-                                      placeholder="用户名">
+                                      placeholder="昵称">
                                 <template #icon>
                                     <i class="fas fa-user"></i>
                                 </template>
@@ -156,7 +156,7 @@
         },
         message: '请输入正确的邮箱地址'
     });
-    //规则 用户名
+    //规则 昵称
     extend('user', {
         validate(value) {
             return /^[_a-zA-Z0-9-.\u4e00-\u9fa5]+$/.test(value);
@@ -268,13 +268,10 @@
                     if (refFormName == 'loginForm') {
                         const data = {
                             login: this.loginForm.login,
-                            pass: this.loginForm.pass
+                            pass: this.loginForm.pass,
+                            isRemember: this.isRemember
                         }
                         login(data).then(res => {
-                            if (this.isRemember) {
-                                this.$cookies.set('login', this.loginForm.login, '10D' )
-                                this.$cookies.set('pass', this.loginForm.pass, '10D' )
-                            }
                             this.$vs.notification({
                                 progress: "auto",
                                 color: 'success',
@@ -288,7 +285,7 @@
                             this.$store.commit('SET_LOGIN_OR_REGISTER_DIALOG');
                             //存储信息
                             this.$store.commit('SET_USER', res.data.userinfo);
-                            this.$cookies.set("token", res.data.token, 3600)
+                            this.$cookies.set("token", res.data.token,'1y')
 
                         }).catch(err => {
                             //按钮loading

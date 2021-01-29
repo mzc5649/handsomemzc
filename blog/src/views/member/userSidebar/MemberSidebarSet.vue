@@ -1,7 +1,7 @@
 <template>
     <div class="MemberSidebarSet" v-if="isSelf">
         <div class="user-info-item">
-            <div class="edit-name">用户名：</div>
+            <div class="edit-name">昵称：</div>
             <div class="edit-item" v-if="!setShow.name">
                 {{userData.uUsername}}
                 <span class="edit-button">
@@ -15,7 +15,7 @@
                     <ValidationProvider ref="nameValid" rules="required|user|userLength" v-slot="v">
                         <vs-input
                                 :state="v.errors[0]?'danger':''"
-                                label-placeholder="用户名可用作登录"
+                                label-placeholder="昵称可用作登录"
                                 v-model="user.uUsername">
                             <template #message-danger>
                                 {{v.errors[0]}}
@@ -179,7 +179,7 @@
         computesRequired: true,
         message: '此处不可为空'
     })
-    //规则 用户名
+    //规则 昵称
     extend('user', {
         validate(value) {
             return /^[_a-zA-Z0-9-.\u4e00-\u9fa5]+$/.test(value);
@@ -193,14 +193,14 @@
         },
         message: '请输入正确的邮箱地址'
     });
-    //规则 用户名输入长度
+    //规则 昵称输入长度
     extend('userLength', {
         validate(value) {
             return value.length <= 20 && value.length >= 3;
         },
         message: '长度应该为3-20之间'
     });
-    //规则 用户名输入长度
+    //规则 昵称输入长度
     extend('pwdLength', {
         validate(value) {
             return value.length <= 20 && value.length >= 6;
@@ -469,5 +469,17 @@
 
 
         }
+    }
+    @media screen and (max-width: 900px) {
+        .user-info-item{
+           flex-direction: column;
+            .edit-name{
+                margin-bottom: 15px;
+            }
+            .edit-button{
+                opacity: 1!important;
+            }
+        }
+
     }
 </style>

@@ -19,8 +19,8 @@
                     ></ArticleList>
                 </div>
             </vs-col>
-            <vs-col :lg="3" :md="3" :sm="0" :xs="0" v-if="device!='mobile'">
-                <RightSide></RightSide>
+            <vs-col :lg="3" :md="3" :sm="0" :xs="0" v-if="device=='desktop'">
+                    <RightSide></RightSide>
             </vs-col>
         </vs-row>
     </div>

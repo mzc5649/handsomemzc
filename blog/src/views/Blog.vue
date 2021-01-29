@@ -3,10 +3,10 @@
         <vs-navbar padding-scroll fixed shadow v-model="activeBar">
             <template #left>
                 <span v-show="device == 'desktop'" class="magictime vanishIn">
-                  handsomemzc
+                  Handsomemzc
                 </span>
                 <span class="magictime twisterInUp" @click="openSideNav" v-show="device == 'mobile'" style="font-size: 20px">
-                  <i class="fas fa-align-justify"></i>
+                  <i class="fas fa-bars"></i>
                 </span>
             </template>
             <span v-if="device == 'desktop'">
@@ -21,12 +21,12 @@
                 </vs-navbar-item>
             </span>
             <span v-show="device == 'mobile'" class="magictime vanishIn">
-                handsomemzc
+                Handsomemzc
             </span>
             <template #right>
                 <vs-tooltip v-show="dark=='dark'" bottom>
                     <vs-button icon shadow @click="handleChangeTheme">
-                        <i class="fas fa-sun fa-lg"></i>
+                        <i class="fas fa-sun fa-lg magictime slideUpReturn "></i>
                     </vs-button>
                     <template #tooltip>
                         日间模式
@@ -34,7 +34,7 @@
                 </vs-tooltip>
                 <vs-tooltip v-show="dark=='light'" bottom>
                     <vs-button icon shadow @click="handleChangeTheme">
-                        <i class="fas fa-moon fa-lg"></i>
+                        <i class="fas fa-moon fa-lg magictime slideUpReturn"></i>
                     </vs-button>
                     <template #tooltip>
                         夜间模式
@@ -42,7 +42,7 @@
                 </vs-tooltip>
                 <vs-tooltip bottom v-if="!user">
                     <vs-button icon shadow v-if="!user" @click="SET_LOGIN_OR_REGISTER_DIALOG">
-                        <i class="fas fa-user fa-lg"/>
+                        <i class="fas fa-user fa-lg animate__animated animate__rubberBand"/>
                     </vs-button>
                     <template slot="tooltip">
                         登录
@@ -53,6 +53,7 @@
                 </template>
             </template>
         </vs-navbar>
+
         <div style="margin-top: 84px">
             <vs-row justify="center">
                 <vs-col :lg="10" :md="10" :sm="12" :xs="12">
@@ -79,6 +80,7 @@
         <Snackbar/>
         <Navigation v-if="device === 'mobile'"></Navigation>
         <div v-if="device === 'mobile'&&sideNav" class="drawer-bg" @click="handleClickOutside"></div>
+
     </div>
 </template>
 
@@ -124,8 +126,7 @@
                 const audioLoading = this.$vs.loading({
                     target: this.$refs["audioLoading"],
                     type: "square",
-                    // color: "#d5397b",
-                    text: "Loading..."
+                    text: "音乐加载中"
                 });
 
                 if (this.dark == 'dark') {

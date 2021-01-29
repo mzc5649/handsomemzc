@@ -49,13 +49,10 @@
         },
         mounted() {
             this.$nextTick(() => {
-                if(this.device=='desktop'){
                     getArticleSortTag().then(res => {
                         this.articleSortData = res.data
                         this.getChart()
                     })
-                }
-
             })
         },
         methods: {

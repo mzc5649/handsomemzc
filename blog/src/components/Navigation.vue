@@ -9,6 +9,7 @@
                     {{item.name}}
                 </vs-sidebar-item>
             </template>
+            <ArticleSortList></ArticleSortList>
             <template #footer>
                 <div v-if="user">
                         <vs-avatar @click="jumpToMemberCenter">
@@ -21,8 +22,11 @@
 </template>
 
 <script>
+
+    import ArticleSortList from "./ArticleSortList";
     export default {
         name: "Navigation",
+        components: {ArticleSortList},
         data() {
             return {
                 activeBar:'',

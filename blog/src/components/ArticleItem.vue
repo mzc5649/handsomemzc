@@ -43,15 +43,25 @@
                                 {{ article.articleSort.sortName }}
                             </template>
                         </vs-button>
-                        <i class="fas fa-user info"></i>
-                        <span class="info">{{article.user.uUsername}}</span>
+                        <div>
+                            <span class="info-time" @click="jumpToMember(article.user.uId)">
+                                <i class="fas fa-user info"></i>
+                                <span class="info" >{{article.user.uUsername}}</span>
+                            </span>
                         <i class="fas fa-clock info"></i>
-                        <span class="info">
-                        <timeago :datetime="article.artInfoCreatedTime" locale="zh-CN" :auto-update="60"></timeago>
+                        <span v-show="device == 'desktop'">
+                            <span class="info">发表于:</span>
+                            <span class="info"><timeago :datetime="article.artInfoCreatedTime" locale="zh-CN"
+                                                        :auto-update="60"></timeago></span>
+                            <span class="info">更新于:</span>
                         </span>
+                        <span class="info">
+                            <timeago :datetime="article.artInfoModifiedTime" locale="zh-CN" :auto-update="60"></timeago>
+                        </span>
+                        </div>
                     </div>
-                    <vs-button shadow border dark animation-type="vertical" @click="toArticle(article.artInfoId)">
-                        开始阅读
+                    <vs-button size="small" shadow border dark animation-type="vertical" @click="toArticle(article.artInfoId)">
+                        阅读
                         <template #animate>
                             Go
                         </template>
@@ -59,7 +69,7 @@
                 </div>
             </template>
         </vs-card>
-        <t
+
     </div>
 
 </template>
@@ -87,6 +97,11 @@
                 }
             }
         },
+        computed: {
+            device() {
+                return this.$store.state.app.device;
+            }
+        },
         mounted() {
         },
         methods: {
@@ -109,6 +124,11 @@
                     }
                 });
 
+            },
+            jumpToMember(id) {
+                this.$router.push({
+                    path: '/blog/member/' + id
+                })
             }
         }
     };
@@ -132,7 +152,12 @@
         font-size: 13px;
         color: #A0A0A0;
     }
+    .info-time:hover{
+        .info{
+            color: #2c3e50;
+        }
 
+    }
     .title {
         overflow: hidden;
         white-space: nowrap;

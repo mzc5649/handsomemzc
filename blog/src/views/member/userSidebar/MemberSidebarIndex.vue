@@ -1,7 +1,7 @@
 <template>
     <div class="MemberSidebarIndex">
         <div class="user-info-item">
-            <span class="user-info-item-title">用户名：</span>
+            <span class="user-info-item-title">昵称：</span>
             <span>{{userData.uUsername}}</span>
         </div>
         <div class="user-info-item">

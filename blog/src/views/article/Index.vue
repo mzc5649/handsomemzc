@@ -25,7 +25,7 @@
                     <div class="article-content">
                         <h1 class=" article_title">{{articleData.artInfoTitle}}</h1>
                         <div class="article-user">
-                            <div>
+                            <div @click="jumpToMember(articleData.user.uId)" style="cursor:pointer">
                                 <vs-avatar circle size="54" style="border: 2px white solid">
                                     <img
                                             :src="articleData.user.uIcon"
@@ -33,8 +33,10 @@
                                 </vs-avatar>
                             </div>
                             <div style="margin-left: 15px">
-                                <div class="article-user-name">{{articleData.user.uUsername}}</div>
-                                <div class="article-user-info">{{articleData.artInfoCreatedTime}}</div>
+                                <div class="article-user-name" @click="jumpToMember(articleData.user.uId)">
+                                    {{articleData.user.uUsername}}
+                                </div>
+                                <div class="article-user-info">发表于：{{articleData.artInfoCreatedTime}}</div>
                             </div>
                         </div>
                         <div class="article-body">
@@ -48,7 +50,7 @@
             <vs-col :lg="3" :md="3" :sm="0" :xs="0" v-if="device!='mobile'">
                 <div class="article-right">
                     <ArticleSortList></ArticleSortList>
-                    <div class="menus-box" :class="auto_fixed">
+                    <div class="menus-box">
                         <ContentPlaceholders v-if="navLoading">
                             <content-placeholders-heading></content-placeholders-heading>
                             <content-placeholders-text :lines="10"></content-placeholders-text>
@@ -61,7 +63,7 @@
                             <ul>
                                 <div class="menus" ref="navList">
                                     <template v-for="item in articleNav">
-                                        <li @click="jumpToTitle(item.id)" class="artMenuIndex"
+                                        <li @click="jumpToTitle(item.id)" class="artMenuIndex animate__animated"
                                             :class="['menu-lev'+item.lev,'menu-'+item.id]">
                                             {{item.name}}
                                         </li>
@@ -73,18 +75,25 @@
                 </div>
             </vs-col>
         </vs-row>
-
+        <vs-row justify="space-between">
+            <vs-col :lg="9" :md="9" :sm="12" :xs="12">
+                <ArticleComment :article-id="id"></ArticleComment>
+            </vs-col>
+            <vs-col :lg="3" :md="3" :sm="0" :xs="0" v-if="device!='mobile'">
+            </vs-col>
+        </vs-row>
     </div>
 </template>
 
 <script>
     import {getArticleDataById} from '@/api/article'
     import ArticleSortList from "../../components/ArticleSortList";
+    import ArticleComment from "../../components/ArticleComment";
 
     export default {
 
         name: "Index",
-        components: {ArticleSortList},
+        components: {ArticleComment, ArticleSortList},
         data() {
             return {
                 markdownOption: {},
@@ -101,11 +110,6 @@
                 navFlag: true,
                 articleLoading: true,
                 navLoading: true,
-                auto_fixed: {
-                    menu_fixed: false,
-                    animate__animated: true,
-                    animate__zoomInLeft: false
-                }
             }
         },
         async created() {
@@ -128,6 +132,7 @@
             },
         },
         methods: {
+            /*监控导航*/
             $scrollListenCallback() {
                 if (this.$store.state["app/device"] != 'mobile') {
                     let that = this;
@@ -150,8 +155,10 @@
                                 let id = a.getAttribute("id");
                                 document.querySelectorAll(".artMenuIndex").forEach(item => {
                                     item.classList.remove("active");
+                                    item.classList.remove("animate__headShake");
                                 });
                                 document.getElementsByClassName("menu-" + id)[0].classList.add("active")
+                                document.getElementsByClassName("menu-" + id)[0].classList.add("animate__headShake")
                             }
                             break;
                         }
@@ -160,13 +167,12 @@
 
 
             },
-            //监听文章导航
+            //设置 文章右侧宽度与左侧等高
             onScroll() {
-                let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-                let header_height = 150
-                this.auto_fixed.menu_fixed=scrollTop >= header_height
-                this.auto_fixed.animate__zoomInLeft=scrollTop >= header_height
-
+                var height;
+                if (height = document.getElementsByClassName("article-left")[0].clientHeight) {
+                    document.getElementsByClassName("article-right")[0].style.height = height + 'px'
+                }
             },
             getElementToPageTop(el) {
                 const box = el.getBoundingClientRect();
@@ -187,7 +193,7 @@
                 window.addEventListener('scroll', this.$scrollListenCallback);
                 window.addEventListener('scroll', this.onScroll)
             },
-            //getMd导航
+            //获取Md导航
             getMdNav() {
                 const data = this.articleData.articleContent.artContent;
                 var myRegex = /<h\d>.*<\/h\d>/g;
@@ -209,6 +215,11 @@
             jumpToTitle(id) {
                 let $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
                 $body.animate({scrollTop: $('#' + id).offset().top - 50}, 1000);
+            },
+            jumpToMember(id) {
+                this.$router.push({
+                    path: '/blog/member/' + id
+                })
             }
         }
     }
@@ -245,7 +256,6 @@
 
     .article-right {
         padding: 0 12px;
-
     }
 
     .article-content {
@@ -263,6 +273,7 @@
 
             .article-user-name {
                 font-weight: 700;
+                cursor: pointer;
             }
 
             .article-user-info {
@@ -278,19 +289,16 @@
         background-color: var(--card-background-color);
         border-radius: 20px;
         padding: 12px;
+        position: sticky;
+        top: 54px;
         color: var(--primary-color);
         box-shadow: rgba(0, 0, 0, 0.05) 0px 5px 20px 0px;
+
         ul {
             padding: 0;
         }
     }
 
-    .menu_fixed {
-        position: fixed;
-        top: 56px;
-        z-index: 9999;
-        right: 0;
-    }
 </style>
 <style lang="scss">
     .markdown-body {
