@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="blog">
         <vs-navbar padding-scroll fixed shadow v-model="activeBar">
             <template #left>
                 <span v-show="device == 'desktop'" class="magictime vanishIn">
