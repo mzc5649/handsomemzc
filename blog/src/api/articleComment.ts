@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getArticleComment(id:any,params:any) {
+export function getArticleComment(params:any) {
     return request({
-        url:'/blog-api/article_comment/'+id,
+        url:'/blog-api/article_comment',
         method:'get',
         params
     })

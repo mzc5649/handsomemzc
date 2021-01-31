@@ -1,40 +1,27 @@
 <template>
     <div class="article-comment">
-        <div class="comment-send">
-            <div class="user-face">
-                <vs-avatar circle size="48">
-                    <img :src="user.uIcon" alt="" style="width: 100%;height: 100%">
-                </vs-avatar>
-            </div>
-            <div class="textarea-container">
-                <textarea ref="comment" type="text" cols="80" rows="4"></textarea>
-                <vs-button
-                        :loading="loading.sendCmt"
-                        @click="sendComment"
-                        class="comment-submit"
-                        animation-type="vertical">
-                    评论
-                    <template #animate>
-                        <i class="fas fa-comment"></i>发送
-                    </template>
-                </vs-button>
-            </div>
-
+        <div class="head">
+            {{recordCount}}评论
+        </div>
+        <ArticleCommentSend></ArticleCommentSend>
+        <div class="comment-list">
+            <template v-for="(item,index) in recordList">
+                <ArticleCommentItem :key="index" :data="item"></ArticleCommentItem>
+            </template>
         </div>
     </div>
 </template>
 
 <script>
-    import {saveArticleComment, getArticleComment} from '../api/articleComment'
-
+    import {getArticleComment} from '../api/articleComment'
+    import ArticleCommentItem from "./ArticleCommentItem";
+    import ArticleCommentSend from "./ArticleCommentSend";
     export default {
         name: "ArticleComment",
+        components: {ArticleCommentSend, ArticleCommentItem},
         props: ['articleId'],
         data() {
             return {
-                loading: {
-                    sendCmt: false
-                },
                 recordList: [],
                 recordCount: 0,
                 pageTotal: 0,
@@ -45,9 +32,11 @@
             }
         },
         created() {
-            getArticleComment(this.articleId,this.page).then(res => {
-                console.log(res);
-            })
+            this.fetchData()
+
+        },
+        mounted() {
+
         },
         computed: {
             user() {
@@ -55,30 +44,18 @@
             }
         },
         methods: {
-            sendComment() {
+            fetchData() {
                 const data = {
-                    artId: this.articleId,
-                    userId: this.user.uId,
-                    artCmtContent: this.$refs['comment'].value,
-                    artCmtLevel: 1
+                    aid: this.articleId,
+                    pageBean: this.page
                 }
-                this.loading.sendCmt = true;
-                saveArticleComment(data).then(res => {
-                    this.loading.sendCmt = false;
-                    this.$refs['comment'].value = '';
-                    this.$vs.notification({
-                        progress: "auto",
-                        color: 'success',
-                        position: "bottom-center",
-                        title: "成功",
-                        text: "评论发送成功"
-                    });
-                }).catch(err => {
-                    this.loading.sendCmt = false;
+                getArticleComment(data).then(res => {
+                    this.recordList = res.data.recordList;
+                    this.pageTotal = res.data.pageTotal;
+                     this.recordCount = res.data.recordCount;
                 })
             }
         }
-
     }
 </script>
 
@@ -90,51 +67,13 @@
         border: 1px solid var(--border-color);
     }
 
-    .comment-send {
-        .user-face {
-            float: left;
-        }
-
-        .textarea-container {
-            margin-left: 85px;
-            margin-right: 85px;
-            position: relative;
-
-            textarea {
-                box-sizing: border-box;
-                background-color: var(--background-color);
-                font-family: "Microsoft YaHei", Avenir, Helvetica, Arial, sans-serif;
-                border: 1px solid var(--border-color);
-                color: var(--primary-color);
-                border-radius: 4px;
-                font-size: 12px;
-                padding: 5px 10px;
-                width: 100%;
-                height: 65px;
-                resize: none;
-                outline: none;
-            }
-
-            textarea:focus {
-                background-color: var(--card-background-color);
-                border: 1px solid rgba(25, 91, 255, 0.6);
-            }
-
-            textarea:hover {
-                background-color: var(---card-background-color);
-                border: 1px solid rgba(25, 91, 255, 0.6);
-            }
-
-            .comment-submit {
-                position: absolute;
-                top: 0;
-                right: -85px;
-                width: 70px;
-                height: 65px;
-                margin: 0;
-            }
-        }
+    .head {
+        margin-bottom: 20px;
+        color: var(--primary-color);
+    }
 
 
+    .comment-list {
+        padding-top: 20px;
     }
 </style>
