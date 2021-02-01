@@ -5,8 +5,8 @@
                 <img :src="user.uIcon" alt="" style="width: 100%;height: 100%">
             </vs-avatar>
         </div>
-        <div class="textarea-container">
-            <textarea ref="comment" type="text" cols="80" rows="4"></textarea>
+        <div class="textarea-container" ref="comment-container">
+            <textarea  @focus="mFocus" @focusout="mFocusOut" @input="mInput" :placeholder="ph" ref="comment" type="text" cols="80" rows="4"></textarea>
             <vs-button
                     :loading="loading.sendCmt"
                     @click="sendComment"
@@ -23,8 +23,34 @@
 
 <script>
     import {saveArticleComment} from "../api/articleComment";
+
     export default {
         name: "ArticleCommentSend",
+        props: {
+            list: {
+                default: []
+            },
+            ph: {
+                type: String,
+                default: '期待您的评论'
+            },
+            articleId: {
+                type: Number,
+                default: 0
+            },
+            toUser: {
+                type: Object,
+                default: null
+            },
+            root: {
+                type: Number,
+                default: 0
+            },
+            parent: {
+                type: Number,
+                default: 0
+            }
+        },
         data() {
             return {
                 loading: {
@@ -35,18 +61,52 @@
         computed: {
             user() {
                 return this.$store.state.user;
+            },
+            token() {
+                return this.$store.state.token
             }
         },
-        methods:{
+        methods: {
+            mFocus(){
+              this.$refs['comment-container'].classList.add('focus')
+            },
+            mFocusOut(){
+                this.$refs['comment-container'].classList.remove('focus')
+            },
+            mInput(){
+                this.$refs['comment-container'].classList.remove('error')
+            },
             sendComment() {
+                var content = this.$refs['comment'].value
+                content = content.replace(/(^[\s\n\t]+|[\s\n\t]+$)/g, "")
+                if (content.length == 0) {
+                    this.$refs['comment-container'].classList.add('error')
+                    this.$vs.notification({
+                        progress: "auto",
+                        color: 'danger',
+                        position: "bottom-center",
+                        text: "你还没有评论！"
+                    });
+                    return
+                }
+
                 const data = {
                     artId: this.articleId,
                     userId: this.user.uId,
-                    artCmtContent: this.$refs['comment'].value,
-                    artCmtLevel: 1
+                    artCmtContent: content,
+                    artCmtRoot: this.root,
+                    artCmtParent: this.parent
+                }
+                if (this.toUser) {
+                    if (this.toUser.uId == this.user.uId) {
+                        data.artCmtContent = '回复 @' + this.toUser.uUsername + ' :' + content
+                    } else {
+                        const href = "//handsomemzc.cn/blog/member/" + this.toUser.uId
+                        data.artCmtContent = '回复 ' + '<a href="' + href + '" target="_blank">@' + this.toUser.uUsername + '</a> :' + content
+                    }
                 }
                 this.loading.sendCmt = true;
-                saveArticleComment(data).then(res => {
+                saveArticleComment(data, this.token).then(res => {
                     this.loading.sendCmt = false;
                     this.$refs['comment'].value = '';
                     this.$vs.notification({
@@ -56,6 +116,7 @@
                         title: "成功",
                         text: "评论发送成功"
                     });
+                    this.list.unshift(res.data)
                 }).catch(err => {
                     this.loading.sendCmt = false;
                 })
@@ -67,6 +128,7 @@
 <style scoped lang="scss">
     .comment-send {
         margin: 10px 0;
+
         .user-face {
             float: left;
             margin: 7px 0 0 5px;
@@ -76,6 +138,15 @@
             margin-left: 85px;
             margin-right: 85px;
             position: relative;
+
+            &.error textarea {
+                background-color: var(--card-background-color) !important;
+                border-color: #e40c0c !important;
+            }
+            &.focus textarea {
+                background-color: var(--card-background-color) !important;
+                border: 1px solid rgba(25, 91, 255, 0.6);
+            }
 
             textarea {
                 box-sizing: border-box;
@@ -90,11 +161,6 @@
                 height: 65px;
                 resize: none;
                 outline: none;
-            }
-
-            textarea:focus {
-                background-color: var(--card-background-color);
-                border: 1px solid rgba(25, 91, 255, 0.6);
             }
 
             textarea:hover {

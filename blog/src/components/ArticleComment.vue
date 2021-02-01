@@ -3,12 +3,13 @@
         <div class="head">
             {{recordCount}}评论
         </div>
-        <ArticleCommentSend></ArticleCommentSend>
+        <ArticleCommentSend :articleId="articleId" :list="recordList"></ArticleCommentSend>
         <div class="comment-list">
             <template v-for="(item,index) in recordList">
                 <ArticleCommentItem :key="index" :data="item"></ArticleCommentItem>
             </template>
         </div>
+        <vs-pagination :dotted-number="10" v-model="page.currentPage" :length="pageTotal"/>
     </div>
 </template>
 
@@ -16,6 +17,7 @@
     import {getArticleComment} from '../api/articleComment'
     import ArticleCommentItem from "./ArticleCommentItem";
     import ArticleCommentSend from "./ArticleCommentSend";
+
     export default {
         name: "ArticleComment",
         components: {ArticleCommentSend, ArticleCommentItem},
@@ -38,21 +40,34 @@
         mounted() {
 
         },
+
+        watch: {
+                pageIndex:  function(val) {
+                     this.fetchData()
+                    console.log(val);
+                    console.log(this.page.currentPage);
+                },
+        },
         computed: {
             user() {
                 return this.$store.state.user;
+            },
+            pageIndex(){
+                return this.page.currentPage
             }
         },
         methods: {
             fetchData() {
                 const data = {
                     aid: this.articleId,
-                    pageBean: this.page
+                    currentPage: this.page.currentPage,
+                    pageSize: this.page.pageSize
                 }
+                console.log(data);
                 getArticleComment(data).then(res => {
                     this.recordList = res.data.recordList;
                     this.pageTotal = res.data.pageTotal;
-                     this.recordCount = res.data.recordCount;
+                    this.recordCount = res.data.recordCount;
                 })
             }
         }
@@ -76,4 +91,6 @@
     .comment-list {
         padding-top: 20px;
     }
+
+
 </style>

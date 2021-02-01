@@ -9,7 +9,7 @@ const darkmode = new darken({
     class: "darkmode-active",
     variables: {
         "--primary-color": ["#2c3e50", "#fafafa"],
-        "--background-color": ["#f4f4f4", "rgb(13, 17, 23)"],
+        "--background-color": ["#f4f5f7", "rgb(13, 17, 23)"],
         "--card-background-color": ["#ffffff", "rgb(13, 17, 23)"],
         "--md-background-color": ["#f6f8fa", "rgb(30, 32, 35)"],
         "--border-color": ["#e1e4e8","#30363d"],

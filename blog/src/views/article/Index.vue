@@ -114,7 +114,7 @@
         },
         async created() {
             let that = this;
-            that.id = that.$route.params.id;
+            that.id = parseInt(that.$route.params.id);
             await that.getArticleData();
         },
         mounted() {

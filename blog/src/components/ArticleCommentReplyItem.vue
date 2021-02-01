@@ -8,12 +8,12 @@
         <div class="reply-con">
             <div class="user">
                 {{data.user.uUsername}}
-                <span class="text-con">{{data.artCmtContent}}</span>
+                <span class="text-con" v-html="data.artCmtContent"></span>
             </div>
             <div class="info">
-                <span class="time">{{data.artCmtCreatedTime}}</span>
-                <vs-button size="small" @click="openReply($event,data.artCmtId)" class="reply-btn" shadow> 回复</vs-button>
-
+                <span class="time"><timeago :datetime="data.artCmtCreatedTime" locale="zh-CN"
+                                            :auto-update="60"></timeago></span>
+                <vs-button size="small" @click="openReply($event,data)" class="reply-btn" shadow>回复</vs-button>
             </div>
         </div>
     </div>
@@ -53,14 +53,15 @@
             }
         },
         methods:{
-            openReply(e,id){
-                this.$emit('openReply2',e,id)
+            openReply(e,data){
+                this.$emit('openReply2',e,data,2)
             }
         }
     }
 </script>
 
 <style scoped lang="scss">
+
     .reply-comment {
         padding: 10px 0;
 
@@ -108,5 +109,13 @@
             }
         }
 
+    }
+</style>
+<style>
+    a{
+        outline: none;
+        color: #00a1d6;
+        text-decoration: none;
+        cursor: pointer;
     }
 </style>

@@ -62,6 +62,7 @@ const router = new VueRouter({
         return {x: 0, y: 0}
     },
     routes,
+    mode:'history'
 });
 router.beforeEach((to,from,next)=>{
     store.dispatch('app/toggleSideNav', false)

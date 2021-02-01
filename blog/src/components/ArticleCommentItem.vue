@@ -5,17 +5,18 @@
                 <img :src="data.user.uIcon" alt="" style="width: 100%;height: 100%">
             </vs-avatar>
         </div>
-        <div class="con">
+        <div class="con" ref="con">
             <div class="user">{{data.user.uUsername}}</div>
             <p class="text">{{data.artCmtContent}}</p>
             <div class="info">
                 <span class="time"><timeago :datetime="data.artCmtCreatedTime" locale="zh-CN"
                                             :auto-update="60"></timeago></span>
-                <vs-button size="small" @click="openReply($event)" class="reply-btn" shadow> 回复</vs-button>
+                <vs-button size="small" @click="openReply($event,data,1)" class="reply-btn" shadow> 回复</vs-button>
             </div>
             <div class="reply-box">
                 <template v-for="(item,index) in data.replies">
-                    <ArticleCommentReplyItem :key="index" :data="item" @openReply2="openReply2"></ArticleCommentReplyItem>
+                    <ArticleCommentReplyItem :key="index" :data="item"
+                                             @openReply2="openReply"></ArticleCommentReplyItem>
                 </template>
                 <div v-if="data.replyCount > 3" class="view-more">
                     共{{data.replyCount}}条回复，点击查看
@@ -70,44 +71,53 @@
 
         },
         methods: {
-            openReply(e) {
-                var parent = e.target.parentNode.parentNode.parentNode
-                var temp = document.getElementById('comment-send')
+            openReply(e, data, type) {
+                const elements = document.getElementsByClassName('open-reply')
+                Array.prototype.forEach.call(elements, function (element) {
+                    element.classList.remove('open-reply')
+                });
+                this.$refs['con'].classList.add('open-reply')
+                //获取父节点
+                const parent = document.getElementsByClassName('open-reply')[0]
+                const temp = document.getElementById('comment-send')
                 if (temp) {
-                    parent.removeChild(temp)
-                    return
+                    document.getElementById("comment-send").remove()
                 }
-                var test = Vue.extend(ArticleCommentSend)
-                var cmt = new test()
+                const test = Vue.extend(ArticleCommentSend)
+                const cmt = new test()
+                cmt.$props.ph = '回复 @' + data.user.uUsername + ' :'
+                cmt.$props.articleId = data.artId
+                if (type == 1) {
+                    cmt.$props.root = data.artCmtId
+                    cmt.$props.parent = 0
+                }
+                if (type == 2) {
+                    cmt.$props.toUser = data.user
+                    cmt.$props.root = data.artCmtRoot
+                    cmt.$props.parent = data.artCmtId
+                }
+                cmt.$props.list = this.data.replies
                 cmt.$store = this.$store
                 //创建挂载点
-                var div = document.createElement('div')
+                const div = document.createElement('div')
                 div.setAttribute("id", "comment-send")
-                var div1 = document.createElement('div')
+                const div1 = document.createElement('div')
                 div.appendChild(div1)
                 parent.appendChild(div)
                 cmt.$mount(div1)
+                //跳转到评论组件
+                const rect = document.getElementById('comment-send').getBoundingClientRect()
+                const isShow = rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= window.innerHeight &&
+                    rect.right <= window.innerWidth
+                if(!isShow){
+                    let $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
+                    $body.animate({scrollTop: $('#comment-send').offset().top-window.innerHeight+100}, 1000);
+                }
 
             },
-            openReply2(e,id){
-                var parent = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode
-                var temp = document.getElementById('comment-send')
-                if (temp) {
-                    parent.removeChild(temp)
-                    return
-                }
-                var test = Vue.extend(ArticleCommentSend)
-                var cmt = new test()
-                cmt.$store = this.$store
-                //创建挂载点
-                var div = document.createElement('div')
-                div.setAttribute("m-id",id);
-                div.setAttribute("id", "comment-send")
-                var div1 = document.createElement('div')
-                div.appendChild(div1)
-                parent.appendChild(div)
-                cmt.$mount(div1)
-            }
+
         }
     }
 </script>
