@@ -1,15 +1,20 @@
 <template>
-    <div class="article-comment">
+    <div id="article-comment" ref="articleComment" class="article-comment">
         <div class="head">
-            {{recordCount}}评论
+            <span class="result">{{recordCount}}</span>评论
         </div>
         <ArticleCommentSend :articleId="articleId" :list="recordList"></ArticleCommentSend>
-        <div class="comment-list">
+        <div id="comment-list" class="comment-list">
             <template v-for="(item,index) in recordList">
-                <ArticleCommentItem :key="index" :data="item"></ArticleCommentItem>
+                <ArticleCommentItem :key="item.artCmtId" :data="item"></ArticleCommentItem>
             </template>
+            <div v-if="recordList.length == 0" class="no-more-comment">
+                空空如也~
+            </div>
         </div>
-        <vs-pagination :dotted-number="10" v-model="page.currentPage" :length="pageTotal"/>
+        <div class="page" v-if="recordCount > 1">
+            <vs-pagination dark not-margin :dotted-number="10" v-model="page.currentPage" :length="pageTotal"/>
+        </div>
     </div>
 </template>
 
@@ -29,45 +34,49 @@
                 pageTotal: 0,
                 page: {
                     currentPage: 1,
-                    pageSize: 20,
-                }
+                    pageSize: 10,
+                },
             }
         },
         created() {
-            this.fetchData()
 
         },
         mounted() {
-
+            this.fetchData()
         },
-
         watch: {
-                pageIndex:  function(val) {
-                     this.fetchData()
-                    console.log(val);
-                    console.log(this.page.currentPage);
-                },
+            pageIndex: function (val) {
+                $("html, body").animate({
+                    scrollTop: $("#article-comment").offset().top-44 }, {duration: 500,easing: "swing"});
+                this.fetchData()
+            },
         },
         computed: {
             user() {
                 return this.$store.state.user;
             },
-            pageIndex(){
+            pageIndex() {
                 return this.page.currentPage
             }
         },
         methods: {
             fetchData() {
+                var commentLoading = this.$vs.loading({
+                    target: this.$refs.articleComment,
+                    type: "points",
+                    text: "加载中",
+                    color:'#1E1E1E'
+                });
                 const data = {
                     aid: this.articleId,
                     currentPage: this.page.currentPage,
                     pageSize: this.page.pageSize
                 }
-                console.log(data);
                 getArticleComment(data).then(res => {
                     this.recordList = res.data.recordList;
                     this.pageTotal = res.data.pageTotal;
                     this.recordCount = res.data.recordCount;
+                    commentLoading.close()
                 })
             }
         }
@@ -83,13 +92,30 @@
     }
 
     .head {
+        font-size: 18px;
         margin-bottom: 20px;
         color: var(--primary-color);
+
+        .result{
+            margin-right: 10px;
+        }
     }
 
 
     .comment-list {
         padding-top: 20px;
+
+        .no-more-comment{
+            color: #99a2aa;
+            text-align: center;
+            padding: 30px 0;
+            font-size: 12px;
+        }
+    }
+
+
+    .page {
+        margin: 20px 0;
     }
 
 

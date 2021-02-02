@@ -8,6 +8,7 @@
         <div class="textarea-container" ref="comment-container">
             <textarea  @focus="mFocus" @focusout="mFocusOut" @input="mInput" :placeholder="ph" ref="comment" type="text" cols="80" rows="4"></textarea>
             <vs-button
+                    dark
                     :loading="loading.sendCmt"
                     @click="sendComment"
                     class="comment-submit"
@@ -17,6 +18,12 @@
                     <i class="fas fa-comment"></i>发送
                 </template>
             </vs-button>
+        </div>
+        <div class="comment-emoji" >
+            <vs-button  icon dark>
+                <i class="fas fa-smile"></i>表情
+            </vs-button>
+
         </div>
     </div>
 </template>
@@ -28,7 +35,7 @@
         name: "ArticleCommentSend",
         props: {
             list: {
-                default: []
+                default: ''
             },
             ph: {
                 type: String,
@@ -79,13 +86,13 @@
             sendComment() {
                 var content = this.$refs['comment'].value
                 content = content.replace(/(^[\s\n\t]+|[\s\n\t]+$)/g, "")
-                if (content.length == 0) {
+                if (content.length == 0 || content.length > 1000) {
                     this.$refs['comment-container'].classList.add('error')
                     this.$vs.notification({
                         progress: "auto",
                         color: 'danger',
                         position: "bottom-center",
-                        text: "你还没有评论！"
+                        text: content.length == 0? "你还没有评论！":"字数限制1000！"
                     });
                     return
                 }
@@ -117,6 +124,7 @@
                         text: "评论发送成功"
                     });
                     this.list.unshift(res.data)
+
                 }).catch(err => {
                     this.loading.sendCmt = false;
                 })
@@ -132,6 +140,11 @@
         .user-face {
             float: left;
             margin: 7px 0 0 5px;
+        }
+
+        .comment-emoji{
+
+            margin-left:  86px;
         }
 
         .textarea-container {

@@ -126,7 +126,8 @@
                 const audioLoading = this.$vs.loading({
                     target: this.$refs["audioLoading"],
                     type: "square",
-                    text: "音乐加载中"
+                    text: "音乐加载中",
+                    color:'dark'
                 });
 
                 if (this.dark == 'dark') {

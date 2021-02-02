@@ -134,7 +134,7 @@
         methods: {
             /*监控导航*/
             $scrollListenCallback() {
-                if (this.$store.state["app/device"] != 'mobile') {
+                if (this.device  != 'mobile') {
                     let that = this;
                     let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
                     scrollTop += 60;
@@ -169,10 +169,13 @@
             },
             //设置 文章右侧宽度与左侧等高
             onScroll() {
-                var height;
-                if (height = document.getElementsByClassName("article-left")[0].clientHeight) {
-                    document.getElementsByClassName("article-right")[0].style.height = height + 'px'
+                if (this.device != 'mobile') {
+                    var height;
+                    if (height = document.getElementsByClassName("article-left")[0].clientHeight) {
+                        document.getElementsByClassName("article-right")[0].style.height = height + 'px'
+                    }
                 }
+
             },
             getElementToPageTop(el) {
                 const box = el.getBoundingClientRect();

@@ -8,7 +8,7 @@
         <div class="reply-con">
             <div class="user">
                 {{data.user.uUsername}}
-                <span class="text-con" v-html="data.artCmtContent"></span>
+                <span class="text-con" v-html="comment"></span>
             </div>
             <div class="info">
                 <span class="time"><timeago :datetime="data.artCmtCreatedTime" locale="zh-CN"
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+    import sanitizeHtml  from 'sanitize-html'
     export default {
         name: "ArticleCommentReplyItem",
         props: {
@@ -55,6 +56,11 @@
         methods:{
             openReply(e,data){
                 this.$emit('openReply2',e,data,2)
+            }
+        },
+        computed:{
+            comment(){
+                return sanitizeHtml(this.data.artCmtContent)
             }
         }
     }

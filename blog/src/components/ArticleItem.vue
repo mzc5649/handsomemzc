@@ -27,9 +27,7 @@
                 </vs-button>
                 <vs-button class="btn-chat" icon shadow animation-type="scale">
                     <i class="fas fa-comment"></i>
-                    <template #animate>
-                        <i class="fas fa-comment"></i>
-                    </template>
+                    <span class="span">{{article.commentCount}}</span>
                 </vs-button>
             </template>
             <template #buttons>
@@ -46,21 +44,25 @@
                         <div>
                             <span class="info-time" @click="jumpToMember(article.user.uId)">
                                 <i class="fas fa-user info"></i>
-                                <span class="info" >{{article.user.uUsername}}</span>
+                                <span class="info">{{article.user.uUsername}}</span>
                             </span>
-                        <i class="fas fa-clock info"></i>
-                        <span v-show="device == 'desktop'">
-                            <span class="info">发表于:</span>
-                            <span class="info"><timeago :datetime="article.artInfoCreatedTime" locale="zh-CN"
-                                                        :auto-update="60"></timeago></span>
-                            <span class="info">更新于:</span>
-                        </span>
-                        <span class="info">
-                            <timeago :datetime="article.artInfoModifiedTime" locale="zh-CN" :auto-update="60"></timeago>
-                        </span>
+                            <i class="fas fa-comment info"></i>
+                            <span class="info">{{article.commentCount}}</span>
+                            <i class="fas fa-clock info"></i>
+                            <span v-show="device == 'desktop'">
+                                <span class="info">发表于:</span>
+                                <span class="info"><timeago :datetime="article.artInfoCreatedTime" locale="zh-CN"
+                                                            :auto-update="60"></timeago></span>
+                                <span class="info">更新于:</span>
+                            </span>
+                            <span class="info">
+                                <timeago :datetime="article.artInfoModifiedTime" locale="zh-CN"
+                                         :auto-update="60"></timeago>
+                            </span>
                         </div>
                     </div>
-                    <vs-button size="small" shadow border dark animation-type="vertical" @click="toArticle(article.artInfoId)">
+                    <vs-button size="small" shadow border dark animation-type="vertical"
+                               @click="toArticle(article.artInfoId)">
                         阅读
                         <template #animate>
                             Go
@@ -152,12 +154,14 @@
         font-size: 13px;
         color: #A0A0A0;
     }
-    .info-time:hover{
-        .info{
+
+    .info-time:hover {
+        .info {
             color: #2c3e50;
         }
 
     }
+
     .title {
         overflow: hidden;
         white-space: nowrap;

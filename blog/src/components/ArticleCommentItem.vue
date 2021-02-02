@@ -7,22 +7,25 @@
         </div>
         <div class="con" ref="con">
             <div class="user">{{data.user.uUsername}}</div>
-            <p class="text">{{data.artCmtContent}}</p>
+            <p class="text" v-html="comment"></p>
             <div class="info">
                 <span class="time"><timeago :datetime="data.artCmtCreatedTime" locale="zh-CN"
                                             :auto-update="60"></timeago></span>
                 <vs-button size="small" @click="openReply($event,data,1)" class="reply-btn" shadow> 回复</vs-button>
             </div>
-            <div class="reply-box">
+            <div ref="reply-box" class="reply-box">
                 <template v-for="(item,index) in data.replies">
-                    <ArticleCommentReplyItem :key="index" :data="item"
+                    <ArticleCommentReplyItem :key="item.artCmtId" :data="item"
                                              @openReply2="openReply"></ArticleCommentReplyItem>
                 </template>
-                <div v-if="data.replyCount > 3" class="view-more">
-                    共{{data.replyCount}}条回复，点击查看
+                <div v-if="data.replyCount > 3 && !isShowMore" class="view-more">
+                    共<b>{{data.replyCount}}</b>条回复,
+                    <vs-button @click="showMoreReply" shadow size="small" class="more-btn">点击查看</vs-button>
                 </div>
             </div>
-            <div class="paging-box"></div>
+            <div v-if="isShowMore && pageTotal>1" class="paging-box">
+                <vs-pagination only-arrows v-model="replyPage.currentPage" :length="pageTotal" />
+            </div>
         </div>
 
     </div>
@@ -32,7 +35,8 @@
     import ArticleCommentReplyItem from "./ArticleCommentReplyItem";
     import ArticleCommentSend from "./ArticleCommentSend";
     import Vue from 'vue'
-
+    import {getArticleCommentReplies} from "../api/articleComment";
+    import sanitizeHtml  from 'sanitize-html'
     export default {
         name: "ArticleCommentItem",
         components: {ArticleCommentSend, ArticleCommentReplyItem},
@@ -67,10 +71,35 @@
                 }
             }
         },
+        data() {
+            return {
+                recordCount: 0,
+                pageTotal: 0,
+                replyPage: {
+                    currentPage: 1,
+                    pageSize: 10,
+                },
+                isShowMore: false
+            }
+        },
+        computed:{
+            pageIndex() {
+                return this.replyPage.currentPage
+            },
+            comment(){
+                return sanitizeHtml(this.data.artCmtContent)
+            }
+        },
+        watch: {
+            pageIndex: function (val) {
+                this.fetchMoreData()
+            },
+        },
         created() {
 
         },
         methods: {
+            //打开回复控件
             openReply(e, data, type) {
                 const elements = document.getElementsByClassName('open-reply')
                 Array.prototype.forEach.call(elements, function (element) {
@@ -111,19 +140,52 @@
                     rect.left >= 0 &&
                     rect.bottom <= window.innerHeight &&
                     rect.right <= window.innerWidth
-                if(!isShow){
+                if (!isShow) {
                     let $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
-                    $body.animate({scrollTop: $('#comment-send').offset().top-window.innerHeight+100}, 1000);
+                    $body.animate({scrollTop: $('#comment-send').offset().top - window.innerHeight/2}, 1000);
                 }
 
             },
-
+            //展示更多回复
+            fetchMoreData(){
+                var commentLoading = this.$vs.loading({
+                    target: this.$refs["reply-box"],
+                    type: "points",
+                    text: "加载中",
+                    color:'dark'
+                });
+                const data = {
+                    rId: this.data.artCmtId,
+                    currentPage: this.replyPage.currentPage,
+                    pageSize: this.replyPage.pageSize
+                }
+                getArticleCommentReplies(data).then(res => {
+                    commentLoading.close()
+                    this.isShowMore = true
+                    this.data.replies = res.data.recordList
+                    this.pageTotal = res.data.pageTotal
+                    this.recordCount = res.data.recordCount
+                    console.log(res);
+                })
+            },
+            //展示更多回复 按钮
+            showMoreReply() {
+                this.fetchMoreData()
+            }
         }
     }
 </script>
 
 <style scoped lang="scss">
+
     .comment {
+        &:last-child {
+            .con {
+                border-bottom: 1px solid var(--border-color);
+            }
+
+        }
+
         .user-face {
             float: left;
             margin: 24px 0 0 5px;
@@ -131,6 +193,7 @@
         }
 
         .con {
+
             position: relative;
             margin-left: 85px;
             padding: 22px 0 14px 0;
@@ -174,7 +237,15 @@
                 .view-more {
                     font-size: 12px;
                     color: #6d757a;
+
+                    .more-btn {
+                        display: inline-block;
+                    }
                 }
+            }
+            .paging-box{
+                display: flex;
+                justify-content: flex-start;
             }
         }
 
