@@ -1,5 +1,6 @@
 // darken
 import darken from "darken";
+
 const darkmode = new darken({
     container: null,
     toggle: null,
@@ -12,16 +13,22 @@ const darkmode = new darken({
         "--background-color": ["#f4f5f7", "rgb(13, 17, 23)"],
         "--card-background-color": ["#ffffff", "rgb(13, 17, 23)"],
         "--md-background-color": ["#f6f8fa", "rgb(30, 32, 35)"],
-        "--border-color": ["#e1e4e8","#30363d"],
-        "--unactive-color":['rgba(49,67,84,0.6)','rgba(255,255,255,0.6)'],
-        "--active-color":['rgb(49,67,84)','rgb(255,255,255)']
-    }
+        "--border-color": ["#e1e4e8", "#30363d"],
+        "--unactive-color": ['rgba(49,67,84,0.6)', 'rgba(255,255,255,0.6)'],
+        "--active-color": ['rgb(49,67,84)', 'rgb(255,255,255)']
+    },
 });
 const state = {
     device: 'desktop',
     sideNav: false,
-    dark: localStorage.getItem('darken-mode')||'light',
-    darkmode: darkmode
+    dark: localStorage.getItem('darken-mode') || 'light',
+    darkmode: darkmode,
+    emojiPos: {
+        top: '0',
+        left: '0'
+    },
+    emojiBoxShow: false,
+    commentContent:''
 }
 
 const mutations = {
@@ -34,6 +41,14 @@ const mutations = {
     TOGGLE_DARK: (state: any, data: boolean) => {
         state.dark = data
     },
+    TOGGLE_EMOJIPOS: (state: any, data: object) => {
+        state.emojiPos = data
+
+    },
+    TOGGLE_EMOJIBOXSHOW: (state: any, data: boolean) => {
+        state.emojiBoxShow = data
+
+    },
 }
 
 
@@ -43,9 +58,9 @@ const actions = {
     },
     toggleSideNav(context: any, data: boolean) {
         context.commit('TOGGLE_SIDENAV', data)
-        if(data){
+        if (data) {
             document.body.style.overflow = 'hidden'
-        }else{
+        } else {
             document.body.style.overflow = 'auto'
         }
 

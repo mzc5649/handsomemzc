@@ -5,7 +5,7 @@
                 <img :src="data.user.uIcon" alt="" style="width: 100%;height: 100%">
             </vs-avatar>
         </div>
-        <div class="con" ref="con">
+        <div class="con" ref="con" >
             <div class="user">{{data.user.uUsername}}</div>
             <p class="text" v-html="comment"></p>
             <div class="info">
@@ -88,6 +88,9 @@
             },
             comment(){
                 return sanitizeHtml(this.data.artCmtContent)
+            },
+            device(){
+                return this.$store.state.app.device
             }
         },
         watch: {
@@ -152,7 +155,7 @@
                     target: this.$refs["reply-box"],
                     type: "points",
                     text: "加载中",
-                    color:'dark'
+                    color:'#1E1E1E'
                 });
                 const data = {
                     rId: this.data.artCmtId,
@@ -165,7 +168,6 @@
                     this.data.replies = res.data.recordList
                     this.pageTotal = res.data.pageTotal
                     this.recordCount = res.data.recordCount
-                    console.log(res);
                 })
             },
             //展示更多回复 按钮
@@ -179,6 +181,7 @@
 <style scoped lang="scss">
 
     .comment {
+
         &:last-child {
             .con {
                 border-bottom: 1px solid var(--border-color);
@@ -194,7 +197,6 @@
 
         .con {
 
-            position: relative;
             margin-left: 85px;
             padding: 22px 0 14px 0;
             border-top: 1px solid var(--border-color);

@@ -1,13 +1,15 @@
 <template>
-    <div class="comment-send">
-        <div class="user-face">
+    <div ref="comment-send" class="comment-send">
+        <div class="user-face" v-if="device == 'desktop'">
             <vs-avatar circle size="48">
-                <img :src="user.uIcon" alt="" style="width: 100%;height: 100%">
+                <img v-if="user.uIcon" :src="user.uIcon" alt="" style="width: 100%;height: 100%">
             </vs-avatar>
         </div>
         <div class="textarea-container" ref="comment-container">
-            <textarea  @focus="mFocus" @focusout="mFocusOut" @input="mInput" :placeholder="ph" ref="comment" type="text" cols="80" rows="4"></textarea>
+            <textarea @focus="mFocus" @focusout="mFocusOut" @input="mInput" :placeholder="ph" ref="comment" type="text"
+                      cols="80" rows="4"></textarea>
             <vs-button
+                    :disabled="!user"
                     dark
                     :loading="loading.sendCmt"
                     @click="sendComment"
@@ -18,18 +20,23 @@
                     <i class="fas fa-comment"></i>发送
                 </template>
             </vs-button>
+            <div v-if="!user" class="login">
+                <div>您必须登录或注册以后才能发表评论</div>
+                <vs-button size="small" border @click="SET_LOGIN_OR_REGISTER_DIALOG">登录</vs-button>
+            </div>
         </div>
-        <div class="comment-emoji" >
-            <vs-button  icon dark>
+        <div class="comment-emoji" v-if="user">
+            <vs-button dark icon @click="openEmoji($event)">
                 <i class="fas fa-smile"></i>表情
             </vs-button>
-
         </div>
+
     </div>
 </template>
 
 <script>
     import {saveArticleComment} from "../api/articleComment";
+    import {mapMutations} from "vuex";
 
     export default {
         name: "ArticleCommentSend",
@@ -62,8 +69,11 @@
             return {
                 loading: {
                     sendCmt: false
-                }
+                },
             }
+        },
+        mounted() {
+
         },
         computed: {
             user() {
@@ -71,18 +81,39 @@
             },
             token() {
                 return this.$store.state.token
+            },
+            device() {
+                return this.$store.state.app.device
             }
         },
         methods: {
-            mFocus(){
-              this.$refs['comment-container'].classList.add('focus')
+            ...mapMutations(["SET_LOGIN_OR_REGISTER_DIALOG"]),
+            /*监听聚焦*/
+            mFocus() {
+                this.$refs['comment-container'].classList.add('focus')
             },
-            mFocusOut(){
+            /*监听聚焦*/
+            mFocusOut() {
                 this.$refs['comment-container'].classList.remove('focus')
             },
-            mInput(){
+            /*监听输入*/
+            mInput() {
                 this.$refs['comment-container'].classList.remove('error')
             },
+            /*打开表情*/
+            openEmoji(e) {
+                e.stopPropagation()
+                const data = {
+                    top: e.currentTarget.offsetTop + 40 + 'px',
+                    left: e.currentTarget.offsetLeft + 'px'
+                }
+                this.$store.commit('app/TOGGLE_EMOJIPOS', data)
+                this.$store.commit('app/TOGGLE_EMOJIBOXSHOW', true)
+                this.$refs['comment'].focus()
+                //输入框引用
+                this.$store.state.app.commentContent = this.$refs['comment']
+            },
+            //评论
             sendComment() {
                 var content = this.$refs['comment'].value
                 content = content.replace(/(^[\s\n\t]+|[\s\n\t]+$)/g, "")
@@ -92,7 +123,7 @@
                         progress: "auto",
                         color: 'danger',
                         position: "bottom-center",
-                        text: content.length == 0? "你还没有评论！":"字数限制1000！"
+                        text: content.length == 0 ? "你还没有评论！" : "字数限制1000！"
                     });
                     return
                 }
@@ -142,9 +173,9 @@
             margin: 7px 0 0 5px;
         }
 
-        .comment-emoji{
+        .comment-emoji {
+            margin-left: 86px;
 
-            margin-left:  86px;
         }
 
         .textarea-container {
@@ -156,6 +187,7 @@
                 background-color: var(--card-background-color) !important;
                 border-color: #e40c0c !important;
             }
+
             &.focus textarea {
                 background-color: var(--card-background-color) !important;
                 border: 1px solid rgba(25, 91, 255, 0.6);
@@ -191,5 +223,43 @@
             }
         }
 
+        .login {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            left: 0px;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            font-weight: 700;
+            font-size: 12px;
+            overflow: hidden;
+            color: var(--primary-color);
+            background-color: rgba(var(--card-background-color), 0.5);
+            backdrop-filter: blur(1px);
+        }
+
+
+    }
+
+    @media screen and (max-width: 900px) {
+        .comment-send {
+            .textarea-container {
+                margin-left: 0px;
+            }
+
+            .comment-emoji {
+                margin-left: 0;
+            }
+        }
+
+    }
+</style>
+<style>
+    .vs-button__content {
+        position: relative;
     }
 </style>

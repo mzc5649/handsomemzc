@@ -1,5 +1,6 @@
 <template>
     <div class="MemberSidebarSet" v-if="isSelf">
+        <h3 style="padding-left: 20px;">设置</h3>
         <div class="user-info-item">
             <div class="edit-name">昵称：</div>
             <div class="edit-item" v-if="!setShow.name">
@@ -15,7 +16,7 @@
                     <ValidationProvider ref="nameValid" rules="required|user|userLength" v-slot="v">
                         <vs-input
                                 :state="v.errors[0]?'danger':''"
-                                label-placeholder="昵称可用作登录"
+                                label-placeholder="用来展示的昵称"
                                 v-model="user.uUsername">
                             <template #message-danger>
                                 {{v.errors[0]}}
@@ -98,7 +99,7 @@
                     <ValidationProvider ref="emailValid" rules="required|email" v-slot="v">
                         <vs-input
                                 :state="v.errors[0]?'danger':''"
-                                label-placeholder="邮箱地址可用作登录"
+                                label-placeholder="用作登录的邮箱地址"
                                 v-model="user.uEmail">
                             <template #message-danger>
                                 {{v.errors[0]}}

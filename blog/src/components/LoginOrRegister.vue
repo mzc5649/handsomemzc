@@ -20,7 +20,7 @@
                             <vs-input  dark :state="v.errors[0]?'danger':''" v-model="loginForm.login"
                                       placeholder="邮箱">
                                 <template #icon>
-                                    <i class="fas fa-user"></i>
+                                    <i class="fas fa-envelope"></i>
                                 </template>
                                 <template slot="message-danger">
                                     {{v.errors[0]}}

@@ -20,7 +20,8 @@
 </template>
 
 <script>
-    import sanitizeHtml  from 'sanitize-html'
+    import sanitizeHtml from 'sanitize-html'
+
     export default {
         name: "ArticleCommentReplyItem",
         props: {
@@ -53,13 +54,13 @@
                 }
             }
         },
-        methods:{
-            openReply(e,data){
-                this.$emit('openReply2',e,data,2)
+        methods: {
+            openReply(e, data) {
+                this.$emit('openReply2', e, data, 2)
             }
         },
-        computed:{
-            comment(){
+        computed: {
+            comment() {
                 return sanitizeHtml(this.data.artCmtContent)
             }
         }
@@ -116,9 +117,13 @@
         }
 
     }
+
+    @media screen and (max-width: 900px) {
+
+    }
 </style>
 <style>
-    a{
+    a {
         outline: none;
         color: #00a1d6;
         text-decoration: none;

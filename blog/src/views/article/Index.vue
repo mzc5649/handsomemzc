@@ -134,7 +134,7 @@
         methods: {
             /*监控导航*/
             $scrollListenCallback() {
-                if (this.device  != 'mobile') {
+                if (this.device != 'mobile') {
                     let that = this;
                     let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
                     scrollTop += 60;
@@ -302,6 +302,12 @@
         }
     }
 
+    @media screen and (max-width: 900px) {
+        .active {
+            padding: 6px;
+        }
+
+    }
 </style>
 <style lang="scss">
     .markdown-body {
@@ -340,4 +346,5 @@
 
         }
     }
+
 </style>
