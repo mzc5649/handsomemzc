@@ -34,7 +34,7 @@
                                 女
                             </span>
                             </h1>
-                            <p>{{user.uSign}}</p>
+                            <p class="sign">{{user.uSign}}</p>
                         </div>
                     </div>
                 </div>
@@ -279,6 +279,10 @@
 
         .user-panel-info {
             padding: 30px 0 0 20px;
+
+            .sign{
+                font-size: 12px;
+            }
 
             h1 {
                 margin: 0;

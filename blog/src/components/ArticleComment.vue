@@ -60,6 +60,7 @@
         props: ['articleId'],
         data() {
             return {
+                isLoaded: false,
                 recordList: [],
                 recordCount: 0,
                 pageTotal: 0,
@@ -97,31 +98,14 @@
             }
         },
         created() {
-            getEmojiList().then(res => {
-                const map = new Map();
-                //当前emojiPackage id
-                this.currentEmojiPackageId = 1
-                //emoji map
-                this.emojiPackageList = res.data
-                res.data.forEach(e => {
-                    map.set(e.id, e);
-                })
-                this.emojiPackageMap = map;
-                //当前 emoji package
-                this.currentEmojiPackage = res.data[0]
-                // class
-                this.emojiClass = {
-                    'emoji-pic': this.currentEmojiPackage.type == 1,
-                    "emoji-small": this.currentEmojiPackage.size == 1 && this.currentEmojiPackage.type == 1,
-                    'emoji-default': this.currentEmojiPackage.type == 2,
-                }
-            })
+
 
         },
         mounted() {
-            this.fetchData()
-            document.addEventListener('click', () => {
-                this.$store.commit('app/TOGGLE_EMOJIBOXSHOW', false)
+
+            this.$nextTick(() => {
+                document.addEventListener('scroll', this.scroll)
+                document.addEventListener('click', this.closeEmojiBox)
             })
         },
         watch: {
@@ -154,7 +138,7 @@
         },
         methods: {
             fetchData() {
-                var commentLoading = this.$vs.loading({
+                const commentLoading = this.$vs.loading({
                     target: this.$refs.articleComment,
                     type: "points",
                     text: "加载中",
@@ -171,6 +155,31 @@
                     this.recordCount = res.data.recordCount;
                     commentLoading.close()
                 })
+            },
+            fetchEmojiData() {
+                getEmojiList().then(res => {
+                    const map = new Map();
+                    //当前emojiPackage id
+                    this.currentEmojiPackageId = 1
+                    //emoji map
+                    this.emojiPackageList = res.data
+                    res.data.forEach(e => {
+                        map.set(e.id, e);
+                    })
+                    this.emojiPackageMap = map;
+                    //当前 emoji package
+                    this.currentEmojiPackage = res.data[0]
+                    // class
+                    this.emojiClass = {
+                        'emoji-pic': this.currentEmojiPackage.type == 1,
+                        "emoji-small": this.currentEmojiPackage.size == 1 && this.currentEmojiPackage.type == 1,
+                        'emoji-default': this.currentEmojiPackage.type == 2,
+                    }
+                })
+            },
+            /*关闭表情窗口*/
+            closeEmojiBox(){
+                this.$store.commit('app/TOGGLE_EMOJIBOXSHOW', false)
             },
             //点击表情窗口阻止消失
             emojiOut(e) {
@@ -196,7 +205,21 @@
                     text +
                     this.$store.state.app.commentContent.value.substr(end)
                 this.$store.state.app.commentContent.selectionEnd = end + text.length
+            },
+            scroll() {
+                const rect = document.getElementById('article-comment').getBoundingClientRect()
+                const isShow = rect.top < window.innerHeight
+                if(isShow && !this.isLoaded){
+                    this.isLoaded = true
+                    this.fetchData()
+                    this.fetchEmojiData()
+                }
+
             }
+        },
+        destroyed() {
+            document.removeEventListener('scroll', this.scroll)
+            document.removeEventListener('click', this.closeEmojiBox)
         }
     }
 </script>

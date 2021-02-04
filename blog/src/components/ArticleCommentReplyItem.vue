@@ -30,6 +30,7 @@
                 default: function () {
                     return {
                         artCmtContent: '',
+                        emojiList: [],
                         artCmtCreatedTime: '',
                         artCmtId: '',
                         artCmtLike: '',
@@ -61,7 +62,20 @@
         },
         computed: {
             comment() {
-                return sanitizeHtml(this.data.artCmtContent)
+                this.data.emojiList.forEach(item => {
+                    var size = item.size == 1 ? 'small' : ''
+                    var img = '<img src="' + item.url + '" alt="' + item.text + '" class="' + size + '"/>'
+                    this.data.artCmtContent = this.data.artCmtContent.replaceAll(item.text, img)
+                })
+
+                return sanitizeHtml(this.data.artCmtContent, {
+                    allowedTags: ['b', 'i', 'em', 'strong', 'a', 'img'],
+                    allowedAttributes: {
+                        'a': ['href'],
+                        'img': ['src', 'alt', 'class']
+                    },
+                    // allowedIframeHostnames: ['www.youtube.com']
+                })
             }
         }
     }
@@ -122,11 +136,23 @@
 
     }
 </style>
-<style>
+<style lang="scss">
     a {
         outline: none;
         color: #00a1d6;
         text-decoration: none;
         cursor: pointer;
+    }
+
+    .reply-con .text-con img {
+        vertical-align: text-bottom;
+        padding: 0 1px;
+        width: 50px;
+        height: 50px;
+
+        &.small {
+            width: 20px;
+            height: 20px;
+        }
     }
 </style>

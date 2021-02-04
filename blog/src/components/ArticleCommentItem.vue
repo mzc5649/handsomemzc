@@ -5,7 +5,7 @@
                 <img :src="data.user.uIcon" alt="" style="width: 100%;height: 100%">
             </vs-avatar>
         </div>
-        <div class="con" ref="con" >
+        <div class="con" ref="con">
             <div class="user">{{data.user.uUsername}}</div>
             <p class="text" v-html="comment"></p>
             <div class="info">
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div v-if="isShowMore && pageTotal>1" class="paging-box">
-                <vs-pagination only-arrows v-model="replyPage.currentPage" :length="pageTotal" />
+                <vs-pagination only-arrows v-model="replyPage.currentPage" :length="pageTotal"/>
             </div>
         </div>
 
@@ -36,7 +36,8 @@
     import ArticleCommentSend from "./ArticleCommentSend";
     import Vue from 'vue'
     import {getArticleCommentReplies} from "../api/articleComment";
-    import sanitizeHtml  from 'sanitize-html'
+    import sanitizeHtml from 'sanitize-html'
+
     export default {
         name: "ArticleCommentItem",
         components: {ArticleCommentSend, ArticleCommentReplyItem},
@@ -46,6 +47,7 @@
                 default: function () {
                     return {
                         artCmtContent: '',
+                        emojiList: [],
                         artCmtCreatedTime: '',
                         artCmtId: '',
                         artCmtLike: '',
@@ -82,14 +84,29 @@
                 isShowMore: false
             }
         },
-        computed:{
+        computed: {
             pageIndex() {
                 return this.replyPage.currentPage
             },
-            comment(){
-                return sanitizeHtml(this.data.artCmtContent)
+            comment() {
+                this.data.emojiList.forEach(item => {
+                    var size = item.size == 1 ? 'small' : ''
+                    var img = '<img src="' + item.url + '" alt="' + item.text + '" class="' + size + '"/>'
+                    this.data.artCmtContent = this.data.artCmtContent.replaceAll(item.text, img)
+                })
+
+                return sanitizeHtml(this.data.artCmtContent, {
+                    allowedTags: ['b', 'i', 'em', 'strong', 'a', 'img'],
+                    allowedAttributes: {
+                        'a': ['href'],
+                        'img': ['src', 'alt', 'class']
+                    },
+                    // allowedIframeHostnames: ['www.youtube.com']
+                })
+
+
             },
-            device(){
+            device() {
                 return this.$store.state.app.device
             }
         },
@@ -145,17 +162,17 @@
                     rect.right <= window.innerWidth
                 if (!isShow) {
                     let $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
-                    $body.animate({scrollTop: $('#comment-send').offset().top - window.innerHeight/2}, 1000);
+                    $body.animate({scrollTop: $('#comment-send').offset().top - window.innerHeight / 2}, 1000);
                 }
 
             },
             //展示更多回复
-            fetchMoreData(){
+            fetchMoreData() {
                 var commentLoading = this.$vs.loading({
                     target: this.$refs["reply-box"],
                     type: "points",
                     text: "加载中",
-                    color:'#1E1E1E'
+                    color: '#1E1E1E'
                 });
                 const data = {
                     rId: this.data.artCmtId,
@@ -221,6 +238,12 @@
                 overflow: hidden;
                 white-space: pre-wrap;
                 word-wrap: break-word;
+
+                .small {
+                    width: 20px;
+                    height: 20px;
+                }
+
             }
 
             .info {
@@ -245,11 +268,27 @@
                     }
                 }
             }
-            .paging-box{
+
+            .paging-box {
                 display: flex;
                 justify-content: flex-start;
             }
         }
 
     }
+
+</style>
+<style lang="scss">
+    .con .text img {
+        vertical-align: text-bottom;
+        padding: 0 1px;
+        width: 50px;
+        height: 50px;
+
+        &.small {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
 </style>

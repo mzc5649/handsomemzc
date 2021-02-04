@@ -16,9 +16,9 @@
                         {{user.uUsername}}
                     </div>
                     <div class="info">
-                        <span style="margin-right: 10px">No.{{user.uId}}</span>
-                        <i class="fas fa-male info" v-if="user.uSex == 1" title="男"></i>
-                        <i class="fas fa-female info" v-if="user.uSex == 2" title="女"></i>
+                        <span >No.{{user.uId}}</span>
+                        <i style="margin-left: 10px" class="fas fa-male info" v-if="user.uSex == 1" title="男"></i>
+                        <i style="margin-left: 10px" class="fas fa-female info" v-if="user.uSex == 2" title="女"></i>
                     </div>
                     <vs-button shadow block :to="'/blog/member/'+user.uId">
                         <i class="fas fa-user"></i>

@@ -8,8 +8,7 @@
         <div class="user-info-item">
             <span class="user-info-item-title">性别：</span>
             <span>
-                <span class="info" v-if="userData.uSex == 1">男</span>
-                <span class="info" v-else>女</span>
+                <span class="info">{{userData.uSex | getSex}}</span>
             </span>
         </div>
         <div class="user-info-item">
@@ -40,6 +39,15 @@
                 var diff = Math.abs(date.getTime() - now.getTime())
                 var result = parseInt(diff / (1000 * 60 * 60 * 24));
                 return result
+            },
+            getSex(data) {
+                if (data == 1) {
+                    return '男'
+                } else if (data == 2) {
+                    return '女'
+                } else {
+                    return '保密'
+                }
             }
         }
     }
@@ -53,6 +61,7 @@
     .MemberSidebarIndex {
         width: 100%;
         font-weight: 400;
+
         .user-info-item {
             padding: 20px;
             border-bottom: 1px solid var(--border-color);

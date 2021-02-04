@@ -28,7 +28,7 @@
                             </vs-input>
                         </ValidationProvider>
                         <ValidationProvider rules="required" v-slot="v">
-                            <vs-input dark :state="v.errors[0]?'danger':''" v-model="loginForm.pass" placeholder="密码"
+                            <vs-input @keyup.enter="handleSubmit" dark :state="v.errors[0]?'danger':''" v-model="loginForm.pass" placeholder="密码"
                                       type="password">
                                 <template #icon>
                                     <i class="fas fa-lock"></i>

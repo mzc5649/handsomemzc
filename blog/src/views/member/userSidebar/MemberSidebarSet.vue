@@ -42,6 +42,9 @@
             </div>
             <div v-else>
                 <div class="edit-input">
+                    <vs-radio v-model="user.uSex" val="0">
+                        保密
+                    </vs-radio>
                     <vs-radio v-model="user.uSex" val="1">
                         男
                     </vs-radio>
@@ -267,7 +270,13 @@
         },
         filters: {
             getSex(data) {
-                return data == 1 ? '男' : '女'
+                if(data == 1){
+                    return '男'
+                }else if(data == 2){
+                    return '女'
+                }else{
+                    return '保密'
+                }
             }
         },
         computed: {

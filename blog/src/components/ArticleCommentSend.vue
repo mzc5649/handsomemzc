@@ -27,7 +27,7 @@
         </div>
         <div class="comment-emoji" v-if="user">
             <vs-button dark icon @click="openEmoji($event)">
-                <i class="fas fa-smile"></i>表情
+                <i class="fas fa-smile" style="margin-right: 5px"></i>表情
             </vs-button>
         </div>
 
@@ -220,6 +220,11 @@
                 width: 70px;
                 height: 65px;
                 margin: 0;
+            }
+
+            .comment-submit:hover &.textarea {
+                background-color: var(---card-background-color);
+                border: 1px solid rgba(25, 91, 255, 0.6);
             }
         }
 
